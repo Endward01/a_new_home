@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "A New Homepage",
+  "short_name": "a_new_home",
+  "version": "0.1",
+  "author": "Daniel Prętki",
+  "description": "A new tab page Extansion",
+  "chrome_url_overrides": {
+    "newtab": "/index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.mozilla.org/*"
+      ],
+      "html": [
+        "index.js"
+      ],
+      "css": [
+        "style.css"
+      ],
+      "js": [
+        "main.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "storage"
+  ]
+}
