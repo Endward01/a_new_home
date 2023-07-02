@@ -4,16 +4,46 @@
 
 body {
   background-color: #1e283a;
-  height: 100vh;
+  max-height: 100%;
+  min-height: 100%;
 }
 body * {
   font-family: "Open Sans", sans-serif;
   color: #f8fdff;
+  overflow: hidden;
+}
+.inp {
+  background-color: #293243;
+  border-width: 0.1rem;
+  border-style: solid;
+  border-color: #f8fdff50;
+  padding-left: 1rem;
+}
+.btn {
+  background-color: #293243;
+  border-width: 0.1rem;
+  border-style: solid;
+  border-color: #f8fdff50;
+  border-radius: 0.25rem;
+  
+  cursor: pointer;
+}
+.select{
+  background-color: #293243;
+  border: none;
+  border-radius: 0.25rem;
+  border-width: 0.1rem;
+  border-style: solid;
+  border-color: #f8fdff50;
+  cursor: pointer;
+  
 }
 .main {
   width: 1440px;
   margin: 0 auto;
-  height: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 .main-nav {
   width: 100%;
@@ -22,62 +52,154 @@ body * {
   border-bottom: 1px solid #f8fdff50;
 }
 .main-nav-brand {
+  /* display: flex; */
+  align-content: center;
+  justify-content: center;
   margin: 2rem 1rem;
-  font-size: 1.5rem;
+  /* padding: 1rem 0rem; */
+}
+.main-nav-brand-text {
+  font-size: 1.2rem;
   font-weight: 600;
+  text-align: center;
 }
 .main-nav-search {
+  margin: 2rem 1rem;
   width: 60%;
   display: flex;
   flex-direction: row;
-  margin: 2rem 1rem;
   height: 2rem;
 }
-.main-nav-search-select {
-  font-size: 1rem;
-  font-weight: 500;
-  width: 15%;
-  text-align: center;
-  background-color: #293243;
-  border: none;
-  border-top-left-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
-  border-width: 0.1rem 0 0.1rem 0.1rem;
-  border-style: solid;
-  border-color: #f8fdff50;
-  cursor: pointer;
-}
 /* Turn off arrow in select */
-select {
+/* select {
   -webkit-appearance: none;
   -moz-appearance: none;
   text-indent: 1px;
   text-overflow: "";
+} */
+.main-nav-search-select {
+  font-size: 1rem;
+  font-weight: 500;
+  width: 10%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-width: 0.1rem 0 0.1rem 0.1rem;
 }
 .main-nav-search-input {
   font-size: 1rem;
   font-weight: 500;
   width: 85%;
-  padding-left: 1rem;
   background-color: #293243;
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
-  border-width: 0.1rem 0.1rem 0.1rem 0;
-  border-style: solid;
-  border-color: #f8fdff50;
+  border-width: 0.1rem 0 0.1rem 0;
+}
+.main-nav-search-btn {
+  font-size: 1rem;
+  width: 5%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left-width: 0;
 }
 .main-nav-icon {
   display: flex;
-  margin: 2rem 1rem;
+  margin: 1rem 1rem;
 }
 .main-nav-icon > li {
   display: flex;
   align-items: center;
 }
-.main-nav-icon > li > * {
-  cursor: pointer;
-  font-size: 1.5rem;
-  margin: 0 1rem;
+.main-nav-icon > li:hover {
 }
-.main-article {
+.main-nav-icon-btn {
+  cursor: pointer;
+  font-size: 1.25rem;
+  margin: 0 .5rem;
+  padding: .5rem .5rem ;
+  border-radius: .25rem;
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+
+.main-nav-icon-btn:hover {
+  background-color: #171e2c;
+  /* color: orange; */
+
+  animation-name: rubberBand;
+}
+
+@keyframes rubberBand {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  30% {
+    transform: scale3d(1.25, 0.75, 1);
+  }
+
+  40% {
+    transform: scale3d(0.75, 1.25, 1);
+  }
+
+  50% {
+    transform: scale3d(1.15, 0.85, 1);
+  }
+
+  65% {
+    transform: scale3d(0.95, 1.05, 1);
+  }
+
+  75% {
+    transform: scale3d(1.05, 0.95, 1);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.main-section {
+  /* background-color: aqua; */
+  flex-grow: 1;
+  position: relative;
+}
+.main-section-bookmarks {
+  /* height: 100%; */
+  display: grid;
+  grid-template-rows: repeat(auto-fit, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  justify-items: center;
+
+}
+
+
+.main-footer {
+  border-top: 1px solid #f8fdff50;
+  text-align: center;
+}
+.main-footer-textarea {
+  margin: 0.25rem 0;
+}
+
+.addBookmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #1e283a;
+}
+.addBookmark[data-visible="false"] {
+  display: none;
+}
+.addBookmark[data-visible="true"] {
+  display: block;
+}
+.addBookmark-container {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
 }
