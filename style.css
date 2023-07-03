@@ -25,10 +25,10 @@ body * {
   border-style: solid;
   border-color: #f8fdff50;
   border-radius: 0.25rem;
-  
+
   cursor: pointer;
 }
-.select{
+.select {
   background-color: #293243;
   border: none;
   border-radius: 0.25rem;
@@ -36,7 +36,6 @@ body * {
   border-style: solid;
   border-color: #f8fdff50;
   cursor: pointer;
-  
 }
 .main {
   width: 1440px;
@@ -48,6 +47,7 @@ body * {
 .main-nav {
   width: 100%;
   display: flex;
+
   justify-content: space-between;
   border-bottom: 1px solid #f8fdff50;
 }
@@ -64,9 +64,10 @@ body * {
   text-align: center;
 }
 .main-nav-search {
+  display: none;
   margin: 2rem 1rem;
   width: 60%;
-  display: flex;
+  /* display: flex; */
   flex-direction: row;
   height: 2rem;
 }
@@ -109,12 +110,15 @@ body * {
 }
 .main-nav-icon > li:hover {
 }
+.icon {
+  font-size: 1.25rem;
+  margin: 0 0.5rem;
+  padding: 0.5rem 0.5rem;
+}
 .main-nav-icon-btn {
   cursor: pointer;
-  font-size: 1.25rem;
-  margin: 0 .5rem;
-  padding: .5rem .5rem ;
-  border-radius: .25rem;
+
+  border-radius: 0.25rem;
   animation-duration: 0.5s;
   animation-fill-mode: both;
   animation-iteration-count: 1;
@@ -122,8 +126,9 @@ body * {
 
 .main-nav-icon-btn:hover {
   background-color: #171e2c;
-  /* color: orange; */
-
+}
+.main-nav-icon-btn:active {
+  color: orange;
   animation-name: rubberBand;
 }
 
@@ -161,17 +166,17 @@ body * {
   /* background-color: aqua; */
   flex-grow: 1;
   position: relative;
+  padding: 0.5rem 0;
 }
 .main-section-bookmarks {
   /* height: 100%; */
   display: grid;
   grid-template-rows: repeat(auto-fit, 1fr);
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
-  justify-items: center;
-
+  gap: 1rem;
+  row-gap: 2rem;
+  /* justify-items: center; */
 }
-
 
 .main-footer {
   border-top: 1px solid #f8fdff50;
@@ -188,18 +193,39 @@ body * {
   width: 100%;
   height: 100%;
   background-color: #1e283a;
+  justify-content: center;
+  padding-top: 1rem;
 }
 .addBookmark[data-visible="false"] {
   display: none;
 }
 .addBookmark[data-visible="true"] {
+  display: flex;
+}
+.group[data-visible="false"]{
+  display: none;
+}
+.group[data-visible="true"]{
   display: block;
 }
-.addBookmark-container {
+.addBookmark-form {
   width: 30%;
   display: flex;
+  padding-top: 5rem;
   flex-direction: column;
-  margin: 0 auto;
-  justify-content: center;
-  align-items: center;
+  gap: 1rem;
+}
+.addBookmark-inp{
+  font-size: 1rem;
+  height: 1.75rem;
+}
+label{
+  width: 100%;
+}
+.inp{
+  width: 95%;
+}
+.flex{
+  display: flex;
+  flex-direction: column;
 }
