@@ -14,10 +14,11 @@
   <body>
     <main class="main">
       <nav class="main-nav">
-        <!-- <div class="main-nav-brand">
+        <div class="main-nav-brand">
+          <i class="bi bi-journal-bookmark-fill icon"></i>
           <h1 class="main-nav-brand-text"></h1>
-        </div> -->
-        <div class="main-nav-search">
+        </div>
+        <!-- <div class="main-nav-search">
           <select class="main-nav-search-select select">
             <option value="Google">Google</option>
             <option value="DuckDuckGo">DuckDuckGo</option>
@@ -27,43 +28,73 @@
           <button class="main-nav-search-btn btn">
             <i class="bi bi-search"></i>
           </button>
-        </div>
+        </div> -->
         <ul class="main-nav-icon">
           <li>
-            <i class="bi bi-plus-square addBookmark-btn main-nav-icon-btn"></i>
+            <i
+              class="bi bi-plus-square addBookmark-btn main-nav-icon-btn icon"
+            ></i>
           </li>
           <li>
             <i
-              class="bi bi-pencil-square editBookmarks-btn main-nav-icon-btn"
+              class="bi bi-pencil-square editBookmarks-btn main-nav-icon-btn icon"
             ></i>
           </li>
-          <li><i class="bi bi-gear settings-btn main-nav-icon-btn"></i></li>
+          <li>
+            <i class="bi bi-gear settings-btn main-nav-icon-btn icon"></i>
+          </li>
         </ul>
       </nav>
       <section class="main-section" data-columns="4">
         <div class="addBookmark" data-visible="false">
-          <div class="addBookmark-container">
-            <div>
-              <label for="name">Name</label
-              ><input class="addBookmark-container-name inp" type="text" />
-            </div>
-            <div>
-              <label for="url">URL</label
-              ><input class="addBookmark-container-url inp" type="text" />
-            </div>
-            <div>
-              <label for="groups">Add to Group</label>
-              <select class="addBookmark-container-groups select">
-              </select>
-            </div>
-            <button class="addBookmark-container-btn btn">submit</button>
-          </div>
+          <form class="addBookmark-form" autocomplete="off">
+            <label for="name flex"
+              >Name
+              <input
+                class="addBookmark-form-name addBookmark-inp inp"
+                type="text"
+              />
+            </label>
+            <label for="url"
+              >URL
+              <input
+                class="addBookmark-form-url addBookmark-inp inp"
+                type="text"
+              />
+            </label>
+            <label for="add to group" class="group" data-visible="true"
+              >Add to Group
+              <select
+                class="addBookmark-form-chooseGroup addBookmark-inp inp"
+              ></select>
+            </label>
+            <label for="new group" class="group" data-visible="false"
+              >New Group
+              <input
+                type="text"
+                class="addBookmark-form-newGroup addBookmark-inp inp"
+              />
+            </label>
+            <label for="add new group"
+              >Add new group
+              <input
+                type="checkbox"
+                class="addBookmark-form-checkbox"
+              />
+            </label>
+            <input type="button" class="addBookmark-form-btn-add btn" value="Add">
+            <p>dodaj validacie zeby sie nie dalo kliknac dodaj bez wypelnienia formy</p>
+            <input type="button" class="addBookmark-form-btn-cancel btn" value="Cancel">
+
+            <!-- <div>
+              <button type="button" class="addBookmark-form-btn-add btn">Add</button>
+              <button type="button" class="addBookmark-form-btn-cancel btn">Cancel</button>
+            </div> -->
+          </form>
         </div>
         <div class="editBookmarks" data-visible="false"></div>
         <div class="settings" data-visible="false"></div>
-        <div class="main-section-bookmarks">
-
-        </div>
+        <div class="main-section-bookmarks"></div>
       </section>
       <footer class="main-footer">
         <p class="main-footer-textarea">Some kinde of text :)</p>
