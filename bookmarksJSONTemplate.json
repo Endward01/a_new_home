@@ -1,74 +1,156 @@
 // Bookmarks JSON Tameplate
-
 [
-    {
-      "groups": [
-        {
-          "groupName": "nameOfBookmarkGroup1",
-          "bookmark": [
-            {
-              "name": "nameOfBookmark 1-1",
-              "url": "urlOfBookmark 1-1"
-            },
-            {
-              "name": "nameOfBookmark 1-2",
-              "url": "urlOfBookmark 1-2"
-            },
-            {
-              "name": "nameOfBookmark 1-3",
-              "url": "urlOfBookmark 1-3"
-            },
-            {
-              "name": "nameOfBookmark 1-4",
-              "url": "urlOfBookmark 1-4"
-            },
-            {
-              "name": "nameOfBookmark 1-4",
-              "url": "urlOfBookmark 1-4"
-            },
-            {
-              "name": "nameOfBookmark 1-5",
-              "url": "urlOfBookmark 1-5"
-            }
-          ]
-        },
-        {
-          "groupName": "nameOfBookmarkGroup 2",
-          "bookmark": [
-            {
-              "name": "nameOfBookmark 2-1",
-              "url": "urlOfBookmark 2-1"
-            },
-            {
-              "name": "nameOfBookmark 2-2",
-              "url": "urlOfBookmark 2-2"
-            },
-            {
-              "name": "nameOfBookmark 2-3",
-              "url": "urlOfBookmark 2-3"
-            },
-            {
-              "name": "nameOfBookmark 2-3",
-              "url": "urlOfBookmark 2-3"
-            },
-            {
-              "name": "nameOfBookmark 2-5",
-              "url": "urlOfBookmark 2-4"
-            },
-            {
-              "name": "nameOfBookmark 2-6",
-              "url": "urlOfBookmark 2-6"
-            },
-            {
-              "name": "nameOfBookmark 2-7",
-              "url": "urlOfBookmark 2-7"
-            },
-            {
-              "name": "nameOfBookmark 2-8",
-              "url": "urlOfBookmark 2-8"
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  {
+    "groups": [
+      {
+        "groupName": "nameOfBookmarkGroup1",
+        "bookmark": [
+          {
+            "name": "nameOfBookmark 1-1",
+            "url": "urlOfBookmark 1-1"
+          },
+          {
+            "name": "nameOfBookmark 1-2",
+            "url": "urlOfBookmark 1-2"
+          },
+          {
+            "name": "nameOfBookmark 1-3",
+            "url": "urlOfBookmark 1-3"
+          },
+          {
+            "name": "nameOfBookmark 1-4",
+            "url": "urlOfBookmark 1-4"
+          },
+          {
+            "name": "nameOfBookmark 1-4",
+            "url": "urlOfBookmark 1-4"
+          },
+          {
+            "name": "nameOfBookmark 1-5",
+            "url": "urlOfBookmark 1-5"
+          }
+        ]
+      },
+      {
+        "groupName": "nameOfBookmarkGroup 2",
+        "bookmark": [
+          {
+            "name": "nameOfBookmark 2-1",
+            "url": "urlOfBookmark 2-1"
+          },
+          {
+            "name": "nameOfBookmark 2-2",
+            "url": "urlOfBookmark 2-2"
+          },
+          {
+            "name": "nameOfBookmark 2-3",
+            "url": "urlOfBookmark 2-3"
+          },
+          {
+            "name": "nameOfBookmark 2-4",
+            "url": "urlOfBookmark 2-3"
+          },
+          {
+            "name": "nameOfBookmark 2-5",
+            "url": "urlOfBookmark 2-4"
+          },
+          {
+            "name": "nameOfBookmark 2-6",
+            "url": "urlOfBookmark 2-6"
+          },
+          {
+            "name": "nameOfBookmark 2-7",
+            "url": "urlOfBookmark 2-7"
+          },
+          {
+            "name": "nameOfBookmark 2-8",
+            "url": "urlOfBookmark 2-8"
+          }
+        ]
+      }
+    ]
+  }
+]
+
+
+
+
+
+///////
+bookmarks = [
+  {
+    groups: [
+      {
+        groupName: "nameOfBookmarkGroup1",
+        bookmark: [
+          {
+            name: "nameOfBookmark 1-1",
+            url: "urlOfBookmark 1-1"
+          },
+          {
+            name: "nameOfBookmark 1-2",
+            url: "urlOfBookmark 1-2"
+          },
+          {
+            name: "nameOfBookmark 1-3",
+            url: "urlOfBookmark 1-3"
+          },
+          {
+            name: "nameOfBookmark 1-4",
+            url: "urlOfBookmark 1-4"
+          },
+          {
+            name: "nameOfBookmark 1-4",
+            url: "urlOfBookmark 1-4"
+          },
+          {
+            name: "nameOfBookmark 1-5",
+            url: "urlOfBookmark 1-5"
+          }
+        ]
+      },
+      {
+        groupName: "nameOfBookmarkGroup 2",
+        bookmark: [
+          {
+            name: "nameOfBookmark 2-1",
+            url: "urlOfBookmark 2-1"
+          },
+          {
+            name: "nameOfBookmark 2-2",
+            url: "urlOfBookmark 2-2"
+          },
+          {
+            name: "nameOfBookmark 2-3",
+            url: "urlOfBookmark 2-3"
+          },
+          {
+            name: "nameOfBookmark 2-4",
+            url: "urlOfBookmark 2-4"
+          },
+          {
+            name: "nameOfBookmark 2-5",
+            url: "urlOfBookmark 2-4"
+          },
+          {
+            name: "nameOfBookmark 2-6",
+            url: "urlOfBookmark 2-6"
+          },
+          {
+            name: "nameOfBookmark 2-7",
+            url: "urlOfBookmark 2-7"
+          },
+          {
+            name: "nameOfBookmark 2-8",
+            url: "urlOfBookmark 2-8"
+          }
+        ]
+      }
+    ]
+  }
+]
+
+
+let bookmarksString = JSON.stringify(bookmarks);
+
+localStorage.setItem("Bookmarks", bookmarksString);
