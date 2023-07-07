@@ -1,7 +1,16 @@
 // get bookmarks from localstorage
+if (localStorage.getItem('Bookmarks') !== null) {
+  console.log(`Bookmarks address exists`);
+  let bookmarks = JSON.parse(retString);
+  let retString = localStorage.getItem("Bookmarks");
+  var bookmarksGroups = bookmarks[0].groups;
+} else {
+  console.log(`Bookmarks address not found`);
+
+}
 let retString = localStorage.getItem("Bookmarks");
 let bookmarks = JSON.parse(retString);
-console.log(bookmarks);
+// console.log(bookmarks);
 
 // SELECT EXISTING NODES
 
@@ -27,7 +36,6 @@ const addBookmarkInpName = document.querySelector(".addBookmark-form-name");
 
 //
 
-const bookmarksGroups = bookmarks[0].groups;
 
 // remove child from section
 

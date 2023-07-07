@@ -8,10 +8,19 @@
   "chrome_url_overrides": {
     "newtab": "/index.html"
   },
+  "browser_action": {
+    "default_popup": "tool-bar-popup.html",
+    "default_title": "add current page to bookmarks",
+    "default_icon": {
+      "16": "icons/white-extansion-icon.png",
+      "32": "icons/white-extansion-icon.png"
+    }
+  },
   "content_scripts": [
     {
       "matches": [
-        "*://*.mozilla.org/*"
+        "http://*/*",
+        "https://*/*"
       ],
       "html": [
         "index.js"
