@@ -1,15 +1,35 @@
 // get bookmarks from localstorage
-if (localStorage.getItem('Bookmarks') !== null) {
+if (localStorage.getItem("Bookmarks") !== null) {
   console.log(`Bookmarks address exists`);
-  let bookmarks = JSON.parse(retString);
   let retString = localStorage.getItem("Bookmarks");
+  var bookmarks = JSON.parse(retString);
   var bookmarksGroups = bookmarks[0].groups;
-} else {
-  console.log(`Bookmarks address not found`);
 
+} else {
+  var bookmarks = [
+    {
+      groups: [
+        {
+          groupName: "Informations",
+          bookmark: [
+            {
+              name: "My Github",
+              url: "https://github.com/Endward01"
+            },
+            {
+              name: "My Webpage",
+              url: "https://danielpretki.dev/"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  var bookmarksGroups = bookmarks[0].groups;
+  
 }
-let retString = localStorage.getItem("Bookmarks");
-let bookmarks = JSON.parse(retString);
+// let retString = localStorage.getItem("Bookmarks");
+// let bookmarks = JSON.parse(retString);
 // console.log(bookmarks);
 
 // SELECT EXISTING NODES
@@ -35,7 +55,6 @@ const checkToAddNewGroup = document.querySelectorAll(".group");
 const addBookmarkInpName = document.querySelector(".addBookmark-form-name");
 
 //
-
 
 // remove child from section
 
