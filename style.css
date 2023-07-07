@@ -1,22 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
 
+:root {
+  --first: #eae6da;
+  --second: #f5eddc;
+  --third: #fff7e9;
+  --accent-first: #f68989;
+  --accent-second: #bb6464;
+  --text-color: #19282f;
+}
+
 /* MAIN STYLES */
 * {
   box-sizing: border-box;
 }
 body {
-  background-color: #1e283a;
+  background-color: var(--first);
   max-height: 100%;
   min-height: 100%;
 }
 body * {
   font-family: "Open Sans", sans-serif;
   /* font-family:  sans-serif; */
-  color: #f8fdff;
+  color: var(--text-color);
   overflow: hidden;
 }
 .inp {
-  background-color: #293243;
+  background-color: var(--third);
   border-width: 0.1rem;
   border-style: solid;
   border-color: #f8fdff50;
@@ -24,10 +33,10 @@ body * {
   outline: none;
 }
 .inp:focus {
-  border: 1px orange solid;
+  border: 1px var(--accent-first) solid;
 }
 .btn {
-  background-color: #293243;
+  background-color: var(--third);
   border-width: 0.1rem;
   border-style: solid;
   border-color: #f8fdff50;
@@ -36,7 +45,7 @@ body * {
   cursor: pointer;
 }
 .select {
-  background-color: #293243;
+  background-color: var(--third);
   border: none;
   border-radius: 0.25rem;
   border-width: 0.1rem;
@@ -45,7 +54,7 @@ body * {
   cursor: pointer;
 }
 .main {
-  width: 1440px;
+  width: 100%;
   margin: 0 auto;
   height: 100vh;
   display: flex;
@@ -54,9 +63,8 @@ body * {
 .main-nav {
   width: 100%;
   display: flex;
-
   justify-content: space-between;
-  border-bottom: 1px solid #f8fdff50;
+  border-bottom: 1px solid var(--accent-second);
 }
 .main-nav-brand {
   /* display: flex; */
@@ -124,7 +132,6 @@ body * {
 }
 .main-nav-icon-btn {
   cursor: pointer;
-
   border-radius: 0.25rem;
   animation-duration: 0.5s;
   animation-fill-mode: both;
@@ -133,7 +140,7 @@ body * {
 
 .main-nav-icon-btn:hover,
 .main-section-bookmarks-ul-li-delete:hover {
-  background-color: #171e2c;
+  background-color: var(--accent-first);
 }
 
 .main-section {
@@ -154,7 +161,7 @@ body * {
   max-width: 32%;
   min-width: 32%;
   height: min-content;
-  background-color: #232c3d;
+  background-color: var(--second);
   line-height: 1.5rem;
   border-radius: 0.25rem;
   display: flex;
@@ -176,7 +183,7 @@ body * {
 }
 .main-section-bookmarks-ul-li-a {
   display: block;
-  background-color: #293243;
+  background-color: var(--third);
 
   padding: 0.4rem 0.4rem;
   font-weight: 400;
@@ -195,11 +202,11 @@ body * {
   border-bottom-right-radius: 0.25rem;
 }
 .main-section-bookmarks-ul-li-a:hover {
-  background-color: #171e2c;
+  background-color: var(--accent-first);
   border-radius: 0.25rem;
 }
 .main-section-bookmarks-ul-li-a:active {
-  color: orange;
+  color: var(--accent-first);
   animation-name: rubberBand;
 }
 .main-section-bookmarks-ul-li-btnContainer {
@@ -217,7 +224,7 @@ body * {
 .main-section-bookmarks-ul-li-btnContainer > *,
 .main-section-bookmarks-ul-arrowDiv > * {
   display: block;
-  color: #f8fdff50;
+  color: var(--text-color);
   height: 100%;
   aspect-ratio: 1/1;
   text-align: center;
@@ -226,16 +233,16 @@ body * {
 }
 .main-section-bookmarks-ul-li-btnContainer > *:hover,
 .main-section-bookmarks-ul-arrowDiv > *:hover {
-  background-color: #171e2c;
+  background-color: var(--accent-first);
   border-radius: 0.25rem;
 }
 .main-section-bookmarks-ul-li-btnContainer > *:active,
 .main-section-bookmarks-ul-arrowDiv > *:active {
-  color: orange;
+  /* color: orange; */
   animation-name: rubberBand;
 }
 .main-footer {
-  border-top: 1px solid #f8fdff50;
+  border-top: 1px solid var(--accent-second);
   text-align: center;
 }
 .main-footer-textarea {
@@ -248,7 +255,10 @@ body * {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #1e283a;
+
+  border-radius: 0.25rem;
+  border: 1px solid transparent;
+  background-color: var(--first);
   justify-content: center;
   padding-top: 1rem;
   z-index: 99;
@@ -275,11 +285,12 @@ body * {
 }
 .addBookmark-btn[data-active="false"],
 .editBookmarks-btn[data-active="false"] {
-  color: #f8fdff;
+  color: var(--text-color);
 }
 .addBookmark-btn[data-active="true"],
 .editBookmarks-btn[data-active="true"] {
-  color: orange;
+  /* color: var(--accent-second); */
+  background-color: var(--accent-first);
 }
 .addBookmark-form {
   width: 30%;
@@ -351,7 +362,7 @@ label {
   margin: 0.25rem 0;
   border-radius: 0.25rem;
   padding-left: 0.5rem;
-  background-color: #293243;
+  background-color: var(--third);
   border-width: 1px;
   border-style: solid;
   border-color: #f8fdff50;
@@ -359,7 +370,7 @@ label {
 }
 .isDisabled > div > div > input:focus,
 .isDisabled > div > div > button:focus {
-  border: 1px orange solid;
+  border: 1px var(--accent-first) solid;
 }
 .isDisabled > div > div > button {
   height: 2rem;
@@ -368,9 +379,14 @@ label {
 }
 .isDisabled > div > div > button:active {
   border: 1px orange solid;
-  color: orange;
+  color: var();
 }
 
+@media screen and (min-width: 1440px) {
+  .main {
+    width: 1440px;
+  }
+}
 
 @keyframes rubberBand {
   from {
