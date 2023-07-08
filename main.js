@@ -3,8 +3,6 @@ if (localStorage.getItem("Bookmarks") !== null) {
   console.log(`Bookmarks address exists`);
   let retString = localStorage.getItem("Bookmarks");
   var bookmarks = JSON.parse(retString);
-  var bookmarksGroups = bookmarks[0].groups;
-
 } else {
   var bookmarks = [
     {
@@ -14,20 +12,20 @@ if (localStorage.getItem("Bookmarks") !== null) {
           bookmark: [
             {
               name: "My Github",
-              url: "https://github.com/Endward01"
+              url: "https://github.com/Endward01",
             },
             {
               name: "My Webpage",
-              url: "https://danielpretki.dev/"
-            }
-          ]
-        }
-      ]
-    }
-  ]
-  var bookmarksGroups = bookmarks[0].groups;
-  
+              url: "https://danielpretki.dev/",
+            },
+          ],
+        },
+      ],
+    },
+  ];
 }
+
+
 // let retString = localStorage.getItem("Bookmarks");
 // let bookmarks = JSON.parse(retString);
 // console.log(bookmarks);
@@ -172,7 +170,7 @@ const dataVisibleSwitcher = (elem, position) => {
 //add bookmarks to DOM
 const appendBookmarks = () => {
   removeAllChildNodes(bookmarksSection);
-  bookmarksGroups.forEach((element) => {
+  bookmarks[0].groups.forEach((element) => {
     const ul = document.createElement("ul");
     const p = document.createElement("p");
     const nameDiv = document.createElement("div");
@@ -323,7 +321,7 @@ addBookmarkBtnAdd.addEventListener("click", function getBalue() {
   const newGroup = addBookmarksNewGroup.value;
 
   if (newGroupCheckBox.checked === false) {
-    const position = getPositionGroupName(group, bookmarksGroups);
+    const position = getPositionGroupName(group, bookmarks[0].groups);
     const newBookmark = {
       name: name,
       url: url,
@@ -382,7 +380,7 @@ newGroupCheckBox.addEventListener("change", () => {
 });
 // append groups to select
 const groupSelect = () => {
-  bookmarksGroups.forEach((element) => {
+  bookmarks[0].groups.forEach((element) => {
     const option = document.createElement("option");
     option.textContent = element.groupName;
     option.setAttribute("value", element.groupName);
@@ -421,12 +419,20 @@ const editBookmarksBtnFunc = () => {
       const bookmarksEditDeleteBtn = document.querySelectorAll(
         ".main-section-bookmarks-ul-li-btnContainer"
       );
+      const bookmarkLink =  document.querySelectorAll(".main-section-bookmarks-ul-li-a")
       dataActiveSwitcher(editBookmarksBtn, 1);
       bookmarksEditDeleteBtn.forEach((elem) => {
         if (editBookmarksBtn.attributes[1].value === "true") {
           elem.setAttribute("data-visible", "true");
+          bookmarkLink.forEach((elem)=>{
+            elem.setAttribute("class", "main-section-bookmarks-ul-li-a linkDisabled")
+          })
         } else {
           elem.setAttribute("data-visible", "false");
+          bookmarkLink.forEach((elem)=>{
+            elem.setAttribute("class", "main-section-bookmarks-ul-li-a ")
+          })
+
         }
       });
     });
@@ -448,7 +454,7 @@ const addbookmarkDeleteBtnFunc = () => {
               .childNodes[0].data;
           const groupNamePosition = getPositionGroupName(
             bookmarkGroupName,
-            bookmarksGroups
+            bookmarks[0].groups
           );
 
           const bookmarkName =
@@ -481,7 +487,6 @@ const addbookmarkDeleteBtnFunc = () => {
   });
 };
 //edit bookmark logic
-
 const addbookmarkEditbtnFunc = () => {
   const bookmarkEditBtn = document.querySelectorAll(
     ".main-section-bookmarks-ul-li-btnContainer-edit"
@@ -501,7 +506,7 @@ const addbookmarkEditbtnFunc = () => {
               .childNodes[0].data;
           const groupNamePosition = getPositionGroupName(
             linkGroupName,
-            bookmarksGroups
+            bookmarks[0].groups
           );
 
           const namePosition = getPositionName(
@@ -530,6 +535,8 @@ const addbookmarkEditbtnFunc = () => {
             linkBookmarkElement.appendChild(div1);
             div1.style.height = "80px";
             div1.style.width = "100%";
+            inpName.setAttribute("class", "input")
+            inpUrl.setAttribute("class", "input")
             div2.appendChild(inpName);
             div2.appendChild(inpUrl);
             inpName.setAttribute(
@@ -543,9 +550,9 @@ const addbookmarkEditbtnFunc = () => {
             );
             btnConfirm.setAttribute("value", "Confirm");
             btnCancel.setAttribute("value", "Cancel");
-            btnConfirm.setAttribute("class", "editBookmarks-btn-confirm btn");
+            btnConfirm.setAttribute("class", "editBookmarks-btn-confirm button");
             btnConfirm.setAttribute("type", "button");
-            btnCancel.setAttribute("class", "editBookmarks-btn-cancel btn");
+            btnCancel.setAttribute("class", "editBookmarks-btn-cancel button");
             btnCancel.setAttribute("type", "button");
             div1.appendChild(div2);
             div1.appendChild(div3);
@@ -625,3 +632,10 @@ editBookmarksBtnFunc();
 addbookmarkDeleteBtnFunc();
 addbookmarkEditbtnFunc();
 collExpBookmarksFunc();
+
+
+//
+/// quick add bookmark toolbar 
+//
+  /* color: currentColor; */
+          
