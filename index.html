@@ -47,50 +47,53 @@
       <section class="main-section" data-columns="4">
         <div class="addBookmark" data-visible="false">
           <form class="addBookmark-form" autocomplete="off">
-            <label for="name flex"
+            <label for="name " class="addBookmark-form-label"
               >Name
               <input
-                class="addBookmark-form-name addBookmark-inp inp"
+                class="addBookmark-form-name addBookmark-inp input addBookmark-form-input"
                 type="text" />
             </label>
-            <label for="url"
+            <label for="url" class="addBookmark-form-label"
               >URL
               <input
-                class="addBookmark-form-url addBookmark-inp inp"
+                class="addBookmark-form-url addBookmark-inp input addBookmark-form-input"
                 type="text" />
             </label>
-            <label for="add to group" class="group" data-visible="true"
+            <label
+              for="add to group"
+              class="group addBookmark-form-label"
+              data-visible="true"
               >Add to Group
               <select
-                class="addBookmark-form-chooseGroup addBookmark-inp inp"></select>
+                class="addBookmark-form-chooseGroup addBookmark-inp input addBookmark-form-input"></select>
             </label>
-            <label for="new group" class="group" data-visible="false"
+            <label
+              for="new group"
+              class="group addBookmark-form-label"
+              data-visible="false"
               >New Group
               <input
                 type="text"
-                class="addBookmark-form-newGroup addBookmark-inp inp" />
+                class="addBookmark-form-newGroup addBookmark-inp input addBookmark-form-input" />
             </label>
-            <label for="add new group"
+            <label for="add new group" class="addBookmark-form-label"
               >Add new group
               <input type="checkbox" class="addBookmark-form-checkbox" />
             </label>
-            <input
-              type="button"
-              class="addBookmark-form-btn-add btn"
-              value="Add" />
+            <div class="addBookmkar-form-btnContainer">
+              <input
+                type="button"
+                class="addBookmark-form-btn-add button addBookmark-form-input addBookmark-form-btn"
+                value="Add" />
+              <input
+                type="button"
+                class="addBookmark-form-btn-cancel button addBookmark-form-input addBookmark-form-btn"
+                value="Cancel" />
+            </div>
             <p>
               dodaj validacie zeby sie nie dalo kliknac dodaj bez wypelnienia
               formy
             </p>
-            <input
-              type="button"
-              class="addBookmark-form-btn-cancel btn"
-              value="Cancel" />
-
-            <!-- <div>
-              <button type="button" class="addBookmark-form-btn-add btn">Add</button>
-              <button type="button" class="addBookmark-form-btn-cancel btn">Cancel</button>
-            </div> -->
           </form>
         </div>
         <!-- <div class="editBookmarks" data-visible="false"></div> -->
