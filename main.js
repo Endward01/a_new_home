@@ -678,44 +678,39 @@ const addbookmarkEditbtnFunc = () => {
 };
 
 // drag and drop
-const elementToDrag = document.querySelectorAll(".main-section-bookmarks-ul");
-elementToDrag.forEach((elem) => {
-  elem.addEventListener(
-    "dragenter",
-    () => {
-      console.log("dragenter");
-    },
-    false
-  );
-  elem.addEventListener(
-    "drag",
-    () => {
-      console.log("drag");
-    },
-    false
-  );
-  elem.addEventListener(
-    "dragleave",
-    () => {
-      console.log("dragleave");
-    },
-    false
-  );
-  elem.addEventListener(
-    "dragover",
-    () => {
-      console.log("dragover");
-    },
-    false
-  );
-  elem.addEventListener(
-    "dragstart",
-    () => {
-      console.log("dragstart");
-    },
-    false
-  );
-});
+const elementToDrag = document.querySelectorAll(
+  ".main-section-bookmarks-ul-li"
+);
+function arraymove(arr, fromIndex, toIndex) {
+  var element = arr[fromIndex];
+  arr.splice(fromIndex, 1);
+  arr.splice(toIndex, 0, element);
+}
+
+const dragAndDropFunction = () => {
+  let elemToMove;
+  let elemToMoveBefore;
+  let parent;
+
+  elementToDrag.forEach((elem) => {
+    elem.addEventListener("dragend", (element) => {
+      parent.insertBefore(elemToMove, elemToMoveBefore);
+      elemToMove.classList.remove("elementToDrag");
+    });
+    elem.addEventListener("dragover", (element) => {
+      elemToMoveBefore = element.target.parentNode;
+      parent.insertBefore(elemToMove, elemToMoveBefore);
+    });
+    elem.addEventListener("dragenter", (element) => {});
+    elem.addEventListener("dragleave", (element) => {});
+    elem.addEventListener("dragstart", (element) => {
+      parent = element.target.parentNode.parentNode;
+      elemToMove = element.target.parentNode;
+      elemToMove.classList.add("elementToDrag");
+    });
+  });
+};
+dragAndDropFunction();
 
 editBookmarksBtnFunc();
 addbookmarkDeleteBtnFunc();

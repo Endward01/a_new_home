@@ -24,6 +24,10 @@ body * {
   color: var(--text-color);
   overflow: hidden;
 }
+.elementToDrag{
+  border: 1px solid var(--accent-second);
+  border-radius: .25rem;
+}
 
 .main {
   width: 100%;
