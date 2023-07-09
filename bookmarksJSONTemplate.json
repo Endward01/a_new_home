@@ -71,17 +71,13 @@
     ]
   }
 ]
-
-
-
-
-
 ///////
 bookmarks = [
   {
     groups: [
       {
         groupName: "nameOfBookmarkGroup1",
+        collapsed: "false",
         bookmark: [
           {
             name: "nameOfBookmark 1-1",
@@ -111,6 +107,7 @@ bookmarks = [
       },
       {
         groupName: "nameOfBookmarkGroup 2",
+        collapsed: "true",
         bookmark: [
           {
             name: "nameOfBookmark 2-1",
