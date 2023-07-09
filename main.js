@@ -24,7 +24,7 @@ if (localStorage.getItem("Bookmarks") !== null) {
     },
   ];
 }
-
+console.log(bookmarks);
 
 // let retString = localStorage.getItem("Bookmarks");
 // let bookmarks = JSON.parse(retString);
@@ -110,6 +110,7 @@ const createNewGroupElement = (name, url, groupName) => {
   arrowDiv.setAttribute("class", "main-section-bookmarks-ul-arrowDiv");
   iUp.setAttribute("class", "bi bi-caret-up main-section-bookmarks-ul-arrowUp");
   iUp.setAttribute("data-visible", "true");
+  ul.setAttribute("data-collapsed", "false");
   iDown.setAttribute(
     "class",
     "bi bi-caret-down main-section-bookmarks-ul-arrowDown"
@@ -180,17 +181,32 @@ const appendBookmarks = () => {
     p.textContent = element.groupName;
     nameDiv.setAttribute("class", "main-section-bookmarks-ul-title");
     arrowDiv.setAttribute("class", "main-section-bookmarks-ul-arrowDiv");
-    iUp.setAttribute(
-      "class",
-      "bi bi-caret-up main-section-bookmarks-ul-arrowUp"
-    );
-    iUp.setAttribute("data-visible", "true");
-    iDown.setAttribute(
-      "class",
-      "bi bi-caret-down main-section-bookmarks-ul-arrowDown"
-    );
-    iDown.setAttribute("data-visible", "false");
+    if (element.collapsed === "true") {
+      iDown.setAttribute(
+        "class",
+        "bi bi-caret-down main-section-bookmarks-ul-arrowDown"
+      );
+      iDown.setAttribute("data-visible", "true");
+      iUp.setAttribute(
+        "class",
+        "bi bi-caret-up main-section-bookmarks-ul-arrowUp"
+      );
+      iUp.setAttribute("data-visible", "false");
+    } else {
+      iDown.setAttribute(
+        "class",
+        "bi bi-caret-down main-section-bookmarks-ul-arrowDown"
+      );
+      iDown.setAttribute("data-visible", "false");
+      iUp.setAttribute(
+        "class",
+        "bi bi-caret-up main-section-bookmarks-ul-arrowUp"
+      );
+      iUp.setAttribute("data-visible", "true");
+    }
     ul.setAttribute("class", "main-section-bookmarks-ul");
+    ul.setAttribute("data-collapsed", element.collapsed);
+    // ul.setAttribute("draggable","true")
     bookmarksSection.appendChild(ul);
     ul.appendChild(nameDiv);
     nameDiv.appendChild(p);
@@ -244,17 +260,17 @@ appendBookmarks();
 const bookmarkEditBtn = document.querySelectorAll(
   ".main-section-bookmarks-ul-li-btnContainer-edit"
 );
-const collapseArrowUp = document.querySelectorAll(
-  ".main-section-bookmarks-ul-arrowUp"
-);
-const expandArrowDown = document.querySelectorAll(
-  ".main-section-bookmarks-ul-arrowDown"
-);
 
 //
 
 // collapse /expand bookmarks in group
 const collExpBookmarksFunc = () => {
+  const collapseArrowUp = document.querySelectorAll(
+    ".main-section-bookmarks-ul-arrowUp"
+  );
+  const expandArrowDown = document.querySelectorAll(
+    ".main-section-bookmarks-ul-arrowDown"
+  );
   collapseArrowUp.forEach((element) => {
     if (element.getAttribute("listener") !== "true") {
       element.setAttribute("listener", "true");
@@ -262,12 +278,24 @@ const collExpBookmarksFunc = () => {
         "click",
         function () {
           const div = this.parentNode.parentNode.parentNode.childNodes;
-          for (let index = 1; index < div.length; index++) {
-            div[index].setAttribute("data-visible", "false");
-          }
+          // for (let index = 1; index < div.length; index++) {
+          //   div[index].setAttribute("data-visible", "false");
+          // }
           this.parentNode.childNodes.forEach((element) => {
             dataVisibleSwitcher(element, 1);
           });
+          const positionInArry = getPositionGroupName(
+            element.parentNode.parentNode.parentNode.childNodes[0].childNodes[0]
+              .childNodes[0].data,
+            bookmarks[0].groups
+          );
+          bookmarks[0].groups[positionInArry].collapsed = "true";
+          element.parentNode.parentNode.parentNode.setAttribute(
+            "data-collapsed",
+            "true"
+          );
+          let bookmarksString = JSON.stringify(bookmarks);
+          localStorage.setItem("Bookmarks", bookmarksString);
         },
         false
       );
@@ -280,12 +308,25 @@ const collExpBookmarksFunc = () => {
         "click",
         function () {
           const div = this.parentNode.parentNode.parentNode.childNodes;
-          for (let index = 1; index < div.length; index++) {
-            div[index].setAttribute("data-visible", "");
-          }
+          // for (let index = 1; index < div.length; index++) {
+          //   div[index].setAttribute("data-visible", "");
+          // }
           this.parentNode.childNodes.forEach((element) => {
             dataVisibleSwitcher(element, 1);
           });
+
+          const positionInArry = getPositionGroupName(
+            element.parentNode.parentNode.parentNode.childNodes[0].childNodes[0]
+              .childNodes[0].data,
+            bookmarks[0].groups
+          );
+          bookmarks[0].groups[positionInArry].collapsed = "false";
+          element.parentNode.parentNode.parentNode.setAttribute(
+            "data-collapsed",
+            "false"
+          );
+          let bookmarksString = JSON.stringify(bookmarks);
+          localStorage.setItem("Bookmarks", bookmarksString);
         },
         false
       );
@@ -378,6 +419,7 @@ newGroupCheckBox.addEventListener("change", () => {
     }
   });
 });
+
 // append groups to select
 const groupSelect = () => {
   bookmarks[0].groups.forEach((element) => {
@@ -419,20 +461,24 @@ const editBookmarksBtnFunc = () => {
       const bookmarksEditDeleteBtn = document.querySelectorAll(
         ".main-section-bookmarks-ul-li-btnContainer"
       );
-      const bookmarkLink =  document.querySelectorAll(".main-section-bookmarks-ul-li-a")
+      const bookmarkLink = document.querySelectorAll(
+        ".main-section-bookmarks-ul-li-a"
+      );
       dataActiveSwitcher(editBookmarksBtn, 1);
       bookmarksEditDeleteBtn.forEach((elem) => {
         if (editBookmarksBtn.attributes[1].value === "true") {
           elem.setAttribute("data-visible", "true");
-          bookmarkLink.forEach((elem)=>{
-            elem.setAttribute("class", "main-section-bookmarks-ul-li-a linkDisabled")
-          })
+          bookmarkLink.forEach((elem) => {
+            elem.setAttribute(
+              "class",
+              "main-section-bookmarks-ul-li-a linkDisabled"
+            );
+          });
         } else {
           elem.setAttribute("data-visible", "false");
-          bookmarkLink.forEach((elem)=>{
-            elem.setAttribute("class", "main-section-bookmarks-ul-li-a ")
-          })
-
+          bookmarkLink.forEach((elem) => {
+            elem.setAttribute("class", "main-section-bookmarks-ul-li-a ");
+          });
         }
       });
     });
@@ -535,8 +581,8 @@ const addbookmarkEditbtnFunc = () => {
             linkBookmarkElement.appendChild(div1);
             div1.style.height = "80px";
             div1.style.width = "100%";
-            inpName.setAttribute("class", "input")
-            inpUrl.setAttribute("class", "input")
+            inpName.setAttribute("class", "input");
+            inpUrl.setAttribute("class", "input");
             div2.appendChild(inpName);
             div2.appendChild(inpUrl);
             inpName.setAttribute(
@@ -550,7 +596,10 @@ const addbookmarkEditbtnFunc = () => {
             );
             btnConfirm.setAttribute("value", "Confirm");
             btnCancel.setAttribute("value", "Cancel");
-            btnConfirm.setAttribute("class", "editBookmarks-btn-confirm button");
+            btnConfirm.setAttribute(
+              "class",
+              "editBookmarks-btn-confirm button"
+            );
             btnConfirm.setAttribute("type", "button");
             btnCancel.setAttribute("class", "editBookmarks-btn-cancel button");
             btnCancel.setAttribute("type", "button");
@@ -628,14 +677,52 @@ const addbookmarkEditbtnFunc = () => {
   });
 };
 
+// drag and drop
+const elementToDrag = document.querySelectorAll(".main-section-bookmarks-ul");
+elementToDrag.forEach((elem) => {
+  elem.addEventListener(
+    "dragenter",
+    () => {
+      console.log("dragenter");
+    },
+    false
+  );
+  elem.addEventListener(
+    "drag",
+    () => {
+      console.log("drag");
+    },
+    false
+  );
+  elem.addEventListener(
+    "dragleave",
+    () => {
+      console.log("dragleave");
+    },
+    false
+  );
+  elem.addEventListener(
+    "dragover",
+    () => {
+      console.log("dragover");
+    },
+    false
+  );
+  elem.addEventListener(
+    "dragstart",
+    () => {
+      console.log("dragstart");
+    },
+    false
+  );
+});
+
 editBookmarksBtnFunc();
 addbookmarkDeleteBtnFunc();
 addbookmarkEditbtnFunc();
 collExpBookmarksFunc();
 
-
 //
-/// quick add bookmark toolbar 
+/// quick add bookmark toolbar
 //
-  /* color: currentColor; */
-          
+/* color: currentColor; */
