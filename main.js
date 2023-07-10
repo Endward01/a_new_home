@@ -3,6 +3,7 @@ if (localStorage.getItem("Bookmarks") !== null) {
   console.log(`Bookmarks address exists`);
   let retString = localStorage.getItem("Bookmarks");
   var bookmarks = JSON.parse(retString);
+  console.log(bookmarks);
 } else {
   var bookmarks = [
     {
@@ -24,16 +25,14 @@ if (localStorage.getItem("Bookmarks") !== null) {
     },
   ];
 }
-console.log(bookmarks);
 
 // let retString = localStorage.getItem("Bookmarks");
 // let bookmarks = JSON.parse(retString);
-// console.log(bookmarks);
 
 // SELECT EXISTING NODES
 
 const body = document.querySelector("body");
-const bookmarksSection = document.querySelector(".main-section-bookmarks");
+
 const editBookmarksBtn = document.querySelector(".editBookmarks-btn");
 const addBookmark = document.querySelector(".addBookmark");
 const addShowBookmark = document.querySelector(".addBookmark-btn");
@@ -49,108 +48,155 @@ const newGroupCheckBox = document.querySelector(".addBookmark-form-checkbox");
 const addBookmarksNewGroup = document.querySelector(
   ".addBookmark-form-newGroup"
 );
-const checkToAddNewGroup = document.querySelectorAll(".group");
+const checkToAddNewGroup = document.querySelectorAll(".addCreateNewGroup");
 const addBookmarkInpName = document.querySelector(".addBookmark-form-name");
 
 //
 
-// remove child from section
-
-const removeAllChildNodes = (e) => {
-  while (e.firstChild) {
-    e.removeChild(e.firstChild);
+const createBookmarkGroup = (array, name, url, newGroup) => {
+  if (array !== null) {
+    array.forEach((element) => {
+      const bookmarksSection = document.querySelector(
+        ".main-section-bookmarks"
+      );
+      const divFirst = document.createElement("div");
+      divFirst.classList.add("main-section-bookmarks-group");
+      divFirst.setAttribute("data-collapsed", "false");
+      bookmarksSection.appendChild(divFirst);
+      const divSecond = document.createElement("div");
+      divFirst.append(divSecond);
+      const h2 = document.createElement("h2");
+      h2.textContent = element.groupName;
+      h2.classList.add("main-section-bookmarks-group-title");
+      divSecond.appendChild(h2);
+      const divThird = document.createElement("div");
+      divThird.classList.add("main-section-bookmarks-group-icons");
+      divSecond.appendChild(divThird);
+      const iEdit = document.createElement("i");
+      const iUp = document.createElement("i");
+      const iDown = document.createElement("i");
+      iEdit.classList.add("fa-solid", "fa-pencil");
+      iEdit.setAttribute("data-visible", "false");
+      if (element.collapsed === "true") {
+        iDown.classList.add("fa-solid", "fa-angle-down");
+        iDown.setAttribute("data-visible", "true");
+        iUp.classList.add("fa-solid", "fa-angle-up");
+        iUp.setAttribute("data-visible", "false");
+      } else {
+        iDown.classList.add("fa-solid", "fa-angle-down");
+        iDown.setAttribute("data-visible", "false");
+        iUp.classList.add("fa-solid", "fa-angle-up");
+        iUp.setAttribute("data-visible", "true");
+      }
+      divThird.appendChild(iEdit);
+      divThird.appendChild(iUp);
+      divThird.appendChild(iDown);
+      const ul = document.createElement("ul");
+      ul.classList.add("main-section-bookmarks-ul");
+      ul.setAttribute("data-collapsed", element.collapsed);
+      divFirst.appendChild(ul);
+      createBookmarkLink(element, ul);
+    });
+  } else {
+    const bookmarksSection = document.querySelector(".main-section-bookmarks");
+    const divFirst = document.createElement("div");
+    divFirst.classList.add("main-section-bookmarks-group");
+    divFirst.setAttribute("data-collapsed", "false");
+    bookmarksSection.appendChild(divFirst);
+    const divSecond = document.createElement("div");
+    divFirst.append(divSecond);
+    const h2 = document.createElement("h2");
+    h2.textContent = newGroup;
+    h2.classList.add("main-section-bookmarks-group-title");
+    divSecond.appendChild(h2);
+    const divThird = document.createElement("div");
+    divThird.classList.add("main-section-bookmarks-group-icons");
+    divSecond.appendChild(divThird);
+    const iEdit = document.createElement("i");
+    const iUp = document.createElement("i");
+    const iDown = document.createElement("i");
+    iEdit.classList.add("fa-solid", "fa-pencil");
+    iEdit.setAttribute("data-visible", "false");
+    iDown.classList.add("fa-solid", "fa-angle-down");
+    iDown.setAttribute("data-visible", "false");
+    iUp.classList.add("fa-solid", "fa-angle-up");
+    iUp.setAttribute("data-visible", "true");
+    divThird.appendChild(iEdit);
+    divThird.appendChild(iUp);
+    divThird.appendChild(iDown);
+    const ul = document.createElement("ul");
+    ul.classList.add("main-section-bookmarks-ul");
+    ul.setAttribute("data-collapsed", "false");
+    divFirst.appendChild(ul);
+    createBookmarkLink(null, ul, name, url);
   }
 };
+const createBookmarkLink = (array, parent, name, url) => {
+  if (array !== null) {
+    array.bookmark.forEach((element) => {
+      const li = document.createElement("li");
+      li.classList.add("main-section-bookmarks-ul-li");
+      parent.appendChild(li);
+      const a = document.createElement("a");
+      a.textContent = element.name;
+      a.setAttribute("href", element.url);
+      a.classList.add("main-section-bookmarks-ul-li-link");
+      a.setAttribute("target", "_blank");
+      li.appendChild(a);
+      const btnDiv = document.createElement("div");
+      btnDiv.classList.add("main-section-bookmarks-ul-li-icons");
+      li.appendChild(btnDiv);
+      const iconDelete = document.createElement("i");
+      const iconEdit = document.createElement("i");
+      if (editBookmarksBtn.attributes[1].value === "true") {
+        btnDiv.setAttribute("data-visible", "true");
+      } else {
+        btnDiv.setAttribute("data-visible", "false");
+      }
+      iconEdit.classList.add("fa-solid", "fa-pencil");
+      iconDelete.classList.add("fa-solid", "fa-xmark");
+      btnDiv.appendChild(iconEdit);
+      btnDiv.appendChild(iconDelete);
+    });
+  } else {
+    const li = document.createElement("li");
+    li.classList.add("main-section-bookmarks-ul-li");
+    parent.appendChild(li);
+    const a = document.createElement("a");
+    a.textContent = name;
+    a.setAttribute("href", url);
+    a.classList.add("main-section-bookmarks-ul-li-link");
+    a.setAttribute("target", "_blank");
+    li.appendChild(a);
+    const btnDiv = document.createElement("div");
+    btnDiv.classList.add("main-section-bookmarks-ul-li-icons");
+    li.appendChild(btnDiv);
+    const iconDelete = document.createElement("i");
+    const iconEdit = document.createElement("i");
+    if (editBookmarksBtn.attributes[1].value === "true") {
+      btnDiv.setAttribute("data-visible", "true");
+    } else {
+      btnDiv.setAttribute("data-visible", "false");
+    }
+    iconEdit.classList.add("fa-solid", "fa-pencil");
+    iconDelete.classList.add("fa-solid", "fa-xmark");
+    btnDiv.appendChild(iconEdit);
+    btnDiv.appendChild(iconDelete);
+  }
+};
+
+//Draw bookmarks from localstorage to body
+
+createBookmarkGroup(bookmarks[0].groups);
+
+// remove child from section
+
 //find element by text in main-section-bookmarks
 const getElementsByText = (string, tag) => {
+  const bookmarksSection = document.querySelector(".main-section-bookmarks");
   return Array.prototype.slice
     .call(bookmarksSection.getElementsByTagName(tag))
     .filter((el) => el.textContent.trim() === string.trim());
-};
-//create new bookmark
-const createNewElement = (parent, name, url) => {
-  const li = document.createElement("li");
-  const a = document.createElement("a");
-  const btnDiv = document.createElement("div");
-  const iconDelete = document.createElement("i");
-  const iconEdit = document.createElement("i");
-  a.textContent = name;
-  a.setAttribute("href", url);
-  a.setAttribute("class", "main-section-bookmarks-ul-li-a");
-  a.setAttribute("target", "_blank");
-  btnDiv.setAttribute("class", "main-section-bookmarks-ul-li-btnContainer");
-
-  btnDiv.setAttribute("data-visible", "false");
-
-  iconEdit.setAttribute(
-    "class",
-    "bi bi-pencil main-section-bookmarks-ul-li-btnContainer-edit"
-  );
-  iconDelete.setAttribute(
-    "class",
-    "bi bi-x-lg main-section-bookmarks-ul-li-btnContainer-delete"
-  );
-  li.setAttribute("class", "main-section-bookmarks-ul-li");
-  parent.appendChild(li);
-  li.appendChild(a);
-  li.appendChild(btnDiv);
-  btnDiv.appendChild(iconEdit);
-  btnDiv.appendChild(iconDelete);
-};
-//create new group bookmark
-const createNewGroupElement = (name, url, groupName) => {
-  const ul = document.createElement("ul");
-  const p = document.createElement("p");
-  const nameDiv = document.createElement("div");
-  const arrowDiv = document.createElement("div");
-  const iUp = document.createElement("i");
-  const iDown = document.createElement("i");
-  p.textContent = groupName;
-  nameDiv.setAttribute("class", "main-section-bookmarks-ul-title");
-  arrowDiv.setAttribute("class", "main-section-bookmarks-ul-arrowDiv");
-  iUp.setAttribute("class", "bi bi-caret-up main-section-bookmarks-ul-arrowUp");
-  iUp.setAttribute("data-visible", "true");
-  ul.setAttribute("data-collapsed", "false");
-  iDown.setAttribute(
-    "class",
-    "bi bi-caret-down main-section-bookmarks-ul-arrowDown"
-  );
-  iDown.setAttribute("data-visible", "false");
-  ul.setAttribute("class", "main-section-bookmarks-ul");
-  bookmarksSection.appendChild(ul);
-  ul.appendChild(nameDiv);
-  nameDiv.appendChild(p);
-  nameDiv.appendChild(arrowDiv);
-  arrowDiv.appendChild(iUp);
-  arrowDiv.appendChild(iDown);
-
-  const li = document.createElement("li");
-  const a = document.createElement("a");
-  const btnDiv = document.createElement("div");
-  const iconDelete = document.createElement("i");
-  const iconEdit = document.createElement("i");
-  a.textContent = name;
-  a.setAttribute("href", url);
-  a.setAttribute("class", "main-section-bookmarks-ul-li-a");
-  a.setAttribute("target", "_blank");
-  btnDiv.setAttribute("class", "main-section-bookmarks-ul-li-btnContainer");
-
-  btnDiv.setAttribute("data-visible", "false");
-
-  iconEdit.setAttribute(
-    "class",
-    "bi bi-pencil main-section-bookmarks-ul-li-btnContainer-edit"
-  );
-  iconDelete.setAttribute(
-    "class",
-    "bi bi-x-lg main-section-bookmarks-ul-li-btnContainer-delete"
-  );
-  li.setAttribute("class", "main-section-bookmarks-ul-li");
-  ul.appendChild(li);
-  li.appendChild(a);
-  li.appendChild(btnDiv);
-  btnDiv.appendChild(iconEdit);
-  btnDiv.appendChild(iconDelete);
 };
 
 const dataActiveSwitcher = (elem, position) => {
@@ -168,95 +214,8 @@ const dataVisibleSwitcher = (elem, position) => {
   }
 };
 
-//add bookmarks to DOM
-const appendBookmarks = () => {
-  removeAllChildNodes(bookmarksSection);
-  bookmarks[0].groups.forEach((element) => {
-    const ul = document.createElement("ul");
-    const p = document.createElement("p");
-    const nameDiv = document.createElement("div");
-    const arrowDiv = document.createElement("div");
-    const iUp = document.createElement("i");
-    const iDown = document.createElement("i");
-    p.textContent = element.groupName;
-    nameDiv.setAttribute("class", "main-section-bookmarks-ul-title");
-    arrowDiv.setAttribute("class", "main-section-bookmarks-ul-arrowDiv");
-    if (element.collapsed === "true") {
-      iDown.setAttribute(
-        "class",
-        "bi bi-caret-down main-section-bookmarks-ul-arrowDown"
-      );
-      iDown.setAttribute("data-visible", "true");
-      iUp.setAttribute(
-        "class",
-        "bi bi-caret-up main-section-bookmarks-ul-arrowUp"
-      );
-      iUp.setAttribute("data-visible", "false");
-    } else {
-      iDown.setAttribute(
-        "class",
-        "bi bi-caret-down main-section-bookmarks-ul-arrowDown"
-      );
-      iDown.setAttribute("data-visible", "false");
-      iUp.setAttribute(
-        "class",
-        "bi bi-caret-up main-section-bookmarks-ul-arrowUp"
-      );
-      iUp.setAttribute("data-visible", "true");
-    }
-    ul.setAttribute("class", "main-section-bookmarks-ul");
-    ul.setAttribute("data-collapsed", element.collapsed);
-    // ul.setAttribute("draggable","true")
-    bookmarksSection.appendChild(ul);
-    ul.appendChild(nameDiv);
-    nameDiv.appendChild(p);
-    nameDiv.appendChild(arrowDiv);
-    arrowDiv.appendChild(iUp);
-    arrowDiv.appendChild(iDown);
-    const groupName = element.bookmark;
-    groupName.forEach((element) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      const btnDiv = document.createElement("div");
-      const iconDelete = document.createElement("i");
-      const iconEdit = document.createElement("i");
-      a.textContent = element.name;
-      a.setAttribute("href", element.url);
-      a.setAttribute("class", "main-section-bookmarks-ul-li-a");
-      a.setAttribute("target", "_blank");
-      btnDiv.setAttribute("class", "main-section-bookmarks-ul-li-btnContainer");
-      if (editBookmarksBtn.attributes[1].value === "true") {
-        btnDiv.setAttribute("data-visible", "true");
-      } else {
-        btnDiv.setAttribute("data-visible", "false");
-      }
-      iconEdit.setAttribute(
-        "class",
-        "bi bi-pencil main-section-bookmarks-ul-li-btnContainer-edit"
-      );
-      iconDelete.setAttribute(
-        "class",
-        "bi bi-x-lg main-section-bookmarks-ul-li-btnContainer-delete"
-      );
-      li.setAttribute("class", "main-section-bookmarks-ul-li");
-      ul.appendChild(li);
-      li.appendChild(a);
-      li.appendChild(btnDiv);
-      btnDiv.appendChild(iconEdit);
-      btnDiv.appendChild(iconDelete);
-    });
-  });
-};
-appendBookmarks();
-
 // SELECT NODES
 
-// const bookmarksEditDeleteBtn = document.querySelectorAll(
-//   ".main-section-bookmarks-ul-li-btnContainer"
-// );
-// const bookmarkDeleteBtn = document.querySelectorAll(
-//   ".main-section-bookmarks-ul-li-btnContainer-delete"
-// );
 const bookmarkEditBtn = document.querySelectorAll(
   ".main-section-bookmarks-ul-li-btnContainer-edit"
 );
@@ -265,72 +224,72 @@ const bookmarkEditBtn = document.querySelectorAll(
 
 // collapse /expand bookmarks in group
 const collExpBookmarksFunc = () => {
-  const collapseArrowUp = document.querySelectorAll(
-    ".main-section-bookmarks-ul-arrowUp"
+  const arrowDiv = document.querySelectorAll(
+    ".main-section-bookmarks-group-icons"
   );
-  const expandArrowDown = document.querySelectorAll(
-    ".main-section-bookmarks-ul-arrowDown"
-  );
-  collapseArrowUp.forEach((element) => {
-    if (element.getAttribute("listener") !== "true") {
-      element.setAttribute("listener", "true");
-      element.addEventListener(
-        "click",
-        function () {
-          const div = this.parentNode.parentNode.parentNode.childNodes;
-          // for (let index = 1; index < div.length; index++) {
-          //   div[index].setAttribute("data-visible", "false");
-          // }
-          this.parentNode.childNodes.forEach((element) => {
-            dataVisibleSwitcher(element, 1);
-          });
-          const positionInArry = getPositionGroupName(
-            element.parentNode.parentNode.parentNode.childNodes[0].childNodes[0]
-              .childNodes[0].data,
-            bookmarks[0].groups
-          );
-          bookmarks[0].groups[positionInArry].collapsed = "true";
-          element.parentNode.parentNode.parentNode.setAttribute(
-            "data-collapsed",
-            "true"
-          );
-          let bookmarksString = JSON.stringify(bookmarks);
-          localStorage.setItem("Bookmarks", bookmarksString);
-        },
-        false
-      );
-    }
-  });
-  expandArrowDown.forEach((element) => {
-    if (element.getAttribute("listener") !== "true") {
-      element.setAttribute("listener", "true");
-      element.addEventListener(
-        "click",
-        function () {
-          const div = this.parentNode.parentNode.parentNode.childNodes;
-          // for (let index = 1; index < div.length; index++) {
-          //   div[index].setAttribute("data-visible", "");
-          // }
-          this.parentNode.childNodes.forEach((element) => {
-            dataVisibleSwitcher(element, 1);
-          });
-
-          const positionInArry = getPositionGroupName(
-            element.parentNode.parentNode.parentNode.childNodes[0].childNodes[0]
-              .childNodes[0].data,
-            bookmarks[0].groups
-          );
-          bookmarks[0].groups[positionInArry].collapsed = "false";
-          element.parentNode.parentNode.parentNode.setAttribute(
-            "data-collapsed",
-            "false"
-          );
-          let bookmarksString = JSON.stringify(bookmarks);
-          localStorage.setItem("Bookmarks", bookmarksString);
-        },
-        false
-      );
-    }
+  arrowDiv.forEach((element) => {
+    const arrowUp = element.querySelectorAll(".fa-angle-up");
+    arrowUp.forEach((element) => {
+      if (element.getAttribute("listener") !== "true") {
+        element.setAttribute("listener", "true");
+        element.addEventListener(
+          "click",
+          function () {
+            for (
+              let index = 1;
+              index < this.parentNode.childNodes.length;
+              index++
+            ) {
+              dataVisibleSwitcher(this.parentNode.childNodes[index], 1);
+            }
+            const positionInArry = getPositionGroupName(
+              element.parentNode.parentNode.parentNode.childNodes[0]
+                .childNodes[0].childNodes[0].data,
+              bookmarks[0].groups
+            );
+            bookmarks[0].groups[positionInArry].collapsed = "true";
+            element.parentNode.parentNode.parentNode.childNodes[1].setAttribute(
+              "data-collapsed",
+              "true"
+            );
+            let bookmarksString = JSON.stringify(bookmarks);
+            localStorage.setItem("Bookmarks", bookmarksString);
+          },
+          false
+        );
+      }
+    });
+    const arrowDown = element.querySelectorAll(".fa-angle-down");
+    arrowDown.forEach((element) => {
+      if (element.getAttribute("listener") !== "true") {
+        element.setAttribute("listener", "true");
+        element.addEventListener(
+          "click",
+          function () {
+            for (
+              let index = 1;
+              index < this.parentNode.childNodes.length;
+              index++
+            ) {
+              dataVisibleSwitcher(this.parentNode.childNodes[index], 1);
+            }
+            const positionInArry = getPositionGroupName(
+              element.parentNode.parentNode.parentNode.childNodes[0]
+                .childNodes[0].childNodes[0].data,
+              bookmarks[0].groups
+            );
+            bookmarks[0].groups[positionInArry].collapsed = "false";
+            element.parentNode.parentNode.parentNode.childNodes[1].setAttribute(
+              "data-collapsed",
+              "false"
+            );
+            let bookmarksString = JSON.stringify(bookmarks);
+            localStorage.setItem("Bookmarks", bookmarksString);
+          },
+          false
+        );
+      }
+    });
   });
 };
 //
@@ -361,7 +320,7 @@ addBookmarkBtnAdd.addEventListener("click", function getBalue() {
   const group = addBookmarkSelectGroup.value;
   const newGroup = addBookmarksNewGroup.value;
 
-  if (newGroupCheckBox.checked === false) {
+  if (newGroupCheckBox.checked !== true) {
     const position = getPositionGroupName(group, bookmarks[0].groups);
     const newBookmark = {
       name: name,
@@ -371,9 +330,11 @@ addBookmarkBtnAdd.addEventListener("click", function getBalue() {
     arrBookmark.push(newBookmark);
     let bookmarksString = JSON.stringify(bookmarks);
     localStorage.setItem("Bookmarks", bookmarksString);
-    const findElement = getElementsByText(group, "p");
-    const parentNodeToAppend = findElement[0].parentNode.parentNode;
-    createNewElement(parentNodeToAppend, name, url);
+    const findElement = getElementsByText(group, "h2");
+    const parentNodeToAppend =
+      findElement[0].parentNode.parentNode.childNodes[1];
+    // createNewElement(parentNodeToAppend, name, url);
+    createBookmarkLink(null, parentNodeToAppend, name, url);
   } else {
     const newBookmark = {
       groupName: newGroup,
@@ -389,18 +350,17 @@ addBookmarkBtnAdd.addEventListener("click", function getBalue() {
     arrBookmark.push(newBookmark);
     let bookmarksString = JSON.stringify(bookmarks);
     localStorage.setItem("Bookmarks", bookmarksString);
-    createNewGroupElement(name, url, newGroup);
-    // createNewElement(parentNodeToAppend, name, url);
+    createBookmarkGroup(null, name, url, newGroup);
     collExpBookmarksFunc();
   }
-  removeAllChildNodes(addBookmarkSelectGroup);
+
   // appendBookmarks();
   editBookmarksBtnFunc();
   addbookmarkDeleteBtnFunc();
   addbookmarkEditbtnFunc();
   collExpBookmarksFunc();
-
   groupSelect();
+
   dataActiveSwitcher(addShowBookmark, 1);
   dataVisibleSwitcher(addBookmark, 1);
   checkToAddNewGroup[0].setAttribute("data-visible", "true");
@@ -422,6 +382,9 @@ newGroupCheckBox.addEventListener("change", () => {
 
 // append groups to select
 const groupSelect = () => {
+  while (addBookmarkSelectGroup.firstChild) {
+    addBookmarkSelectGroup.removeChild(addBookmarkSelectGroup.firstChild);
+  }
   bookmarks[0].groups.forEach((element) => {
     const option = document.createElement("option");
     option.textContent = element.groupName;
@@ -458,26 +421,34 @@ const editBookmarksBtnFunc = () => {
   if (editBookmarksBtn.getAttribute("listener") !== "true") {
     editBookmarksBtn.setAttribute("listener", "true");
     editBookmarksBtn.addEventListener("click", function showHide() {
+      dataActiveSwitcher(editBookmarksBtn, 1);
+      //show edit group name btn
+      const bookmarkGroupIconContainer = document.querySelectorAll(
+        ".main-section-bookmarks-group-icons"
+      );
+      bookmarkGroupIconContainer.forEach((element) => {
+        const btnEdit = element.querySelectorAll(".fa-pencil");
+        btnEdit.forEach((element) => {
+          dataVisibleSwitcher(element, 1);
+        });
+      });
+
+      //show edit/delete bookmark btn and disable link
       const bookmarksEditDeleteBtn = document.querySelectorAll(
-        ".main-section-bookmarks-ul-li-btnContainer"
+        ".main-section-bookmarks-ul-li-icons"
       );
       const bookmarkLink = document.querySelectorAll(
-        ".main-section-bookmarks-ul-li-a"
+        ".main-section-bookmarks-ul-li-link"
       );
-      dataActiveSwitcher(editBookmarksBtn, 1);
-      bookmarksEditDeleteBtn.forEach((elem) => {
+      bookmarksEditDeleteBtn.forEach((element) => {
+        dataVisibleSwitcher(element, 1);
         if (editBookmarksBtn.attributes[1].value === "true") {
-          elem.setAttribute("data-visible", "true");
-          bookmarkLink.forEach((elem) => {
-            elem.setAttribute(
-              "class",
-              "main-section-bookmarks-ul-li-a linkDisabled"
-            );
+          bookmarkLink.forEach((element) => {
+            element.classList.add("linkDisabled");
           });
         } else {
-          elem.setAttribute("data-visible", "false");
-          bookmarkLink.forEach((elem) => {
-            elem.setAttribute("class", "main-section-bookmarks-ul-li-a ");
+          bookmarkLink.forEach((element) => {
+            element.classList.remove("linkDisabled");
           });
         }
       });
@@ -486,194 +457,214 @@ const editBookmarksBtnFunc = () => {
 };
 // delete bookmark logic
 const addbookmarkDeleteBtnFunc = () => {
-  const bookmarkDeleteBtn = document.querySelectorAll(
-    ".main-section-bookmarks-ul-li-btnContainer-delete"
+  const bookmarkIconGroup = document.querySelectorAll(
+    ".main-section-bookmarks-ul-li-icons"
   );
-  bookmarkDeleteBtn.forEach((element) => {
-    if (element.getAttribute("listener") !== "true") {
-      element.setAttribute("listener", "true");
-      element.addEventListener(
-        "click",
-        function () {
-          const bookmarkGroupName =
-            this.parentNode.parentNode.parentNode.childNodes[0].childNodes[0]
-              .childNodes[0].data;
-          const groupNamePosition = getPositionGroupName(
-            bookmarkGroupName,
-            bookmarks[0].groups
-          );
+  bookmarkIconGroup.forEach((element) => {
+    const bookmarkDeleteBtn = element.querySelectorAll(".fa-xmark");
+    bookmarkDeleteBtn.forEach((element) => {
+      if (element.getAttribute("listener") !== "true") {
+        element.setAttribute("listener", "true");
+        element.addEventListener(
+          "click",
+          function () {
+            const bookmarkGroupName =
+              this.parentNode.parentNode.parentNode.parentNode.childNodes[0]
+                .childNodes[0].innerHTML;
+            const groupNamePosition = getPositionGroupName(
+              bookmarkGroupName,
+              bookmarks[0].groups
+            );
 
-          const bookmarkName =
-            this.parentNode.parentNode.childNodes[0].childNodes[0].data;
-          const namePosition = getPositionName(
-            bookmarkName,
-            bookmarks[0].groups[groupNamePosition].bookmark
-          );
+            const bookmarkName =
+              this.parentNode.parentNode.childNodes[0].childNodes[0].data;
+            const namePosition = getPositionName(
+              bookmarkName,
+              bookmarks[0].groups[groupNamePosition].bookmark
+            );
 
-          const array = bookmarks[0].groups[groupNamePosition].bookmark;
-          const indexToDelete = namePosition;
+            const array = bookmarks[0].groups[groupNamePosition].bookmark;
+            const indexToDelete = namePosition;
 
-          if (indexToDelete > -1) {
-            array.splice(indexToDelete, 1);
-          } else {
-            return;
-          }
+            if (indexToDelete > -1) {
+              array.splice(indexToDelete, 1);
+            } else {
+              return;
+            }
 
-          const kickTheBaby = this.parentNode.parentNode;
+            const kickTheBaby = this.parentNode.parentNode;
 
-          if (kickTheBaby.parentNode) {
-            kickTheBaby.parentNode.removeChild(kickTheBaby);
-          }
-          let bookmarksString = JSON.stringify(bookmarks);
-          localStorage.setItem("Bookmarks", bookmarksString);
-        },
-        false
-      );
-    }
+            if (kickTheBaby.parentNode) {
+              kickTheBaby.parentNode.removeChild(kickTheBaby);
+            }
+
+            let bookmarksString = JSON.stringify(bookmarks);
+            localStorage.setItem("Bookmarks", bookmarksString);
+          },
+          false
+        );
+      }
+    });
   });
 };
 //edit bookmark logic
+
+const editDiv = (parent, name, url) => {
+  parent.classList.add("isEditing");
+  const div1 = document.createElement("div");
+  parent.appendChild(div1);
+  const div2 = document.createElement("div");
+  const div3 = document.createElement("div");
+  const inpName = document.createElement("input");
+  inpName.classList.add("input");
+  div2.appendChild(inpName);
+  inpName.setAttribute("value", name);
+  if (url !== null) {
+    const inpUrl = document.createElement("input");
+    inpUrl.classList.add("input");
+    div2.appendChild(inpUrl);
+    inpUrl.setAttribute("value", url);
+  }
+  const btnConfirm = document.createElement("input");
+  const btnCancel = document.createElement("input");
+  btnConfirm.setAttribute("value", "Confirm");
+  btnCancel.setAttribute("value", "Cancel");
+  btnConfirm.classList.add("editBookmarks-btn-confirm", "button");
+  btnConfirm.setAttribute("type", "button");
+  btnCancel.classList.add("editBookmarks-btn-cancel", "button");
+  btnCancel.setAttribute("type", "button");
+  div1.appendChild(div2);
+  div1.appendChild(div3);
+  div3.appendChild(btnConfirm);
+  div3.appendChild(btnCancel);
+};
 const addbookmarkEditbtnFunc = () => {
-  const bookmarkEditBtn = document.querySelectorAll(
-    ".main-section-bookmarks-ul-li-btnContainer-edit"
+  const bookmarkIconGroup = document.querySelectorAll(
+    ".main-section-bookmarks-ul-li-icons"
   );
+  bookmarkIconGroup.forEach((element) => {
+    const bookmarkEditBtn = element.querySelectorAll(".fa-pencil");
+    bookmarkEditBtn.forEach((element) => {
+      if (element.getAttribute("listener") !== "true") {
+        element.setAttribute("listener", "true");
 
-  bookmarkEditBtn.forEach((element) => {
-    if (element.getAttribute("listener") !== "true") {
-      element.setAttribute("listener", "true");
-
-      element.addEventListener(
-        "click",
-        function () {
-          const linkName =
-            element.parentNode.parentNode.childNodes[0].firstChild.data;
-          const linkGroupName =
-            element.parentNode.parentNode.parentNode.childNodes[0].childNodes[0]
-              .childNodes[0].data;
-          const groupNamePosition = getPositionGroupName(
-            linkGroupName,
-            bookmarks[0].groups
-          );
-
-          const namePosition = getPositionName(
-            linkName,
-            bookmarks[0].groups[groupNamePosition].bookmark
-          );
-          const bookmarkToChange =
-            bookmarks[0].groups[groupNamePosition].bookmark[namePosition];
-
-          const linkBookmarkElement = element.parentNode.parentNode;
-          if (
-            linkBookmarkElement.getAttribute("class") !==
-            "main-section-bookmarks-ul-li isDisabled"
-          ) {
-            linkBookmarkElement.setAttribute(
-              "class",
-              "main-section-bookmarks-ul-li isDisabled"
-            );
-            const div1 = document.createElement("div");
-            const div2 = document.createElement("div");
-            const div3 = document.createElement("div");
-            const inpName = document.createElement("input");
-            const inpUrl = document.createElement("input");
-            const btnConfirm = document.createElement("input");
-            const btnCancel = document.createElement("input");
-            linkBookmarkElement.appendChild(div1);
-            div1.style.height = "80px";
-            div1.style.width = "100%";
-            inpName.setAttribute("class", "input");
-            inpUrl.setAttribute("class", "input");
-            div2.appendChild(inpName);
-            div2.appendChild(inpUrl);
-            inpName.setAttribute(
-              "value",
-              element.parentNode.parentNode.childNodes[0].firstChild.data
-            );
-            inpUrl.setAttribute(
-              "value",
+        element.addEventListener(
+          "click",
+          function () {
+            const linkName =
+              element.parentNode.parentNode.childNodes[0].firstChild.data;
+            const linkUrl =
               element.parentNode.parentNode.childNodes[0].attributes[0]
-                .nodeValue
-            );
-            btnConfirm.setAttribute("value", "Confirm");
-            btnCancel.setAttribute("value", "Cancel");
-            btnConfirm.setAttribute(
-              "class",
-              "editBookmarks-btn-confirm button"
-            );
-            btnConfirm.setAttribute("type", "button");
-            btnCancel.setAttribute("class", "editBookmarks-btn-cancel button");
-            btnCancel.setAttribute("type", "button");
-            div1.appendChild(div2);
-            div1.appendChild(div3);
-            div3.appendChild(btnConfirm);
-            div3.appendChild(btnCancel);
+                .nodeValue;
 
-            //confirm edit
-            const editBookmarksBtnConfirm = document.querySelector(
-              ".editBookmarks-btn-confirm"
+            const linkGroupName =
+              element.parentNode.parentNode.parentNode.parentNode.childNodes[0]
+                .childNodes[0].innerHTML;
+            const groupNamePosition = getPositionGroupName(
+              linkGroupName,
+              bookmarks[0].groups
             );
-            editBookmarksBtnConfirm.addEventListener("click", () => {
-              let newBookmarkName =
-                editBookmarksBtnConfirm.parentNode.parentNode.childNodes[0]
-                  .childNodes[0].value;
-              let newBookmarkUrl =
-                editBookmarksBtnConfirm.parentNode.parentNode.childNodes[0]
-                  .childNodes[1].value;
 
-              const elementToUpdate =
-                editBookmarksBtnConfirm.parentNode.parentNode.parentNode
-                  .childNodes[0];
+            const namePosition = getPositionName(
+              linkName,
+              bookmarks[0].groups[groupNamePosition].bookmark
+            );
+            const bookmarkToChange =
+              bookmarks[0].groups[groupNamePosition].bookmark[namePosition];
 
-              elementToUpdate.textContent = newBookmarkName;
-              elementToUpdate.setAttribute("href", newBookmarkUrl);
-              const removeElement =
-                editBookmarksBtnConfirm.parentNode.parentNode;
-              const parentOfElementToRemove =
-                editBookmarksBtnConfirm.parentNode.parentNode.parentNode;
-              parentOfElementToRemove.setAttribute(
+            const linkBookmarkElement = element.parentNode.parentNode;
+
+            if (
+              linkBookmarkElement.getAttribute("class") !==
+              "main-section-bookmarks-ul-li isEditing"
+            ) {
+              editDiv(linkBookmarkElement, linkName, linkUrl);
+
+              //confirm edit
+              const editBookmarksBtnConfirm = document.querySelector(
+                ".editBookmarks-btn-confirm"
+              );
+              editBookmarksBtnConfirm.addEventListener("click", () => {
+                let newBookmarkName =
+                  editBookmarksBtnConfirm.parentNode.parentNode.childNodes[0]
+                    .childNodes[0].value;
+                let newBookmarkUrl =
+                  editBookmarksBtnConfirm.parentNode.parentNode.childNodes[0]
+                    .childNodes[1].value;
+
+                const elementToUpdate =
+                  editBookmarksBtnConfirm.parentNode.parentNode.parentNode
+                    .childNodes[0];
+
+                elementToUpdate.textContent = newBookmarkName;
+                elementToUpdate.setAttribute("href", newBookmarkUrl);
+                const removeElement =
+                  editBookmarksBtnConfirm.parentNode.parentNode;
+                const parentOfElementToRemove =
+                  editBookmarksBtnConfirm.parentNode.parentNode.parentNode;
+                parentOfElementToRemove.setAttribute(
+                  "class",
+                  "main-section-bookmarks-ul-li"
+                );
+
+                bookmarkToChange.name = newBookmarkName;
+                bookmarkToChange.url = newBookmarkUrl;
+                let bookmarksString = JSON.stringify(bookmarks);
+                localStorage.setItem("Bookmarks", bookmarksString);
+
+                if (removeElement.parentNode) {
+                  removeElement.parentNode.removeChild(removeElement);
+                }
+              });
+
+              //cancel edit
+
+              const editBookmarksBtnCancel = document.querySelector(
+                ".editBookmarks-btn-cancel"
+              );
+              editBookmarksBtnCancel.addEventListener("click", () => {
+                const removeElement =
+                  editBookmarksBtnCancel.parentNode.parentNode;
+                const parentOfRemoveToElement =
+                  editBookmarksBtnCancel.parentNode.parentNode.parentNode;
+                parentOfRemoveToElement.classList.remove("isEditing");
+
+                if (removeElement.parentNode) {
+                  removeElement.parentNode.removeChild(removeElement);
+                }
+              });
+            } else {
+              linkBookmarkElement.setAttribute(
                 "class",
                 "main-section-bookmarks-ul-li"
               );
+            }
+          },
+          false
+        );
+      }
+    });
+  });
 
-              bookmarkToChange.name = newBookmarkName;
-              bookmarkToChange.url = newBookmarkUrl;
-              let bookmarksString = JSON.stringify(bookmarks);
-              localStorage.setItem("Bookmarks", bookmarksString);
+  const groupIconGroup = document.querySelectorAll(
+    ".main-section-bookmarks-group-icons"
+  );
+  groupIconGroup.forEach((element) => {
+    const groupEditBtn = element.querySelectorAll(".fa-pencil");
+    groupEditBtn.forEach((element) => {
+      if (element.getAttribute("listener") !== "true") {
+        element.setAttribute("listener", "true");
 
-              if (removeElement.parentNode) {
-                removeElement.parentNode.removeChild(removeElement);
-              }
-            });
+        element.addEventListener("click", () => {
+          const groupParent = element.parentElement.parentElement;
+          console.log(groupParent);
+          const groupName =
+            element.parentElement.parentElement.children[0].innerHTML;
 
-            //cancel edit
-
-            const editBookmarksBtnCancel = document.querySelector(
-              ".editBookmarks-btn-cancel"
-            );
-            editBookmarksBtnCancel.addEventListener("click", () => {
-              const removeElement =
-                editBookmarksBtnCancel.parentNode.parentNode;
-              const parentOfRemoveToElement =
-                editBookmarksBtnCancel.parentNode.parentNode.parentNode;
-              parentOfRemoveToElement.setAttribute(
-                "class",
-                "main-section-bookmarks-ul-li"
-              );
-
-              if (removeElement.parentNode) {
-                removeElement.parentNode.removeChild(removeElement);
-              }
-            });
-          } else {
-            linkBookmarkElement.setAttribute(
-              "class",
-              "main-section-bookmarks-ul-li"
-            );
-          }
-        },
-        false
-      );
-    }
+          
+        });
+      }
+    });
   });
 };
 
@@ -681,12 +672,6 @@ const addbookmarkEditbtnFunc = () => {
 const elementToDrag = document.querySelectorAll(
   ".main-section-bookmarks-ul-li"
 );
-function arraymove(arr, fromIndex, toIndex) {
-  var element = arr[fromIndex];
-  arr.splice(fromIndex, 1);
-  arr.splice(toIndex, 0, element);
-}
-
 const dragAndDropFunction = () => {
   let elemToMove;
   let elemToMoveBefore;
@@ -701,7 +686,10 @@ const dragAndDropFunction = () => {
       elemToMoveBefore = element.target.parentNode;
       parent.insertBefore(elemToMove, elemToMoveBefore);
     });
-    elem.addEventListener("dragenter", (element) => {});
+    elem.addEventListener("dragenter", (element) => {
+      elemToMoveBefore = element.target.parentNode;
+      parent.insertBefore(elemToMove, elemToMoveBefore);
+    });
     elem.addEventListener("dragleave", (element) => {});
     elem.addEventListener("dragstart", (element) => {
       parent = element.target.parentNode.parentNode;
@@ -710,7 +698,7 @@ const dragAndDropFunction = () => {
     });
   });
 };
-dragAndDropFunction();
+// dragAndDropFunction();
 
 editBookmarksBtnFunc();
 addbookmarkDeleteBtnFunc();
@@ -721,3 +709,12 @@ collExpBookmarksFunc();
 /// quick add bookmark toolbar
 //
 /* color: currentColor; */
+
+const bookmarksGroups = document.querySelectorAll(
+  ".main-section-bookmarks-group"
+);
+bookmarksGroups.forEach((element) => {
+  element.addEventListener("cut", () => {
+    console.log(element);
+  });
+});
