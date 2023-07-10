@@ -15,8 +15,10 @@
 }
 body {
   background-color: var(--first);
-  max-height: 100%;
-  min-height: 100%;
+  height: 100vh;
+  /* width: 100vh; */
+  /* max-height: 100vh; */
+  overflow: hidden;
 }
 body * {
   /* font-family: "Open Sans", sans-serif; */
@@ -46,6 +48,8 @@ i {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  background-color: var(--first);
+  z-index: 10;
 }
 .main-nav-brand {
   height: 2rem;
@@ -189,16 +193,9 @@ i {
   border-color: var(--accent-first);
   animation-name: rubberBand;
 }
-
-/* .main-section-bookmarks-ul-li-btnContainer > *:active,
-.main-section-bookmarks-ul-arrowDiv > *:active {
-  color: orange;
-  animation-name: rubberBand;
-} */
 /* End of Bookmark Section */
 
 /* Start of Footer Section */
-
 .main-footer {
   /* border-top: 1px solid var(--accent-first); */
   text-align: center;
@@ -227,6 +224,7 @@ i {
   width: 100%;
   height: 100%;
   background-color: var(--first);
+  border-radius: 0.25rem;
   justify-content: center;
   z-index: 2;
 }
@@ -289,38 +287,77 @@ i {
   display: inline-block;
   pointer-events: none;
 }
-.isEditing {
+.isEditingBookmark {
   display: flex;
   flex-direction: column;
   background-color: var(--third);
   border-radius: 0.25rem;
 }
-.isEditing > a {
+.isEditingBookmark > a {
   display: inline-block;
   pointer-events: none;
   width: auto;
 }
-.isEditing > .main-section-bookmarks-ul-li-icons {
+.isEditingBookmark > .main-section-bookmarks-ul-li-icons {
   display: none;
 }
-.isEditing > div {
+.isEditingBookmark > div {
   color: #f8fdff;
   display: flex;
   justify-content: space-around;
 }
-.isEditing > div > div:first-child {
+.isEditingBookmark > div > div:first-child {
   width: 70%;
 }
-.isEditing > div > div:last-child {
+.isEditingBookmark > div > div:last-child {
   display: flex;
   flex-direction: column;
   width: 25%;
 }
-.isEditing > div > div > input {
+.isEditingBookmark > div > div > input {
   background-color: var(--first);
   width: 100%;
   height: 2rem;
   margin: 0.25rem 0;
+}
+
+.isEditingGroup {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--third);
+  border-radius: 0.25rem;
+}
+.isEditingGroup > div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.isEditingGroup > div > div:first-child {
+  display: flex;
+  justify-content: center;
+}
+.isEditingGroup > div > div:first-child > input {
+  width: 95%;
+  margin: 0 auto;
+}
+.isEditingGroup > div > div:last-child {
+  display: flex;
+  justify-content: space-around;
+  /* flex-direction: column; */
+  width: 100%;
+}
+.isEditingGroup > div > div:last-child > input {
+  width: 45%;
+}
+.isEditingGroup > div > div > input {
+  background-color: var(--first);
+  width: 100%;
+  height: 2rem;
+  margin: 0.25rem 0;
+}
+/* .isEditingGroup > h2, */
+.isEditingGroup > .main-section-bookmarks-group-icons {
+  display: none;
 }
 /* End of Editing Container */
 

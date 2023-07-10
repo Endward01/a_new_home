@@ -26,9 +26,6 @@ if (localStorage.getItem("Bookmarks") !== null) {
   ];
 }
 
-// let retString = localStorage.getItem("Bookmarks");
-// let bookmarks = JSON.parse(retString);
-
 // SELECT EXISTING NODES
 
 const body = document.querySelector("body");
@@ -507,37 +504,8 @@ const addbookmarkDeleteBtnFunc = () => {
     });
   });
 };
-//edit bookmark logic
+//edit bookmark logic (funtion to organanize they are messy)
 
-const editDiv = (parent, name, url) => {
-  parent.classList.add("isEditing");
-  const div1 = document.createElement("div");
-  parent.appendChild(div1);
-  const div2 = document.createElement("div");
-  const div3 = document.createElement("div");
-  const inpName = document.createElement("input");
-  inpName.classList.add("input");
-  div2.appendChild(inpName);
-  inpName.setAttribute("value", name);
-  if (url !== null) {
-    const inpUrl = document.createElement("input");
-    inpUrl.classList.add("input");
-    div2.appendChild(inpUrl);
-    inpUrl.setAttribute("value", url);
-  }
-  const btnConfirm = document.createElement("input");
-  const btnCancel = document.createElement("input");
-  btnConfirm.setAttribute("value", "Confirm");
-  btnCancel.setAttribute("value", "Cancel");
-  btnConfirm.classList.add("editBookmarks-btn-confirm", "button");
-  btnConfirm.setAttribute("type", "button");
-  btnCancel.classList.add("editBookmarks-btn-cancel", "button");
-  btnCancel.setAttribute("type", "button");
-  div1.appendChild(div2);
-  div1.appendChild(div3);
-  div3.appendChild(btnConfirm);
-  div3.appendChild(btnCancel);
-};
 const addbookmarkEditbtnFunc = () => {
   const bookmarkIconGroup = document.querySelectorAll(
     ".main-section-bookmarks-ul-li-icons"
@@ -576,12 +544,36 @@ const addbookmarkEditbtnFunc = () => {
 
             if (
               linkBookmarkElement.getAttribute("class") !==
-              "main-section-bookmarks-ul-li isEditing"
+              "main-section-bookmarks-ul-li isEditingBookmark"
             ) {
-              editDiv(linkBookmarkElement, linkName, linkUrl);
+              linkBookmarkElement.classList.add("isEditingBookmark");
+              const div1 = document.createElement("div");
+              linkBookmarkElement.appendChild(div1);
+              const div2 = document.createElement("div");
+              const div3 = document.createElement("div");
+              const inpName = document.createElement("input");
+              inpName.classList.add("input");
+              div2.appendChild(inpName);
+              inpName.setAttribute("value", linkName);
+              const inpUrl = document.createElement("input");
+              inpUrl.classList.add("input");
+              div2.appendChild(inpUrl);
+              inpUrl.setAttribute("value", linkUrl);
+              const btnConfirm = document.createElement("input");
+              const btnCancel = document.createElement("input");
+              btnConfirm.setAttribute("value", "Confirm");
+              btnCancel.setAttribute("value", "Cancel");
+              btnConfirm.classList.add("editBookmarks-btn-confirm", "button");
+              btnConfirm.setAttribute("type", "button");
+              btnCancel.classList.add("editBookmarks-btn-cancel", "button");
+              btnCancel.setAttribute("type", "button");
+              div1.appendChild(div2);
+              div1.appendChild(div3);
+              div3.appendChild(btnConfirm);
+              div3.appendChild(btnCancel);
 
               //confirm edit
-              const editBookmarksBtnConfirm = document.querySelector(
+              const editBookmarksBtnConfirm = linkBookmarkElement.querySelector(
                 ".editBookmarks-btn-confirm"
               );
               editBookmarksBtnConfirm.addEventListener("click", () => {
@@ -619,7 +611,7 @@ const addbookmarkEditbtnFunc = () => {
 
               //cancel edit
 
-              const editBookmarksBtnCancel = document.querySelector(
+              const editBookmarksBtnCancel = linkBookmarkElement.querySelector(
                 ".editBookmarks-btn-cancel"
               );
               editBookmarksBtnCancel.addEventListener("click", () => {
@@ -627,7 +619,7 @@ const addbookmarkEditbtnFunc = () => {
                   editBookmarksBtnCancel.parentNode.parentNode;
                 const parentOfRemoveToElement =
                   editBookmarksBtnCancel.parentNode.parentNode.parentNode;
-                parentOfRemoveToElement.classList.remove("isEditing");
+                parentOfRemoveToElement.classList.remove("isEditingBookmark");
 
                 if (removeElement.parentNode) {
                   removeElement.parentNode.removeChild(removeElement);
@@ -657,11 +649,85 @@ const addbookmarkEditbtnFunc = () => {
 
         element.addEventListener("click", () => {
           const groupParent = element.parentElement.parentElement;
-          console.log(groupParent);
           const groupName =
             element.parentElement.parentElement.children[0].innerHTML;
 
-          
+          if (groupParent.getAttribute("class") !== " isEditing") {
+            groupParent.classList.add("isEditingGroup");
+            const div1 = document.createElement("div");
+            groupParent.appendChild(div1);
+            const div2 = document.createElement("div");
+            const div3 = document.createElement("div");
+            const inpName = document.createElement("input");
+            inpName.classList.add("input");
+            div2.appendChild(inpName);
+            inpName.setAttribute("value", groupName);
+
+            const btnConfirm = document.createElement("input");
+            const btnCancel = document.createElement("input");
+            btnConfirm.setAttribute("value", "Confirm");
+            btnCancel.setAttribute("value", "Cancel");
+            btnConfirm.classList.add("editBookmarks-btn-confirm", "button");
+            btnConfirm.setAttribute("type", "button");
+            btnCancel.classList.add("editBookmarks-btn-cancel", "button");
+            btnCancel.setAttribute("type", "button");
+            div1.appendChild(div2);
+            div1.appendChild(div3);
+            div3.appendChild(btnConfirm);
+            div3.appendChild(btnCancel);
+
+            //confirm edit
+            const groupNamePosition = getPositionGroupName(
+              groupName,
+              bookmarks[0].groups
+            );
+
+            const bookmarkToChange = bookmarks[0].groups[groupNamePosition];
+
+
+            const editBookmarksBtnConfirm = groupParent.querySelector(
+              ".editBookmarks-btn-confirm"
+            );
+            editBookmarksBtnConfirm.addEventListener("click", () => {
+              let groupNewName =
+                editBookmarksBtnConfirm.parentNode.parentNode.childNodes[0]
+                  .childNodes[0].value;
+
+              const elementToUpdate =
+                editBookmarksBtnConfirm.parentNode.parentNode.parentNode
+                  .childNodes[0];
+
+              elementToUpdate.textContent = groupNewName;
+              const removeElement =
+                editBookmarksBtnConfirm.parentNode.parentNode;
+
+              groupParent.classList.remove("isEditingGroup");
+
+              bookmarkToChange.groupName = groupNewName;
+              let bookmarksString = JSON.stringify(bookmarks);
+              localStorage.setItem("Bookmarks", bookmarksString);
+
+              if (removeElement.parentNode) {
+                removeElement.parentNode.removeChild(removeElement);
+              }
+            });
+
+            //cancel edit
+
+            const editBookmarksBtnCancel = groupParent.querySelector(
+              ".editBookmarks-btn-cancel"
+            );
+            editBookmarksBtnCancel.addEventListener("click", () => {
+              const removeElement =
+                editBookmarksBtnCancel.parentNode.parentNode;
+
+              groupParent.classList.remove("isEditingGroup");
+
+              if (removeElement.parentNode) {
+                removeElement.parentNode.removeChild(removeElement);
+              }
+            });
+          }
         });
       }
     });
@@ -698,7 +764,7 @@ const dragAndDropFunction = () => {
     });
   });
 };
-// dragAndDropFunction();
+dragAndDropFunction();
 
 editBookmarksBtnFunc();
 addbookmarkDeleteBtnFunc();
@@ -709,12 +775,3 @@ collExpBookmarksFunc();
 /// quick add bookmark toolbar
 //
 /* color: currentColor; */
-
-const bookmarksGroups = document.querySelectorAll(
-  ".main-section-bookmarks-group"
-);
-bookmarksGroups.forEach((element) => {
-  element.addEventListener("cut", () => {
-    console.log(element);
-  });
-});
