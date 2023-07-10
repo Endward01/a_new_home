@@ -3,9 +3,10 @@
   --first: #1e283a;
   --second: #232c3d;
   --third: #293243;
-  --accent-first: #c2933e;
-  --accent-second: #ffbc41;
+  /* --accent-first: #c2933e; */
+  --accent-first: #ffbc41;
   --text-color: #f8fdff;
+  --text-color-semiTrans: #f8fdffa6;
 }
 
 /* MAIN STYLES */
@@ -22,11 +23,14 @@ body * {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   color: var(--text-color);
-  overflow: hidden;
+  /* overflow: hidden; */
 }
-.elementToDrag{
-  border: 1px solid var(--accent-second);
-  border-radius: .25rem;
+i {
+  display: inline-block;
+}
+.elementToDrag {
+  border: 1px solid var(--accent-first);
+  border-radius: 0.25rem;
 }
 
 .main {
@@ -36,117 +40,118 @@ body * {
   display: flex;
   flex-direction: column;
 }
+
+/* Start of Navbar Styles*/
 .main-nav {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid var(--accent-second);
 }
 .main-nav-brand {
-  /* display: flex; */
-  align-content: center;
-  justify-content: center;
-  margin: 2rem 1rem;
-  /* padding: 1rem 0rem; */
-}
-.main-nav-brand-text {
-  font-size: 1.2rem;
-  font-weight: 600;
-  text-align: center;
-}
-.main-nav-search {
-  display: none;
-  margin: 2rem 1rem;
-  width: 60%;
-  /* display: flex; */
-  flex-direction: row;
   height: 2rem;
-}
-/* Turn off arrow in select */
-/* select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  text-indent: 1px;
-  text-overflow: "";
-} */
-.main-nav-search-select {
-  font-size: 1rem;
-  font-weight: 500;
-  width: 10%;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-width: 0.1rem 0 0.1rem 0.1rem;
-}
-.main-nav-search-input {
-  font-size: 1rem;
-  font-weight: 500;
-  width: 85%;
-  background-color: #293243;
-  border-width: 0.1rem 0 0.1rem 0;
-}
-.main-nav-search-btn {
-  font-size: 1rem;
-  width: 5%;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-left-width: 0;
-}
-.main-nav-icon {
-  display: flex;
-  margin: 1rem 1rem;
-}
-.main-nav-icon > li {
-  display: flex;
-  align-items: center;
-}
-.main-nav-icon > li:hover {
-}
-.icon {
-  font-size: 1.25rem;
-  margin: 0 0.5rem;
-  padding: 0.5rem 0.5rem;
-}
-.main-nav-icon-btn {
-  cursor: pointer;
-  border-radius: 0.25rem;
-  animation-duration: 0.5s;
-  animation-fill-mode: both;
-  animation-iteration-count: 1;
+  margin: 2rem 1rem;
 }
 
-.main-nav-icon-btn:hover,
-.main-section-bookmarks-ul-li-delete:hover {
-  background-color: var(--accent-first);
+.main-nav-icon {
+  height: 2rem;
+  margin: 2rem 1rem;
+  display: flex;
+  gap: 1rem;
 }
+
+.main-nav-icon > li {
+  display: flex;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+}
+.main-nav-icon-btn {
+  flex: 0;
+  width: 100%;
+  font-size: 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.main-nav-icon-btn:hover {
+  color: var(--accent-first);
+}
+.addBookmark-btn[data-active="true"],
+.editBookmarks-btn[data-active="true"] {
+  color: var(--accent-first);
+}
+/* End of Navbar Styles*/
 
 .main-section {
   flex-grow: 1;
   position: relative;
-  padding: 0.5rem 0;
 }
+/* Start of Bookmark Section */
 .main-section-bookmarks {
-  height: max-content;
-  display: flex;
-  flex-wrap: wrap;
-  overflow-y: scroll;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
 }
-.main-section-bookmarks-ul {
-  display: inline-block;
-  width: 24%;
-  height: min-content;
-  background-color: var(--second);
-  line-height: 1.5rem;
-  border-radius: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  padding: 4px 4px;
+.main-section-bookmarks-group {
+  line-height: 1.25rem;
 }
-.main-section-bookmarks-ul[data-collapsed="true"] >li{
+.main-section-bookmarks-group > div:first-child {
+  border-top: 1px solid var(--accent-first);
+  margin: 1rem 1rem 0.25rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-section-bookmarks-group-icons,
+.main-section-bookmarks-ul-li-icons {
+  box-sizing: border-box;
+  display: flex;
+  gap: 0.5rem;
+  text-align: center;
+}
+.main-section-bookmarks-ul-li-icons {
+  padding: 0.4rem 1rem 0.4rem 0rem;
+}
+
+.main-section-bookmarks-ul-li-icons > i,
+.main-section-bookmarks-group-icons > i {
+  color: var(--text-color-semiTrans);
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  overflow: none;
+  cursor: pointer;
+}
+.main-section-bookmarks-ul-li-icons > i:hover,
+.main-section-bookmarks-group-icons > i:hover {
+  color: var(--accent-first);
+}
+.main-section-bookmarks-group-icons > i[data-visible="false"],
+.main-section-bookmarks-group-icons > i[data-visible="false"] {
   display: none;
 }
-.main-section-bookmarks-ul[data-collapsed="false"] >li{
+
+.main-section-bookmarks-group-icons > i[data-visible="true"],
+.main-section-bookmarks-group-icons > i[data-visible="true"] {
+  display: inline-block;
+}
+.main-section-bookmarks-ul-li-icons[data-visible="true"] {
+  display: flex;
+}
+.main-section-bookmarks-ul-li-icons[data-visible="false"] {
+  display: none;
+}
+.main-section-bookmarks-group-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color-semiTrans);
+}
+.main-section-bookmarks-ul[data-collapsed="true"] > li {
+  display: none;
+}
+.main-section-bookmarks-ul[data-collapsed="false"] > li {
   display: flex;
 }
 .main-section-bookmarks-ul-title {
@@ -157,81 +162,64 @@ body * {
 }
 .main-section-bookmarks-ul-li {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin: 0 auto;
-
-  position: relative;
 }
-.main-section-bookmarks-ul-li-a {
-  display: block;
-  background-color: var(--third);
 
-  padding: 0.4rem 0.4rem;
+.main-section-bookmarks-ul-li-link {
+  display: block;
+  width: 100%;
+  padding: 0.4rem 0rem 0.4rem 1rem;
   font-weight: 400;
   line-height: 1.2rem;
   text-decoration: none;
-  flex-grow: 1;
-  /* z-index: -1; */
 }
-.main-section-bookmarks-ul > .main-section-bookmarks-ul-li:nth-of-type(1) {
-  margin-top: 0.25rem;
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-}
-.main-section-bookmarks-ul > .main-section-bookmarks-ul-li:last-child {
-  border-bottom-left-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
-}
-.main-section-bookmarks-ul-li-a:hover {
-  color: var(--accent-second);
+/* .main-section-bookmarks-ul-li-icons {
+  padding: 0 1rem 0 0;
+} */
+
+.main-section-bookmarks-ul-li-link:hover {
+  color: var(--accent-first);
+  background-color: var(--third);
   border-radius: 0.25rem;
 }
-.main-section-bookmarks-ul-li-a:active {
-  border-color: var(--accent-second);
+.main-section-bookmarks-ul-li-link:active {
+  border-color: var(--accent-first);
   animation-name: rubberBand;
 }
-.main-section-bookmarks-ul-li-btnContainer {
-  display: flex;
-  /* justify-content: center;
-  align-content: center; */
-  width: min-content;
-  /* background-color: #f8fdff50; */
-  height: 100%;
-  aspect-ratio: 2/1;
-  border-radius: 0.25rem;
-  position: absolute;
-  right: 0;
-}
-.main-section-bookmarks-ul-li-btnContainer > *,
-.main-section-bookmarks-ul-arrowDiv > * {
-  display: block;
-  color: var(--text-color);
-  height: 100%;
-  aspect-ratio: 1/1;
-  text-align: center;
-  padding: 0.25rem 0.25rem;
-  cursor: pointer;
-}
-.main-section-bookmarks-ul-li-btnContainer > *:hover,
-.main-section-bookmarks-ul-arrowDiv > *:hover {
-  background-color: var(--accent-first);
-  border-radius: 0.25rem;
-}
-.main-section-bookmarks-ul-li-btnContainer > *:active,
+
+/* .main-section-bookmarks-ul-li-btnContainer > *:active,
 .main-section-bookmarks-ul-arrowDiv > *:active {
-  /* color: orange; */
+  color: orange;
   animation-name: rubberBand;
-}
+} */
+/* End of Bookmark Section */
+
+/* Start of Footer Section */
+
 .main-footer {
-  border-top: 1px solid var(--accent-second);
+  /* border-top: 1px solid var(--accent-first); */
   text-align: center;
 }
 .main-footer-textarea {
   margin: 0.25rem 0;
 }
+/* End of Footer Section */
 
-/* addBoockmark CSS */
+.main-section-bookmarks-ul-li[data-visible="false"],
+.addCreateNewGroup[data-visible="false"] {
+  display: none;
+}
+.bi[data-visible="false"] {
+  display: none;
+}
+.bi[data-visible="true"] {
+  display: block;
+}
 
+/* Start of Add New Bookmark / Group Container */
 .addBookmark {
   position: absolute;
   top: 0;
@@ -240,44 +228,22 @@ body * {
   height: 100%;
   background-color: var(--first);
   justify-content: center;
-  /* padding-top: 1rem; */
-  z-index: 99;
+  z-index: 2;
 }
-.addBookmark[data-visible="false"],
-.main-section-bookmarks-ul-arrowUp[data-visible="false"],
-.main-section-bookmarks-ul-arrowDown[data-visible="false"],
-.main-section-bookmarks-ul-li-btnContainer[data-visible="false"],
-.main-section-bookmarks-ul-li[data-visible="false"],
-.group[data-visible="false"] {
-  display: none;
-}
-.addBookmark[data-visible="true"],
-.main-section-bookmarks-ul-arrowUp[data-visible="true"],
-.main-section-bookmarks-ul-arrowDown[data-visible="true"],
-.main-section-bookmarks-ul-li-btnContainer[data-visible="true"] {
+.addBookmark[data-visible="true"] {
   display: flex;
 }
-/* .group[data-visible="false"] {
+.addBookmark[data-visible="false"] {
   display: none;
-} */
-.group[data-visible="true"] {
+}
+.addCreateNewGroup[data-visible="true"] {
   display: block;
-}
-.addBookmark-btn[data-active="false"],
-.editBookmarks-btn[data-active="false"] {
-  color: var(--text-color);
-}
-.addBookmark-btn[data-active="true"],
-.editBookmarks-btn[data-active="true"] {
-  /* color: var(--accent-second); */
-  background-color: var(--accent-first);
 }
 .addBookmark-form {
   display: flex;
   padding-top: 5rem;
   flex-direction: column;
   gap: 1rem;
-  align-items: center;
 }
 .addBookmark-form-label {
   width: 100%;
@@ -286,9 +252,7 @@ body * {
 }
 .input {
   background-color: var(--third);
-  border-width: 0.1rem;
-  border-style: solid;
-  border-color: transparent;
+  border: none;
   border-radius: 0.25rem;
   padding-left: 0.25rem;
   outline: none;
@@ -300,78 +264,65 @@ body * {
   width: 100%;
 }
 .input:focus {
-  border: 1px var(--accent-second) solid;
+  border: 1px var(--accent-first) solid;
 }
 .addBookmkar-form-btnContainer {
   width: 100%;
   display: flex;
   column-gap: 1rem;
 }
-.addBookmark-form-btn {
-  width: 20%;
-}
 .button {
   background-color: var(--third);
-  border-width: 0rem;
-  border-style: solid;
-  border-color: #f8fdff50;
+  border: none;
   border-radius: 0.25rem;
   cursor: pointer;
   outline: none;
 }
 .button:hover,
 .button:focus {
-  border: 1px var(--accent-second) solid;
-}
-.button:active {
   border: 1px var(--accent-first) solid;
-  background-color: var(--accent-first);
-  color: var(--first);
 }
-.main-nav-icon-btn:active {
-  /* animation-name: rubberBand; */
-}
-.isDisabled {
-  display: flex;
-  flex-direction: column;
-}
+/* End of Add New Bookmark / Group Container */
+
+/* Start of Editing Container */
 .linkDisabled {
   display: inline-block;
   pointer-events: none;
-  text-decoration: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
-.isDisabled > a {
+.isEditing {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--third);
+  border-radius: 0.25rem;
+}
+.isEditing > a {
   display: inline-block;
   pointer-events: none;
-  text-decoration: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  width: auto;
 }
-.isDisabled > .main-section-bookmarks-ul-li-btnContainer {
+.isEditing > .main-section-bookmarks-ul-li-icons {
   display: none;
 }
-.isDisabled > div {
+.isEditing > div {
   color: #f8fdff;
   display: flex;
   justify-content: space-around;
 }
-.isDisabled > div > div:first-child {
+.isEditing > div > div:first-child {
   width: 70%;
 }
-.isDisabled > div > div:last-child {
+.isEditing > div > div:last-child {
   display: flex;
   flex-direction: column;
   width: 25%;
 }
-.isDisabled > div > div > input {
+.isEditing > div > div > input {
+  background-color: var(--first);
   width: 100%;
   height: 2rem;
   margin: 0.25rem 0;
 }
+/* End of Editing Container */
 
 @media screen and (min-width: 1440px) {
   .main {

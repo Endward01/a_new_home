@@ -9,38 +9,33 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
   </head>
   <body>
     <main class="main">
       <nav class="main-nav">
         <div class="main-nav-brand">
-          <i class="bi bi-journal-bookmark-fill icon"></i>
+          <i class="fa-solid fa-book-bookmark icon"></i>
           <h1 class="main-nav-brand-text"></h1>
         </div>
-        <!-- <div class="main-nav-search">
-          <select class="main-nav-search-select select">
-            <option value="Google">Google</option>
-            <option value="DuckDuckGo">DuckDuckGo</option>
-            <option value="Bing">Bing</option>
-          </select>
-          <input class="main-nav-search-input inp" type="text" />
-          <button class="main-nav-search-btn btn">
-            <i class="bi bi-search"></i>
-          </button>
-        </div> -->
         <ul class="main-nav-icon">
           <li>
             <i
-              class="bi bi-plus-square addBookmark-btn main-nav-icon-btn icon"
+              class="fa-solid fa-plus addBookmark-btn main-nav-icon-btn icon"
               data-active="false"></i>
           </li>
           <li>
             <i
-              class="bi bi-pencil-square editBookmarks-btn main-nav-icon-btn icon"
+              class="fa-solid fa-pen-to-square editBookmarks-btn main-nav-icon-btn icon"
               data-active="false"></i>
           </li>
           <li>
-            <i class="bi bi-gear settings-btn main-nav-icon-btn icon"></i>
+            <i class="fa-solid fa-gear settings-btn main-nav-icon-btn icon"></i>
           </li>
         </ul>
       </nav>
@@ -61,7 +56,7 @@
             </label>
             <label
               for="add to group"
-              class="group addBookmark-form-label"
+              class="addCreateNewGroup addBookmark-form-label"
               data-visible="true"
               >Add to Group
               <select
@@ -69,7 +64,7 @@
             </label>
             <label
               for="new group"
-              class="group addBookmark-form-label"
+              class="addCreateNewGroup addBookmark-form-label"
               data-visible="false"
               >New Group
               <input
@@ -96,7 +91,6 @@
             </p>
           </form>
         </div>
-        <!-- <div class="editBookmarks" data-visible="false"></div> -->
         <div class="settings" data-visible="false"></div>
         <div class="main-section-bookmarks"></div>
       </section>
@@ -106,5 +100,6 @@
     </main>
 
     <script src="main.js"></script>
+    <!-- <script src="https://kit.fontawesome.com/66fa1c109e.js" crossorigin="anonymous"></script> -->
   </body>
 </html>
