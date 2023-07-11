@@ -1,11 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
 :root {
-  --first: #1e283a;
-  --second: #232c3d;
-  --third: #293243;
-  --accent-first: #ffbc41;
-  --text-color: #f8fdff;
-  --text-color-semiTrans: #fafeffa6;
+  --first: #eae6da;
+  --second: #f5eddc;
+  --third: #fff7e9;
+  --accent-first: #d44b4b;
+  --text-color: #19282f;
+  --text-color-semiTrans: #19282fa6;
+
 }
 
 /* MAIN STYLES */
@@ -240,13 +241,15 @@ i {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--first);
+  /* background-color: var(--first); */
   border-radius: 0.25rem;
   justify-content: center;
-  z-index: 2;
+  align-items: center;
+  z-index: 1;
+  backdrop-filter: blur(.25rem);
 }
-.addBookmark[data-visible="true"],
-.settings[data-visible="true"] {
+
+.settings[data-visible="true"],.addBookmark[data-visible="true"] {
   display: flex;
 }
 .addBookmark[data-visible="false"],
@@ -260,16 +263,25 @@ i {
 .addBookmkar-form-btnContainer >  .addBookmark-form-btnIsDisabled:hover{
   background-color: gray;
   cursor:auto;
-  /* color:black; */
   border: none;
 }
 .addBookmark-form {
+  padding: 2rem;
+  background-color: var(--second);
   display: flex;
   width: 30rem;
-  padding-top: 5rem;
+  margin-bottom: 20%;
+
   flex-direction: column;
   gap: 1rem;
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  backdrop-filter: blur(10px);
 }
+/* .addBookmark-form{
+  margin-bottom: 25%;
+  transition: margin-bottom 1s linear;
+} */
 .addBookmark-form-label {
   width: 100%;
   line-height: 1.25;
