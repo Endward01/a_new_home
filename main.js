@@ -68,26 +68,27 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
       divSecond.appendChild(h2);
       const divThird = document.createElement("div");
       divThird.classList.add("main-section-bookmarks-group-icons");
+      divThird.setAttribute("data-visible", "false");
       divSecond.appendChild(divThird);
       const iEdit = document.createElement("i");
-      const iUp = document.createElement("i");
-      const iDown = document.createElement("i");
+      // const iUp = document.createElement("i");
+      // const iDown = document.createElement("i");
       iEdit.classList.add("fa-solid", "fa-pencil");
-      iEdit.setAttribute("data-visible", "false");
-      if (element.collapsed === "true") {
-        iDown.classList.add("fa-solid", "fa-angle-down");
-        iDown.setAttribute("data-visible", "true");
-        iUp.classList.add("fa-solid", "fa-angle-up");
-        iUp.setAttribute("data-visible", "false");
-      } else {
-        iDown.classList.add("fa-solid", "fa-angle-down");
-        iDown.setAttribute("data-visible", "false");
-        iUp.classList.add("fa-solid", "fa-angle-up");
-        iUp.setAttribute("data-visible", "true");
-      }
+      // iEdit.setAttribute("data-visible", "false");
+      // if (element.collapsed === "true") {
+      //   iDown.classList.add("fa-solid", "fa-angle-down");
+      //   iDown.setAttribute("data-visible", "true");
+      //   iUp.classList.add("fa-solid", "fa-angle-up");
+      //   iUp.setAttribute("data-visible", "false");
+      // } else {
+      //   iDown.classList.add("fa-solid", "fa-angle-down");
+      //   iDown.setAttribute("data-visible", "false");
+      //   iUp.classList.add("fa-solid", "fa-angle-up");
+      //   iUp.setAttribute("data-visible", "true");
+      // }
       divThird.appendChild(iEdit);
-      divThird.appendChild(iUp);
-      divThird.appendChild(iDown);
+      // divThird.appendChild(iUp);
+      // divThird.appendChild(iDown);
       const ul = document.createElement("ul");
       ul.classList.add("main-section-bookmarks-ul");
       ul.setAttribute("data-collapsed", element.collapsed);
@@ -110,17 +111,17 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
     divThird.classList.add("main-section-bookmarks-group-icons");
     divSecond.appendChild(divThird);
     const iEdit = document.createElement("i");
-    const iUp = document.createElement("i");
-    const iDown = document.createElement("i");
+    // const iUp = document.createElement("i");
+    // const iDown = document.createElement("i");
     iEdit.classList.add("fa-solid", "fa-pencil");
     iEdit.setAttribute("data-visible", "false");
-    iDown.classList.add("fa-solid", "fa-angle-down");
-    iDown.setAttribute("data-visible", "false");
-    iUp.classList.add("fa-solid", "fa-angle-up");
-    iUp.setAttribute("data-visible", "true");
+    // iDown.classList.add("fa-solid", "fa-angle-down");
+    // iDown.setAttribute("data-visible", "false");
+    // iUp.classList.add("fa-solid", "fa-angle-up");
+    // iUp.setAttribute("data-visible", "true");
     divThird.appendChild(iEdit);
-    divThird.appendChild(iUp);
-    divThird.appendChild(iDown);
+    // divThird.appendChild(iUp);
+    // divThird.appendChild(iDown);
     const ul = document.createElement("ul");
     ul.classList.add("main-section-bookmarks-ul");
     ul.setAttribute("data-collapsed", "false");
@@ -220,75 +221,130 @@ const bookmarkEditBtn = document.querySelectorAll(
 //
 
 // collapse /expand bookmarks in group
+// const collExpBookmarksFunc = () => {
+//   const arrowDiv = document.querySelectorAll(
+//     ".main-section-bookmarks-group-icons"
+//   );
+//   arrowDiv.forEach((element) => {
+//     const arrowUp = element.querySelectorAll(".fa-angle-up");
+//     arrowUp.forEach((element) => {
+//       if (element.getAttribute("listener") !== "true") {
+//         element.setAttribute("listener", "true");
+//         element.addEventListener(
+//           "click",
+//           function () {
+//             for (
+//               let index = 1;
+//               index < this.parentNode.childNodes.length;
+//               index++
+//             ) {
+//               dataVisibleSwitcher(this.parentNode.childNodes[index], 1);
+//             }
+//             const positionInArry = getPositionGroupName(
+//               element.parentNode.parentNode.parentNode.childNodes[0]
+//                 .childNodes[0].childNodes[0].data,
+//               bookmarks[0].groups
+//             );
+//             bookmarks[0].groups[positionInArry].collapsed = "true";
+//             element.parentNode.parentNode.parentNode.childNodes[1].setAttribute(
+//               "data-collapsed",
+//               "true"
+//             );
+//             let bookmarksString = JSON.stringify(bookmarks);
+//             localStorage.setItem("Bookmarks", bookmarksString);
+//           },
+//           false
+//         );
+//       }
+//     });
+//     const arrowDown = element.querySelectorAll(".fa-angle-down");
+//     arrowDown.forEach((element) => {
+//       if (element.getAttribute("listener") !== "true") {
+//         element.setAttribute("listener", "true");
+//         element.addEventListener(
+//           "click",
+//           function () {
+//             for (
+//               let index = 1;
+//               index < this.parentNode.childNodes.length;
+//               index++
+//             ) {
+//               dataVisibleSwitcher(this.parentNode.childNodes[index], 1);
+//             }
+//             const positionInArry = getPositionGroupName(
+//               element.parentNode.parentNode.parentNode.childNodes[0]
+//                 .childNodes[0].childNodes[0].data,
+//               bookmarks[0].groups
+//             );
+//             bookmarks[0].groups[positionInArry].collapsed = "false";
+//             element.parentNode.parentNode.parentNode.childNodes[1].setAttribute(
+//               "data-collapsed",
+//               "false"
+//             );
+//             let bookmarksString = JSON.stringify(bookmarks);
+//             localStorage.setItem("Bookmarks", bookmarksString);
+//           },
+//           false
+//         );
+//       }
+//     });
+//   });
+// };
+
 const collExpBookmarksFunc = () => {
-  const arrowDiv = document.querySelectorAll(
-    ".main-section-bookmarks-group-icons"
+  const groupNameBtn = document.querySelectorAll(
+    ".main-section-bookmarks-group"
   );
-  arrowDiv.forEach((element) => {
-    const arrowUp = element.querySelectorAll(".fa-angle-up");
-    arrowUp.forEach((element) => {
-      if (element.getAttribute("listener") !== "true") {
-        element.setAttribute("listener", "true");
-        element.addEventListener(
-          "click",
-          function () {
-            for (
-              let index = 1;
-              index < this.parentNode.childNodes.length;
-              index++
+  groupNameBtn.forEach((element) => {
+    const btn = element.querySelectorAll("div:first-child");
+    btn.forEach((element) => {
+      const h2 = element.querySelectorAll(
+        ".main-section-bookmarks-group-title"
+      );
+      h2.forEach((element) => {
+        if (element.getAttribute("listener") !== "true") {
+          element.setAttribute("listener", "true");
+
+          element.addEventListener("click", function () {
+            console.log(this.parentNode.parentNode);
+            if (
+              this.parentNode.parentNode.childNodes[1].attributes[1]
+                .nodeValue !== "true"
             ) {
-              dataVisibleSwitcher(this.parentNode.childNodes[index], 1);
+              console.log("set to true");
+              this.parentNode.parentNode.childNodes[1].setAttribute(
+                "data-collapsed",
+                "true"
+              );
+              const positionInArry = getPositionGroupName(
+                this.parentNode.parentNode.childNodes[0].childNodes[0]
+                  .innerHTML,
+                bookmarks[0].groups
+              );
+              bookmarks[0].groups[positionInArry].collapsed = "true";
+            } else {
+              console.log("set to false");
+              this.parentNode.parentNode.childNodes[1].setAttribute(
+                "data-collapsed",
+                "false"
+              );
+              const positionInArry = getPositionGroupName(
+                this.parentNode.parentNode.childNodes[0].childNodes[0]
+                  .innerHTML,
+                bookmarks[0].groups
+              );
+              bookmarks[0].groups[positionInArry].collapsed = "false";
             }
-            const positionInArry = getPositionGroupName(
-              element.parentNode.parentNode.parentNode.childNodes[0]
-                .childNodes[0].childNodes[0].data,
-              bookmarks[0].groups
-            );
-            bookmarks[0].groups[positionInArry].collapsed = "true";
-            element.parentNode.parentNode.parentNode.childNodes[1].setAttribute(
-              "data-collapsed",
-              "true"
-            );
+
             let bookmarksString = JSON.stringify(bookmarks);
             localStorage.setItem("Bookmarks", bookmarksString);
-          },
-          false
-        );
-      }
-    });
-    const arrowDown = element.querySelectorAll(".fa-angle-down");
-    arrowDown.forEach((element) => {
-      if (element.getAttribute("listener") !== "true") {
-        element.setAttribute("listener", "true");
-        element.addEventListener(
-          "click",
-          function () {
-            for (
-              let index = 1;
-              index < this.parentNode.childNodes.length;
-              index++
-            ) {
-              dataVisibleSwitcher(this.parentNode.childNodes[index], 1);
-            }
-            const positionInArry = getPositionGroupName(
-              element.parentNode.parentNode.parentNode.childNodes[0]
-                .childNodes[0].childNodes[0].data,
-              bookmarks[0].groups
-            );
-            bookmarks[0].groups[positionInArry].collapsed = "false";
-            element.parentNode.parentNode.parentNode.childNodes[1].setAttribute(
-              "data-collapsed",
-              "false"
-            );
-            let bookmarksString = JSON.stringify(bookmarks);
-            localStorage.setItem("Bookmarks", bookmarksString);
-          },
-          false
-        );
-      }
+          });
+        }
+      });
     });
   });
 };
+
 //
 /// addBookmark Container logic
 //
@@ -424,10 +480,7 @@ const editBookmarksBtnFunc = () => {
         ".main-section-bookmarks-group-icons"
       );
       bookmarkGroupIconContainer.forEach((element) => {
-        const btnEdit = element.querySelectorAll(".fa-pencil");
-        btnEdit.forEach((element) => {
-          dataVisibleSwitcher(element, 1);
-        });
+        dataVisibleSwitcher(element, 1);
       });
 
       //show edit/delete bookmark btn and disable link
@@ -490,13 +543,34 @@ const addbookmarkDeleteBtnFunc = () => {
             }
 
             const kickTheBaby = this.parentNode.parentNode;
+            console.log(this.parentNode.parentNode.parentNode.childNodes);
 
+            console.log(
+              this.parentNode.parentNode.parentNode.childNodes.length
+            );
+            const childLeft =
+              this.parentNode.parentNode.parentNode.childNodes.length;
+            const parentNode = this.parentNode.parentNode.parentNode.parentNode;
             if (kickTheBaby.parentNode) {
               kickTheBaby.parentNode.removeChild(kickTheBaby);
             }
 
+            // delete group if there is no bookmark in it
+            if (childLeft === 1) {
+              console.log("delete");
+              console.log(parentNode);
+              if (parentNode.parentNode) {
+                parentNode.parentNode.removeChild(parentNode);
+              }
+              if (groupNamePosition > -1) {
+                bookmarks[0].groups.splice(groupNamePosition, 1);
+              } else {
+                return;
+              }
+            }
             let bookmarksString = JSON.stringify(bookmarks);
             localStorage.setItem("Bookmarks", bookmarksString);
+            groupSelect();
           },
           false
         );
@@ -684,7 +758,6 @@ const addbookmarkEditbtnFunc = () => {
 
             const bookmarkToChange = bookmarks[0].groups[groupNamePosition];
 
-
             const editBookmarksBtnConfirm = groupParent.querySelector(
               ".editBookmarks-btn-confirm"
             );
@@ -733,6 +806,11 @@ const addbookmarkEditbtnFunc = () => {
     });
   });
 };
+// const mainGroupDiv = document.querySelectorAll(".main-section-bookmarks-group")
+// mainGroupDiv.forEach((element) => {
+//   const mainGroupDivUl = element.querySelector(".main-section-bookmarks-ul")
+//   console.log(mainGroupDivUl)
+// })
 
 // drag and drop
 const elementToDrag = document.querySelectorAll(
