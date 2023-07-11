@@ -109,12 +109,13 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
     divSecond.appendChild(h2);
     const divThird = document.createElement("div");
     divThird.classList.add("main-section-bookmarks-group-icons");
+    divThird.setAttribute("data-visible", "false");
     divSecond.appendChild(divThird);
     const iEdit = document.createElement("i");
     // const iUp = document.createElement("i");
     // const iDown = document.createElement("i");
     iEdit.classList.add("fa-solid", "fa-pencil");
-    iEdit.setAttribute("data-visible", "false");
+    // iEdit.setAttribute("data-visible", "false");
     // iDown.classList.add("fa-solid", "fa-angle-down");
     // iDown.setAttribute("data-visible", "false");
     // iUp.classList.add("fa-solid", "fa-angle-up");
@@ -306,12 +307,10 @@ const collExpBookmarksFunc = () => {
           element.setAttribute("listener", "true");
 
           element.addEventListener("click", function () {
-            console.log(this.parentNode.parentNode);
             if (
               this.parentNode.parentNode.childNodes[1].attributes[1]
                 .nodeValue !== "true"
             ) {
-              console.log("set to true");
               this.parentNode.parentNode.childNodes[1].setAttribute(
                 "data-collapsed",
                 "true"
@@ -323,7 +322,6 @@ const collExpBookmarksFunc = () => {
               );
               bookmarks[0].groups[positionInArry].collapsed = "true";
             } else {
-              console.log("set to false");
               this.parentNode.parentNode.childNodes[1].setAttribute(
                 "data-collapsed",
                 "false"
@@ -552,11 +550,7 @@ const addbookmarkDeleteBtnFunc = () => {
             }
 
             const kickTheBaby = this.parentNode.parentNode;
-            console.log(this.parentNode.parentNode.parentNode.childNodes);
 
-            console.log(
-              this.parentNode.parentNode.parentNode.childNodes.length
-            );
             const childLeft =
               this.parentNode.parentNode.parentNode.childNodes.length;
             const parentNode = this.parentNode.parentNode.parentNode.parentNode;
@@ -566,8 +560,6 @@ const addbookmarkDeleteBtnFunc = () => {
 
             // delete group if there is no bookmark in it
             if (childLeft === 1) {
-              console.log("delete");
-              console.log(parentNode);
               if (parentNode.parentNode) {
                 parentNode.parentNode.removeChild(parentNode);
               }
