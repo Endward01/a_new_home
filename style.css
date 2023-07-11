@@ -3,10 +3,9 @@
   --first: #1e283a;
   --second: #232c3d;
   --third: #293243;
-  /* --accent-first: #c2933e; */
   --accent-first: #ffbc41;
   --text-color: #f8fdff;
-  --text-color-semiTrans: #f8fdffa6;
+  --text-color-semiTrans: #fafeffa6;
 }
 
 /* MAIN STYLES */
@@ -98,7 +97,19 @@ i {
   gap: 0.5rem;
 }
 .main-section-bookmarks-group {
+  position: relative;
   line-height: 1.25rem;
+  cursor: pointer;
+}
+.main-section-bookmarks-group > div:hover::before {
+  /* background-color: white; */
+  right: 5%;
+  /* top: 9%; */
+  position: absolute;
+  content: "\f077";
+  font: normal normal normal 14px/1 FontAwesome;
+  color: var(--text-color-semiTrans);
+  z-index: -1;
 }
 .main-section-bookmarks-group > div:first-child {
   border-top: 1px solid var(--accent-first);
@@ -108,6 +119,9 @@ i {
   align-items: center;
 }
 
+.main-section-bookmarks-group-icons{
+  margin-right: 1.5rem;
+}
 .main-section-bookmarks-group-icons,
 .main-section-bookmarks-ul-li-icons {
   box-sizing: border-box;
@@ -133,12 +147,12 @@ i {
   color: var(--accent-first);
 }
 .main-section-bookmarks-group-icons > i[data-visible="false"],
-.main-section-bookmarks-group-icons > i[data-visible="false"] {
+.main-section-bookmarks-group-icons[data-visible="false"] {
   display: none;
 }
 
 .main-section-bookmarks-group-icons > i[data-visible="true"],
-.main-section-bookmarks-group-icons > i[data-visible="true"] {
+.main-section-bookmarks-group-icons[data-visible="true"] {
   display: inline-block;
 }
 .main-section-bookmarks-ul-li-icons[data-visible="true"] {
@@ -148,6 +162,7 @@ i {
   display: none;
 }
 .main-section-bookmarks-group-title {
+  width: 100%;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-color-semiTrans);
