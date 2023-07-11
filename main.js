@@ -353,6 +353,15 @@ const collExpBookmarksFunc = () => {
 addShowBookmark.addEventListener("click", function openWindow() {
   dataActiveSwitcher(addShowBookmark, 1);
   dataVisibleSwitcher(addBookmark, 1);
+  const selectGroup = document.querySelector(".addBookmark-form-chooseGroup");
+  if (selectGroup.childNodes.length === 0) {
+    newGroupCheckBox.click();
+    newGroupCheckBox.setAttribute("disabled","true")
+  } else{
+    newGroupCheckBox.removeAttribute("disabled","true")
+
+
+  }
   // document.querySelector(".addBookmark-form").reset();
 });
 
