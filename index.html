@@ -84,14 +84,51 @@
                 class="addBookmark-form-btn-cancel button addBookmark-form-input addBookmark-form-btn"
                 value="Cancel" />
             </div>
-           
           </form>
         </div>
         <div class="settings" data-visible="false">
-          <h1 style="font-size: 4rem; text-align: center; font-weight: 800">
-            HI THIS IS SETTING WINDOW! CAN'T YOU SEE IT'S UNDER CONSTRUCTION ?
-            <p>MOVE ALONG</p>
-          </h1>
+          <div class="settings-menu" autocomplete="off">
+            <div class="settings-menu-newTab">
+              <h2>Setup your new tab page URL</h2>
+              <p>
+                If you want this extansion to be your homepage, set your
+                homepage to the following URL.
+              </p>
+              <label for="URL" class="settings-menu-newTab-label"
+                >URL
+                <form class="settings-menu-form">
+                  <input type="text" class="input settings-menu-form-inp" placeholder="Nothing to see here. Yet!" />
+                  <input
+                    type="button"
+                    value="Copy"
+                    class="button settings-menu-form-btn" />
+                </form>
+              </label>
+            </div>
+
+            <form class="settings-menu-importExport">
+              <h2>Import/Export Bookmarks</h2>
+
+              <textarea
+                class="settings-menu-textarea input"
+                placeholder="Click 'Export' button to get your bookmarks as a code.                       Click 'Import' button to import your bookmarks as a code you paste. Click 'Clear' to clear this textarea.
+                "></textarea>
+              <div class="settings-menu-btnContainer">
+                <input
+                  type="button"
+                  class="settings-menu-export settings-menu-btn button"
+                  value="Export" />
+                <input
+                  type="button"
+                  class="settings-menu-clear settings-menu-btn button"
+                  value="Clear" />
+                <input
+                  type="button"
+                  class="settings-menu-import settings-menu-btn button"
+                  value="Import" />
+              </div>
+            </form>
+          </div>
         </div>
         <div class="main-section-bookmarks"></div>
       </section>

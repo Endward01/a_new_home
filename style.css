@@ -6,7 +6,6 @@
   --accent-first: #d44b4b;
   --text-color: #19282f;
   --text-color-semiTrans: #19282fa6;
-
 }
 
 /* MAIN STYLES */
@@ -49,7 +48,7 @@ i {
   display: flex;
   justify-content: space-between;
   background-color: var(--first);
-  z-index: 10;
+  /* z-index: 10; */
 }
 .main-nav-brand {
   height: 2rem;
@@ -214,8 +213,12 @@ i {
 
 /* Start of Footer Section */
 .main-footer {
+  display: flex;
   /* border-top: 1px solid var(--accent-first); */
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  z-index: 10;
 }
 .main-footer-textarea {
   margin: 0.25rem 0;
@@ -246,10 +249,11 @@ i {
   justify-content: center;
   align-items: center;
   z-index: 1;
-  backdrop-filter: blur(.25rem);
+  backdrop-filter: blur(0.25rem);
 }
 
-.settings[data-visible="true"],.addBookmark[data-visible="true"] {
+.settings[data-visible="true"],
+.addBookmark[data-visible="true"] {
   display: flex;
 }
 .addBookmark[data-visible="false"],
@@ -259,24 +263,25 @@ i {
 .addCreateNewGroup[data-visible="true"] {
   display: block;
 }
-.addBookmkar-form-btnContainer >  .addBookmark-form-btnIsDisabled,
-.addBookmkar-form-btnContainer >  .addBookmark-form-btnIsDisabled:hover{
+.addBookmkar-form-btnContainer > .addBookmark-form-btnIsDisabled,
+.addBookmkar-form-btnContainer > .addBookmark-form-btnIsDisabled:hover {
   background-color: gray;
-  cursor:auto;
+  cursor: auto;
   border: none;
 }
 .addBookmark-form {
   padding: 2rem;
   background-color: var(--second);
   display: flex;
-  width: 30rem;
+  width: 40rem;
   margin-bottom: 20%;
-
   flex-direction: column;
   gap: 1rem;
-  border-radius: .25rem;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-  backdrop-filter: blur(10px);
+  border-radius: 0.25rem;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  /* backdrop-filter: blur(10px); */
 }
 /* .addBookmark-form{
   margin-bottom: 25%;
@@ -289,37 +294,129 @@ i {
 }
 .input {
   background-color: var(--third);
-  border: none;
+  border: 1px solid transparent;
   border-radius: 0.25rem;
-  padding-left: 0.25rem;
+  padding: 0.25rem;
   outline: none;
+  font-size: 1rem;
 }
 .addBookmark-form-input {
   height: 2rem;
-  font-size: 1.1rem;
+
   margin-top: 0.25rem;
   width: 100%;
 }
 .input:focus {
-  border: 1px var(--accent-first) solid;
+  border: 1px solid var(--accent-first);
 }
 .addBookmkar-form-btnContainer {
   width: 100%;
   display: flex;
   column-gap: 1rem;
 }
+.addBookmark-form-checkbox {
+  /* outline: none; */
+  background-color: var(--accent-first);
+}
 .button {
   background-color: var(--third);
-  border: none;
+  border: 1px transparent solid;
   border-radius: 0.25rem;
   cursor: pointer;
   outline: none;
+  font-size: 1rem;
 }
 .button:hover,
 .button:focus {
   border: 1px var(--accent-first) solid;
 }
 /* End of Add New Bookmark / Group Container */
+
+/* Start of Setting Container */
+.settings {
+  flex-direction: column;
+}
+.settings-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 40rem;
+  padding: 2rem;
+  gap: 2rem;
+  border-radius: 0.25rem;
+  background-color: var(--first);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.settings-menu-importExport {
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.settings-menu-newTab {
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.settings-menu-importExport > h2,
+.settings-menu-newTab > h2 {
+  width: 100%;
+  border-top: 1px solid var(--accent-first);
+  line-height: 1.25;
+  font-size: 1.5rem;
+}
+.settings-menu-newTab > p {
+  width: 90%;
+  line-height: 1.25;
+  font-size: 1rem;
+}
+.settings-menu-newTab-label {
+  width: 90%;
+  line-height: 1.25;
+  font-size: 1.1rem;
+}
+.settings-menu-form {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.settings-menu-form-inp {
+  width: 69%;
+  height: 2rem;
+
+}
+.settings-menu-form-btn {
+  width: 30%;
+  height: 2rem;
+
+}
+.settings-menu-textarea {
+  width: 90%;
+  height: 10rem;
+  resize: none;
+  margin: 0 auto;
+}
+
+.settings-menu-btnContainer {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+.settings-menu-btn {
+  width: 33%;
+  height: 2rem;
+}
+/* End of Setting Container */
 
 /* Start of Editing Container */
 .linkDisabled {
@@ -399,10 +496,6 @@ i {
   display: none;
 }
 /* End of Editing Container */
-
-.settings{
-  flex-direction: column;
-}
 
 @media screen and (min-width: 1440px) {
   .main {
