@@ -348,7 +348,7 @@ const collExpBookmarksFunc = () => {
 //
 
 // show/hide addBookmark card
-addShowBookmark.addEventListener("click", function openWindow() {
+addShowBookmark.addEventListener("click", function () {
   dataActiveSwitcher(addShowBookmark, 1);
   dataVisibleSwitcher(addBookmark, 1);
   const selectGroup = document.querySelector(".addBookmark-form-chooseGroup");
@@ -358,21 +358,82 @@ addShowBookmark.addEventListener("click", function openWindow() {
   } else {
     newGroupCheckBox.removeAttribute("disabled", "true");
   }
+
+  addBookmarkBtnAdd.setAttribute("disabled", "true");
+  addBookmarkBtnAdd.classList.add("addBookmark-form-btnIsDisabled");
   // document.querySelector(".addBookmark-form").reset();
 });
 
+// validation for addBookmark form
+const form = document.querySelector(".addBookmark-form");
+form.addEventListener("input", () => {
+  console.log("change");
+  const name = addBookmarkInpName.value;
+  const url = addBookmarkInpUrl.value;
+  const newGroup = addBookmarksNewGroup.value;
+  // if (name == "" || url == "" || newGroup == "") {
+
+  if (name === "" || url === "") {
+    addBookmarkBtnAdd.setAttribute("disabled", "true");
+    addBookmarkBtnAdd.classList.add("addBookmark-form-btnIsDisabled");
+  } else {
+    addBookmarkBtnAdd.removeAttribute("disabled", "true");
+    addBookmarkBtnAdd.classList.remove("addBookmark-form-btnIsDisabled");
+  }
+});
+// const addBookmarksValidation = () => {
+// };
+// addBookmarksValidation()
+// console.log();
+// if (newGroupCheckBox.checked !== true) {
+//   addBookmarkInpName.addEventListener("change", function () {
+//     addBookmarkInpUrl.addEventListener("change", function () {
+//       console.log(addBookmarkInpName.value);
+//       if ((addBookmarkInpName.value !== "", addBookmarkInpUrl.value !== "")) {
+//         addBookmarkBtnAdd.setAttribute("disabled", "false");
+//         addBookmarkBtnAdd.classList.remove("addBookmark-form-btnIsDisabled");
+//       } else {
+//         addBookmarkBtnAdd.setAttribute("disabled", "true");
+//         addBookmarkBtnAdd.classList.add("addBookmark-form-btnIsDisabled");
+//       }
+//     });
+//   });
+// } else {
+//   addBookmarkInpName.addEventListener("change", function () {
+//     addBookmarkInpUrl.addEventListener("change", function () {
+//       addBookmarksNewGroup.addEventListener("change", function () {
+//         console.log(addBookmarkInpName.value);
+//         if (
+//           (addBookmarkInpName.value !== "",
+//           addBookmarkInpUrl.value !== "",
+//           addBookmarksNewGroup.value !== "")
+//         ) {
+//           addBookmarkBtnAdd.setAttribute("disabled", "false");
+//           addBookmarkBtnAdd.classList.remove("addBookmark-form-btnIsDisabled");
+//         } else {
+//           addBookmarkBtnAdd.setAttribute("disabled", "true");
+//           addBookmarkBtnAdd.classList.add("addBookmark-form-btnIsDisabled");
+//         }
+//       });
+//     });
+//   });
+// }
+
 // close addBookmarks card
-addBookmarksBtnCancel.addEventListener("click", function close() {
+addBookmarksBtnCancel.addEventListener("click", function () {
   dataActiveSwitcher(addShowBookmark, 1);
   dataVisibleSwitcher(addBookmark, 1);
-  checkToAddNewGroup[0].setAttribute("data-visible", "true");
-  checkToAddNewGroup[1].setAttribute("data-visible", "false");
-
-  document.querySelector(".addBookmark-form").reset();
+  const selectGroup = document.querySelector(".addBookmark-form-chooseGroup");
+  if (selectGroup.childNodes.length !== 0) {
+    checkToAddNewGroup[0].setAttribute("data-visible", "true");
+    checkToAddNewGroup[1].setAttribute("data-visible", "false");
+    document.querySelector(".addBookmark-form").reset();
+  }
 });
 
 //add new bookmark to group or create new group
-addBookmarkBtnAdd.addEventListener("click", function getBalue() {
+
+addBookmarkBtnAdd.addEventListener("click", function () {
   const name = addBookmarkInpName.value;
   const url = addBookmarkInpUrl.value;
   const group = addBookmarkSelectGroup.value;
@@ -819,7 +880,7 @@ const showSettingsUI = () => {
     settingBtn.setAttribute("listener", "true");
     settingBtn.addEventListener("click", () => {
       console.log("show settings UI");
-      console.log(settingBtn)
+      console.log(settingBtn);
       dataActiveSwitcher(settingBtn, 1);
       dataVisibleSwitcher(settingDiv, 1);
     });

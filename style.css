@@ -256,8 +256,16 @@ i {
 .addCreateNewGroup[data-visible="true"] {
   display: block;
 }
+.addBookmkar-form-btnContainer >  .addBookmark-form-btnIsDisabled,
+.addBookmkar-form-btnContainer >  .addBookmark-form-btnIsDisabled:hover{
+  background-color: gray;
+  cursor:auto;
+  /* color:black; */
+  border: none;
+}
 .addBookmark-form {
   display: flex;
+  width: 30rem;
   padding-top: 5rem;
   flex-direction: column;
   gap: 1rem;
