@@ -367,7 +367,6 @@ addShowBookmark.addEventListener("click", function () {
 // validation for addBookmark form
 const form = document.querySelector(".addBookmark-form");
 form.addEventListener("input", () => {
-  console.log("change");
   const name = addBookmarkInpName.value;
   const url = addBookmarkInpUrl.value;
   const newGroup = addBookmarksNewGroup.value;
@@ -381,43 +380,6 @@ form.addEventListener("input", () => {
     addBookmarkBtnAdd.classList.remove("addBookmark-form-btnIsDisabled");
   }
 });
-// const addBookmarksValidation = () => {
-// };
-// addBookmarksValidation()
-// console.log();
-// if (newGroupCheckBox.checked !== true) {
-//   addBookmarkInpName.addEventListener("change", function () {
-//     addBookmarkInpUrl.addEventListener("change", function () {
-//       console.log(addBookmarkInpName.value);
-//       if ((addBookmarkInpName.value !== "", addBookmarkInpUrl.value !== "")) {
-//         addBookmarkBtnAdd.setAttribute("disabled", "false");
-//         addBookmarkBtnAdd.classList.remove("addBookmark-form-btnIsDisabled");
-//       } else {
-//         addBookmarkBtnAdd.setAttribute("disabled", "true");
-//         addBookmarkBtnAdd.classList.add("addBookmark-form-btnIsDisabled");
-//       }
-//     });
-//   });
-// } else {
-//   addBookmarkInpName.addEventListener("change", function () {
-//     addBookmarkInpUrl.addEventListener("change", function () {
-//       addBookmarksNewGroup.addEventListener("change", function () {
-//         console.log(addBookmarkInpName.value);
-//         if (
-//           (addBookmarkInpName.value !== "",
-//           addBookmarkInpUrl.value !== "",
-//           addBookmarksNewGroup.value !== "")
-//         ) {
-//           addBookmarkBtnAdd.setAttribute("disabled", "false");
-//           addBookmarkBtnAdd.classList.remove("addBookmark-form-btnIsDisabled");
-//         } else {
-//           addBookmarkBtnAdd.setAttribute("disabled", "true");
-//           addBookmarkBtnAdd.classList.add("addBookmark-form-btnIsDisabled");
-//         }
-//       });
-//     });
-//   });
-// }
 
 // close addBookmarks card
 addBookmarksBtnCancel.addEventListener("click", function () {
@@ -866,11 +828,6 @@ const addbookmarkEditbtnFunc = () => {
     });
   });
 };
-// const mainGroupDiv = document.querySelectorAll(".main-section-bookmarks-group")
-// mainGroupDiv.forEach((element) => {
-//   const mainGroupDivUl = element.querySelector(".main-section-bookmarks-ul")
-//   console.log(mainGroupDivUl)
-// })
 
 // settings btn logic
 const showSettingsUI = () => {
@@ -879,8 +836,6 @@ const showSettingsUI = () => {
   if (settingBtn.getAttribute("listener") !== "true") {
     settingBtn.setAttribute("listener", "true");
     settingBtn.addEventListener("click", () => {
-      console.log("show settings UI");
-      console.log(settingBtn);
       dataActiveSwitcher(settingBtn, 1);
       dataVisibleSwitcher(settingDiv, 1);
     });
