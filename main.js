@@ -1,8 +1,8 @@
 // get bookmarks from localstorage
 if (localStorage.getItem("Bookmarks") !== null) {
   console.log(`Bookmarks address exists`);
-  let retString = localStorage.getItem("Bookmarks");
-  var bookmarks = JSON.parse(retString);
+  var bookmarksString = localStorage.getItem("Bookmarks");
+  var bookmarks = JSON.parse(bookmarksString);
   console.log(bookmarks);
 } else {
   var bookmarks = [
@@ -26,6 +26,50 @@ if (localStorage.getItem("Bookmarks") !== null) {
   ];
 }
 
+const importExportBookmarks = () => {
+  const textarea = document.querySelector(".settings-menu-textarea");
+  const importBTN = document.querySelector(".settings-menu-import");
+  const exportBTN = document.querySelector(".settings-menu-export");
+  const clearBTN = document.querySelector(".settings-menu-clear");
+  const settingDiv = document.querySelector(".settings");
+  const settingBtn = document.querySelector(".settings-btn");
+  const bookmarksSection = document.querySelector(".main-section-bookmarks");
+
+  if (importBTN.getAttribute("listener") !== "true") {
+    importBTN.setAttribute("listener", "true");
+    importBTN.addEventListener("click", () => {
+      localStorage.setItem("Bookmarks", textarea.value);
+
+      while (bookmarksSection.firstChild) {
+        bookmarksSection.removeChild(bookmarksSection.firstChild);
+      }
+
+      bookmarksString = localStorage.getItem("Bookmarks");
+      bookmarks = JSON.parse(bookmarksString);
+      dataActiveSwitcher(settingBtn, 1);
+      dataVisibleSwitcher(settingDiv, 1);
+      createBookmarkGroup(bookmarks[0].groups);
+      addbookmarkDeleteBtnFunc();
+      addbookmarkEditbtnFunc();
+      collExpBookmarksFunc();
+    });
+  }
+  if (exportBTN.getAttribute("listener") !== "true") {
+    exportBTN.setAttribute("listener", "true");
+    exportBTN.addEventListener("click", () => {
+      textarea.value = "";
+      textarea.value = localStorage.getItem("Bookmarks");
+    });
+  }
+  if (clearBTN.getAttribute("listener") !== "true") {
+    clearBTN.setAttribute("listener", "true");
+    clearBTN.addEventListener("click", () => {
+      textarea.value = "";
+    });
+  }
+
+};
+importExportBookmarks();
 // SELECT EXISTING NODES
 
 const body = document.querySelector("body");
@@ -838,6 +882,7 @@ const showSettingsUI = () => {
     settingBtn.addEventListener("click", () => {
       dataActiveSwitcher(settingBtn, 1);
       dataVisibleSwitcher(settingDiv, 1);
+      document.querySelector(".settings-menu-textarea").value = "";
     });
   }
 };
@@ -872,7 +917,7 @@ const dragAndDropFunction = () => {
     });
   });
 };
-// dragAndDropFunction();
+dragAndDropFunction();
 
 editBookmarksBtnFunc();
 showSettingsUI();
