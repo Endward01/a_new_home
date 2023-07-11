@@ -354,11 +354,9 @@ addShowBookmark.addEventListener("click", function openWindow() {
   const selectGroup = document.querySelector(".addBookmark-form-chooseGroup");
   if (selectGroup.childNodes.length === 0) {
     newGroupCheckBox.click();
-    newGroupCheckBox.setAttribute("disabled","true")
-  } else{
-    newGroupCheckBox.removeAttribute("disabled","true")
-
-
+    newGroupCheckBox.setAttribute("disabled", "true");
+  } else {
+    newGroupCheckBox.removeAttribute("disabled", "true");
   }
   // document.querySelector(".addBookmark-form").reset();
 });
@@ -415,7 +413,7 @@ addBookmarkBtnAdd.addEventListener("click", function getBalue() {
   }
 
   // appendBookmarks();
-  editBookmarksBtnFunc();
+  // editBookmarksBtnFunc();
   addbookmarkDeleteBtnFunc();
   addbookmarkEditbtnFunc();
   collExpBookmarksFunc();
@@ -813,6 +811,21 @@ const addbookmarkEditbtnFunc = () => {
 //   console.log(mainGroupDivUl)
 // })
 
+// settings btn logic
+const showSettingsUI = () => {
+  const settingDiv = document.querySelector(".settings");
+  const settingBtn = document.querySelector(".settings-btn");
+  if (settingBtn.getAttribute("listener") !== "true") {
+    settingBtn.setAttribute("listener", "true");
+    settingBtn.addEventListener("click", () => {
+      console.log("show settings UI");
+      console.log(settingBtn)
+      dataActiveSwitcher(settingBtn, 1);
+      dataVisibleSwitcher(settingDiv, 1);
+    });
+  }
+};
+
 // drag and drop
 const elementToDrag = document.querySelectorAll(
   ".main-section-bookmarks-ul-li"
@@ -843,9 +856,10 @@ const dragAndDropFunction = () => {
     });
   });
 };
-dragAndDropFunction();
+// dragAndDropFunction();
 
 editBookmarksBtnFunc();
+showSettingsUI();
 addbookmarkDeleteBtnFunc();
 addbookmarkEditbtnFunc();
 collExpBookmarksFunc();

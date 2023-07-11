@@ -81,6 +81,7 @@ i {
   color: var(--accent-first);
 }
 .addBookmark-btn[data-active="true"],
+.settings-btn[data-active="true"],
 .editBookmarks-btn[data-active="true"] {
   color: var(--accent-first);
 }
@@ -119,7 +120,7 @@ i {
   align-items: center;
 }
 
-.main-section-bookmarks-group-icons{
+.main-section-bookmarks-group-icons {
   margin-right: 1.5rem;
 }
 .main-section-bookmarks-group-icons,
@@ -232,7 +233,8 @@ i {
 }
 
 /* Start of Add New Bookmark / Group Container */
-.addBookmark {
+.addBookmark,
+.settings {
   position: absolute;
   top: 0;
   left: 0;
@@ -243,10 +245,12 @@ i {
   justify-content: center;
   z-index: 2;
 }
-.addBookmark[data-visible="true"] {
+.addBookmark[data-visible="true"],
+.settings[data-visible="true"] {
   display: flex;
 }
-.addBookmark[data-visible="false"] {
+.addBookmark[data-visible="false"],
+.settings[data-visible="false"] {
   display: none;
 }
 .addCreateNewGroup[data-visible="true"] {
@@ -375,6 +379,10 @@ i {
   display: none;
 }
 /* End of Editing Container */
+
+.settings{
+  flex-direction: column;
+}
 
 @media screen and (min-width: 1440px) {
   .main {
