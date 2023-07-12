@@ -23,6 +23,8 @@ if (localStorage.getItem("Bookmarks") !== null) {
       ],
     },
   ];
+  let bookmarksString = JSON.stringify(bookmarks);
+  localStorage.setItem("Bookmarks", bookmarksString);
 }
 if (localStorage.getItem("Bookmarks") !== null) {
   console.log(`Color Sheme exists`);
@@ -44,9 +46,8 @@ if (localStorage.getItem("Bookmarks") !== null) {
       ],
     },
   ];
-
-  // let colorSchemeString = JSON.stringify(colorScheme);
-  // localStorage.setItem("ColorSheme", colorSchemeString);
+  var colorSchemeString = JSON.stringify(colorScheme);
+  colorScheme = localStorage.setItem("ColorSheme", colorSchemeString);
 }
 
 //press escepe to quickly quit manu functions
