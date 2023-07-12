@@ -22,6 +22,15 @@
         </div>
         <ul class="main-nav-icon">
           <li>
+            <input type="checkbox" class="switchForLightDarkMode" />
+            <i
+              class="fa-solid fa-moon main-nav-icon-btn icon darkBtn"
+              data-visible="false"></i>
+            <i
+              class="fa-solid fa-sun main-nav-icon-btn icon lightBtn"
+              data-visible="true"></i>
+          </li>
+          <li>
             <i
               class="fa-solid fa-plus addBookmark-btn main-nav-icon-btn icon"
               data-active="false"></i>
@@ -98,7 +107,10 @@
               <label for="URL" class="settings-menu-newTab-label"
                 >URL
                 <form class="settings-menu-form">
-                  <input type="text" class="input settings-menu-form-inp" placeholder="Nothing to see here. Yet!" />
+                  <input
+                    type="text"
+                    class="input settings-menu-form-inp"
+                    placeholder="Nothing to see here. Yet!" />
                   <input
                     type="button"
                     value="Copy"
@@ -107,28 +119,6 @@
               </label>
             </div>
 
-            <form class="settings-menu-importExport">
-              <h2>Import/Export Bookmarks</h2>
-
-              <textarea
-                class="settings-menu-textarea input"
-                placeholder="Click 'Export' button to get your bookmarks as a code.                       Click 'Import' button to import your bookmarks as a code you paste. Click 'Clear' to clear this textarea.
-                "></textarea>
-              <div class="settings-menu-btnContainer">
-                <input
-                  type="button"
-                  class="settings-menu-export settings-menu-btn button"
-                  value="Export" />
-                <input
-                  type="button"
-                  class="settings-menu-clear settings-menu-btn button"
-                  value="Clear" />
-                <input
-                  type="button"
-                  class="settings-menu-import settings-menu-btn button"
-                  value="Import" />
-              </div>
-            </form>
             <form class="settings-menu-importExport">
               <h2>Import/Export Bookmarks</h2>
 
