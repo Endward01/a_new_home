@@ -6,14 +6,14 @@
   "author": "Daniel Prętki",
   "description": "A new tab page Extansion",
   "chrome_url_overrides": {
-    "newtab": "/index.html"
+    "newtab": "src/index.html"
   },
   "browser_action": {
-    "default_popup": "tool-bar-popup.html",
+    "default_popup": "src/tool-bar-popup.html",
     "default_title": "add current page to bookmarks",
     "default_icon": {
-      "16": "icons/white-extansion-icon.png",
-      "32": "icons/white-extansion-icon.png"
+      "16": "src/icons/white-extansion-icon.png",
+      "32": "src/icons/white-extansion-icon.png"
     }
   },
   "content_scripts": [
@@ -22,13 +22,14 @@
         "*://*.mozilla.org/*"
       ],
       "html": [
-        "index.js"
+        "src/index.html"
       ],
       "css": [
-        "style.css"
+        "src/style.css",
+        "src/reset.css"
       ],
       "js": [
-        "main.js"
+        "src/main.js"
       ],
       "run_at": "document_start"
     }
