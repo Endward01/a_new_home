@@ -1,24 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="choose_page.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self';" /> -->
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
   </head>
-  <body>
-    <div style="">
-      <h1 style="margin: 1rem 2rem; line-height: 3rem">
-        Hi, It's me a small popup
-      </h1>
-      <label for="name">
-        Name
-        <input type="text" value="" class="popup-" /> </label
-      ><label for="href">
-        Url
-        <input type="text" value=""  class="popup-urlValue" />
+  <body style="width: 25rem; height: 23rem">
+    <form
+      class="addBookmark-form"
+      autocomplete="off"
+      style="width: 25rem; height: 23rem; top: 0">
+      <label for="name " class="addBookmark-form-label"
+        >Name
+        <input
+          class="addBookmark-form-name addBookmark-inp input addBookmark-form-input"
+          type="text" />
       </label>
-    </div>
-    <script src="main.js"></script>
+      <label for="url" class="addBookmark-form-label"
+        >URL
+        <input
+          class="addBookmark-form-url addBookmark-inp input addBookmark-form-input"
+          type="text" />
+      </label>
+      <label
+        for="add to group"
+        class="addCreateNewGroup addBookmark-form-label"
+        data-visible="true"
+        >Add to Group
+        <select
+          class="addBookmark-form-chooseGroup addBookmark-inp input addBookmark-form-input"></select>
+      </label>
+      <label
+        for="new group"
+        class="addCreateNewGroup addBookmark-form-label"
+        data-visible="false"
+        >New Group
+        <input
+          type="text"
+          class="addBookmark-form-newGroup addBookmark-inp input addBookmark-form-input" />
+      </label>
+      <label for="add new group" class="addBookmark-form-label"
+        >Add new group
+        <input type="checkbox" class="addBookmark-form-checkbox" />
+      </label>
+      <div class="addBookmkar-form-btnContainer">
+        <input
+          type="button"
+          class="addBookmark-form-btn-add button addBookmark-form-input addBookmark-form-btn"
+          value="Add" />
+      </div>
+    </form>
+    <script src="tool-bar-popup.js"></script>
   </body>
 </html>

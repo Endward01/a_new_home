@@ -1,8 +1,9 @@
 // get bookmarks from localstorage
 if (localStorage.getItem("Bookmarks") !== null) {
-  console.log(`Bookmarks address exists`);
   var bookmarksString = localStorage.getItem("Bookmarks");
   var bookmarks = JSON.parse(bookmarksString);
+  console.info(`Bookmarks address exists`);
+  console.info(bookmarks);
 } else {
   var bookmarks = [
     {
@@ -26,8 +27,7 @@ if (localStorage.getItem("Bookmarks") !== null) {
   let bookmarksString = JSON.stringify(bookmarks);
   localStorage.setItem("Bookmarks", bookmarksString);
 }
-if (localStorage.getItem("Bookmarks") !== null) {
-  console.log(`Color Sheme exists`);
+if (localStorage.getItem("ColorSheme") !== null) {
   var colorSchemeString = localStorage.getItem("ColorSheme");
   var colorScheme = JSON.parse(colorSchemeString);
 } else {
@@ -46,10 +46,34 @@ if (localStorage.getItem("Bookmarks") !== null) {
       ],
     },
   ];
-  var colorSchemeString = JSON.stringify(colorScheme);
-  colorScheme = localStorage.setItem("ColorSheme", colorSchemeString);
+  let colorSchemeString = JSON.stringify(colorScheme);
+  localStorage.setItem("ColorSheme", colorSchemeString);
+  console.log(colorScheme);
 }
 
+// window.addEventListener("storage", function (e) {
+//   if (e.key === "Bookmarks") {
+//     alert("Woohoo, someone changed my localstorage!");
+//   }
+// });
+
+window.addEventListener("storage", function (e) {
+  if (e.key === "Bookmarks") {
+    while (document.querySelector(".main-section-bookmarks").firstChild) {
+      document
+        .querySelector(".main-section-bookmarks")
+        .removeChild(
+          document.querySelector(".main-section-bookmarks").firstChild
+        );
+    }
+    bookmarksString = localStorage.getItem("Bookmarks");
+    bookmarks = JSON.parse(bookmarksString);
+    createBookmarkGroup(bookmarks[0].groups);
+    addbookmarkDeleteBtnFunc();
+    addbookmarkEditbtnFunc();
+    collExpBookmarksFunc();
+  }
+});
 //press escepe to quickly quit manu functions
 
 document.body.addEventListener("keyup", function (e) {
@@ -430,14 +454,39 @@ form.addEventListener("input", () => {
   const name = addBookmarkInpName.value;
   const url = addBookmarkInpUrl.value;
   const newGroup = addBookmarksNewGroup.value;
-  // if (name == "" || url == "" || newGroup == "") {
 
-  if (name === "" || url === "") {
-    addBookmarkBtnAdd.setAttribute("disabled", "true");
-    addBookmarkBtnAdd.classList.add("addBookmark-form-btnIsDisabled");
+  if (document.querySelector(".addBookmark-form-checkbox").checked !== true) {
+    if (name === "" || url === "") {
+      document
+        .querySelector(".addBookmark-form-btn-add")
+        .setAttribute("disabled", "true");
+      document
+        .querySelector(".addBookmark-form-btn-add")
+        .classList.add("addBookmark-form-btnIsDisabled");
+    } else {
+      document
+        .querySelector(".addBookmark-form-btn-add")
+        .removeAttribute("disabled", "true");
+      document
+        .querySelector(".addBookmark-form-btn-add")
+        .classList.remove("addBookmark-form-btnIsDisabled");
+    }
   } else {
-    addBookmarkBtnAdd.removeAttribute("disabled", "true");
-    addBookmarkBtnAdd.classList.remove("addBookmark-form-btnIsDisabled");
+    if (name === "" || url === "" || newGroup == "") {
+      document
+        .querySelector(".addBookmark-form-btn-add")
+        .setAttribute("disabled", "true");
+      document
+        .querySelector(".addBookmark-form-btn-add")
+        .classList.add("addBookmark-form-btnIsDisabled");
+    } else {
+      document
+        .querySelector(".addBookmark-form-btn-add")
+        .removeAttribute("disabled", "true");
+      document
+        .querySelector(".addBookmark-form-btn-add")
+        .classList.remove("addBookmark-form-btnIsDisabled");
+    }
   }
 });
 
@@ -492,7 +541,7 @@ addBookmarkBtnAdd.addEventListener("click", function () {
     let bookmarksString = JSON.stringify(bookmarks);
     localStorage.setItem("Bookmarks", bookmarksString);
     createBookmarkGroup(null, name, url, newGroup);
-    collExpBookmarksFunc();
+    // collExpBookmarksFunc();
   }
 
   // appendBookmarks();
@@ -1002,8 +1051,8 @@ const dragAndDropFunction = () => {
 };
 dragAndDropFunction();
 
-editBookmarksBtnFunc();
 showSettingsUI();
+editBookmarksBtnFunc();
 addbookmarkDeleteBtnFunc();
 addbookmarkEditbtnFunc();
 collExpBookmarksFunc();
@@ -1021,17 +1070,15 @@ const switchLDMode = () => {
     darkBtn.setAttribute("data-visible", "false");
   }
   const styleSheet = document.styleSheets[1];
-  console.log(colorScheme[0].mode);
-
   let first = colorScheme[0].colors[0].first;
   let second = colorScheme[0].colors[0].second;
   let third = colorScheme[0].colors[0].third;
   let accentFirst = colorScheme[0].colors[0].accentFirst;
   let textColor = colorScheme[0].colors[0].textColor;
   let textColorSemiTrans = colorScheme[0].colors[0].textColorSemiTrans;
-  const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
-  styleSheet.deleteRule(mode);
-  styleSheet.insertRule(mode);
+  const mode = `:root { --first:${first}; --second:${second}; --third:${third}; --accent-first:${accentFirst}; --text-color:${textColor}; --text-color-semiTrans:${textColorSemiTrans}; }`;
+  styleSheet.deleteRule(mode, 0);
+  styleSheet.insertRule(mode, 0);
   const checkBox = document.querySelector(".switchForLightDarkMode");
   if (checkBox.getAttribute("listener") !== "true") {
     checkBox.setAttribute("listener", "true");
