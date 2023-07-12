@@ -9,9 +9,7 @@
 }
 
 /* MAIN STYLES */
-* {
-  box-sizing: border-box;
-}
+
 body {
   background-color: var(--first);
   height: 100vh;
@@ -351,6 +349,13 @@ i {
   overflow-y: scroll;
   overflow-x: hidden;
 }
+.settings-menu h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.25;
+
+  text-align: center;
+}
 .settings-menu-importExport {
   margin: 0 auto;
   width: 100%;
@@ -370,6 +375,7 @@ i {
 .settings-menu-importExport > h2,
 .settings-menu-newTab > h2 {
   width: 100%;
+  padding: .5rem 0;
   border-top: 1px solid var(--accent-first);
   line-height: 1.25;
   font-size: 1.5rem;
@@ -404,6 +410,9 @@ i {
   height: 10rem;
   resize: none;
   margin: 0 auto;
+}
+.settings-menu-textarea::placeholder{
+  text-align: center;
 }
 
 .settings-menu-btnContainer {
