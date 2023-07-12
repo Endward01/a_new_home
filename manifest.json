@@ -5,24 +5,21 @@
   "version": "0.1",
   "author": "Daniel Prętki",
   "description": "A new tab page Extansion",
+  "icons": {
+    "48": "src/icons/white-extansion-icon.png"
+  },
   "chrome_url_overrides": {
     "newtab": "src/index.html"
   },
   "browser_action": {
     "default_popup": "src/tool-bar-popup.html",
     "default_title": "add current page to bookmarks",
-    "default_icon": {
-      "16": "src/icons/white-extansion-icon.png",
-      "32": "src/icons/white-extansion-icon.png"
-    }
+    "default_icon": "src/icons/white-extansion-icon.png"
   },
   "content_scripts": [
     {
       "matches": [
-        "*://*.mozilla.org/*"
-      ],
-      "html": [
-        "src/index.html"
+        "file://*/*"
       ],
       "css": [
         "src/style.css",
