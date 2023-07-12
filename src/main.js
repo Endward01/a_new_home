@@ -3,7 +3,6 @@ if (localStorage.getItem("Bookmarks") !== null) {
   console.log(`Bookmarks address exists`);
   var bookmarksString = localStorage.getItem("Bookmarks");
   var bookmarks = JSON.parse(bookmarksString);
-  console.log(bookmarks);
 } else {
   var bookmarks = [
     {
@@ -24,6 +23,30 @@ if (localStorage.getItem("Bookmarks") !== null) {
       ],
     },
   ];
+}
+if (localStorage.getItem("Bookmarks") !== null) {
+  console.log(`Color Sheme exists`);
+  var colorSchemeString = localStorage.getItem("ColorSheme");
+  var colorScheme = JSON.parse(colorSchemeString);
+} else {
+  var colorScheme = [
+    {
+      mode: "light",
+      colors: [
+        {
+          first: "#eae6da",
+          second: "#f5eddc",
+          third: "#fff7e9",
+          accentFirst: "#d44b4b",
+          textColor: "#19282f",
+          textColorSemiTrans: "#19282fa6",
+        },
+      ],
+    },
+  ];
+
+  // let colorSchemeString = JSON.stringify(colorScheme);
+  // localStorage.setItem("ColorSheme", colorSchemeString);
 }
 
 //press escepe to quickly quit manu functions
@@ -896,6 +919,9 @@ const importExportBookmarks = () => {
   if (importBTN.getAttribute("listener") !== "true") {
     importBTN.setAttribute("listener", "true");
     importBTN.addEventListener("click", () => {
+      // const check = '[{"groups":';
+      // textarea.value.includes(check);
+      // console.log(JSON.parse(textarea.value));
       if (textarea.value !== "") {
         localStorage.setItem("Bookmarks", textarea.value);
 
@@ -980,6 +1006,100 @@ showSettingsUI();
 addbookmarkDeleteBtnFunc();
 addbookmarkEditbtnFunc();
 collExpBookmarksFunc();
+
+//modify color theme
+
+const switchLDMode = () => {
+  const lightBtn = document.querySelector(".lightBtn");
+  const darkBtn = document.querySelector(".darkBtn");
+  if (colorScheme[0].mode !== "light") {
+    lightBtn.setAttribute("data-visible", "false");
+    darkBtn.setAttribute("data-visible", "true");
+  } else {
+    lightBtn.setAttribute("data-visible", "true");
+    darkBtn.setAttribute("data-visible", "false");
+  }
+  const styleSheet = document.styleSheets[1];
+  console.log(colorScheme[0].mode);
+
+  let first = colorScheme[0].colors[0].first;
+  let second = colorScheme[0].colors[0].second;
+  let third = colorScheme[0].colors[0].third;
+  let accentFirst = colorScheme[0].colors[0].accentFirst;
+  let textColor = colorScheme[0].colors[0].textColor;
+  let textColorSemiTrans = colorScheme[0].colors[0].textColorSemiTrans;
+  const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
+  styleSheet.deleteRule(mode);
+  styleSheet.insertRule(mode);
+  const checkBox = document.querySelector(".switchForLightDarkMode");
+  if (checkBox.getAttribute("listener") !== "true") {
+    checkBox.setAttribute("listener", "true");
+    checkBox.addEventListener("change", () => {
+      if (checkBox.checked !== true) {
+        lightBtn.setAttribute("data-visible", "true");
+        darkBtn.setAttribute("data-visible", "false");
+        let first = "#eae6da";
+        let second = "#f5eddc";
+        let third = "#fff7e9";
+        let accentFirst = "#d44b4b";
+        let textColor = "#19282f";
+        let textColorSemiTrans = "#19282fa6";
+        const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
+        styleSheet.deleteRule(mode);
+        styleSheet.insertRule(mode);
+        colorScheme = [
+          {
+            mode: "light",
+            colors: [
+              {
+                first: first,
+                second: second,
+                third: third,
+                accentFirst: accentFirst,
+                textColor: textColor,
+                textColorSemiTrans: textColorSemiTrans,
+              },
+            ],
+          },
+        ];
+        colorSchemeString = JSON.stringify(colorScheme);
+        localStorage.setItem("ColorSheme", colorSchemeString);
+      } else {
+        lightBtn.setAttribute("data-visible", "false");
+        darkBtn.setAttribute("data-visible", "true");
+        let first = "#1e283a";
+        let second = "#232c3d";
+        let third = "#293243";
+        let accentFirst = "#ffbc41";
+        let textColor = "#f8fdff";
+        let textColorSemiTrans = "#fafeffa6";
+        const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
+        styleSheet.deleteRule(mode);
+        styleSheet.insertRule(mode);
+        colorScheme = [
+          {
+            mode: "dark",
+            colors: [
+              {
+                first: first,
+                second: second,
+                third: third,
+                accentFirst: accentFirst,
+                textColor: textColor,
+                textColorSemiTrans: textColorSemiTrans,
+              },
+            ],
+          },
+        ];
+        colorSchemeString = JSON.stringify(colorScheme);
+        localStorage.setItem("ColorSheme", colorSchemeString);
+      }
+    });
+  }
+};
+switchLDMode();
+
+// console.log(sheet);
 
 //
 /// quick add bookmark toolbar

@@ -1,12 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
-:root {
-  --first: #eae6da;
-  --second: #f5eddc;
-  --third: #fff7e9;
-  --accent-first: #d44b4b;
-  --text-color: #19282f;
-  --text-color-semiTrans: #19282fa6;
-}
 
 /* MAIN STYLES */
 
@@ -58,6 +50,42 @@ i {
   margin: 2rem 1rem;
   display: flex;
   gap: 1rem;
+}
+.main-nav-icon li:first-child {
+  display: flex;
+  justify-content: center;
+  align-items: ceter;
+  position: relative;
+}
+.main-nav-icon li:first-child * {
+  position: absolute;
+}
+.main-nav-icon li:first-child *:nth-child(1) {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  background: rgba(40, 40, 40, 0);
+  color: black;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  position: relative;
+  /* left: -5px;
+  top: -5px; */
+  z-index: 10;
+}
+/* .main-nav-icon li:first-child *:nth-child(1):hover {
+  background: rgba(40, 40, 40, 0);
+} */
+.main-nav-icon li:first-child *:nth-child(2)[data-visible="false"],
+.main-nav-icon li:first-child *:nth-child(3)[data-visible="false"] {
+  display: none;
+}
+.main-nav-icon li:first-child *:nth-child(2)[data-visible="true"],
+.main-nav-icon li:first-child *:nth-child(3)[data-visible="true"] {
+  display: inline-block;
 }
 
 .main-nav-icon > li {
@@ -375,7 +403,7 @@ i {
 .settings-menu-importExport > h2,
 .settings-menu-newTab > h2 {
   width: 100%;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   border-top: 1px solid var(--accent-first);
   line-height: 1.25;
   font-size: 1.5rem;
@@ -398,12 +426,10 @@ i {
 .settings-menu-form-inp {
   width: 69%;
   height: 2rem;
-
 }
 .settings-menu-form-btn {
   width: 30%;
   height: 2rem;
-
 }
 .settings-menu-textarea {
   width: 90%;
@@ -411,7 +437,7 @@ i {
   resize: none;
   margin: 0 auto;
 }
-.settings-menu-textarea::placeholder{
+.settings-menu-textarea::placeholder {
   text-align: center;
 }
 
