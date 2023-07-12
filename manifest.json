@@ -6,15 +6,19 @@
   "author": "Daniel Prętki",
   "description": "A new tab page Extansion",
   "icons": {
-    "48": "src/icons/white-extansion-icon.png"
+    "128": "src/icons/logo-128.png"
   },
   "chrome_url_overrides": {
     "newtab": "src/index.html"
   },
   "browser_action": {
     "default_popup": "src/tool-bar-popup.html",
-    "default_title": "add current page to bookmarks",
-    "default_icon": "src/icons/white-extansion-icon.png"
+    "default_title": "Quickly add current page to bookmarks.",
+    "default_icon": {
+      "16": "src/icons/star-16.png",
+      "32": "src/icons/star-32.png",
+      "128": "src/icons/star-128.png"
+    }
   },
   "content_scripts": [
     {

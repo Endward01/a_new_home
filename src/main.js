@@ -1115,10 +1115,10 @@ const switchLDMode = () => {
       } else {
         lightBtn.setAttribute("data-visible", "false");
         darkBtn.setAttribute("data-visible", "true");
-        let first = "#1e283a";
-        let second = "#232c3d";
-        let third = "#293243";
-        let accentFirst = "#ffbc41";
+        let first = "#1c1b22";
+        let second = "#2b2a33";
+        let third = "#42414d";
+        let accentFirst = "#00ddff";
         let textColor = "#f8fdff";
         let textColorSemiTrans = "#fafeffa6";
         const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
