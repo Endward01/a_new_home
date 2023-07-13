@@ -1,12 +1,4 @@
 @import url();
-:root {
-  --first: #1c1b22;
-  --second: #2b2a33;
-  --third: #42414d;
-  --accent-first: #00ddff;
-  --text-color: #f8fdff;
-  --text-color-semiTrans: #fafeffa6;
-}
 body {
   height: 100vh;
   overflow: hidden;
