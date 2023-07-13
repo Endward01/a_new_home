@@ -4,37 +4,25 @@
   "short_name": "a_new_home",
   "version": "0.1",
   "author": "Daniel Prętki",
-  "description": "A new tab page Extansion",
+  "description": "An extension that adds a homepage and new tab page for your minimalistic needs.",
   "icons": {
-    "128": "src/icons/logo-128.png"
+    "48": "src/icons/logo-48.png",
+    "96": "src/icons/logo-96.png"
   },
   "chrome_url_overrides": {
     "newtab": "src/index.html"
   },
-  "browser_action": {
+  "page_action": {
     "default_popup": "src/tool-bar-popup.html",
-    "default_title": "Quickly add current page to bookmarks.",
+    "default_title": "Quickly add current page to bookmarks",
+    "show_matches": [
+      "<all_urls>"
+    ],
     "default_icon": {
-      "16": "src/icons/star-16.png",
-      "32": "src/icons/star-32.png",
-      "128": "src/icons/star-128.png"
+      "48": "src/icons/logo-48.png",
+      "96": "src/icons/logo-98.png"
     }
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "file://*/*"
-      ],
-      "css": [
-        "src/style.css",
-        "src/reset.css"
-      ],
-      "js": [
-        "src/main.js"
-      ],
-      "run_at": "document_start"
-    }
-  ],
   "permissions": [
     "activeTab",
     "storage"

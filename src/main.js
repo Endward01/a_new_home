@@ -1,10 +1,13 @@
 // get bookmarks from localstorage
 if (localStorage.getItem("Bookmarks") !== null) {
+  console.info(`Bookmarks address exists`);
+  console.info(`Loading bookmarks from localstorage`);
   var bookmarksString = localStorage.getItem("Bookmarks");
   var bookmarks = JSON.parse(bookmarksString);
-  console.info(`Bookmarks address exists`);
-  console.info(bookmarks);
 } else {
+  console.warn(`Bookmarks address doesn't exists`);
+  console.warn(`Making default templat`);
+
   var bookmarks = [
     {
       groups: [
@@ -12,7 +15,11 @@ if (localStorage.getItem("Bookmarks") !== null) {
           groupName: "Informations",
           bookmark: [
             {
-              name: "My Github",
+              name: "Read Me",
+              url: "https://github.com/Endward01/a_new_home/blob/main/README.md",
+            },
+            {
+              name: "My Github Page",
               url: "https://github.com/Endward01",
             },
             {
@@ -48,7 +55,6 @@ if (localStorage.getItem("ColorSheme") !== null) {
   ];
   let colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
-  console.log(colorScheme);
 }
 
 // window.addEventListener("storage", function (e) {
