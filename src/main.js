@@ -1055,7 +1055,7 @@ const dragAndDropFunction = () => {
     });
   });
 };
-dragAndDropFunction();
+// dragAndDropFunction();
 
 showSettingsUI();
 editBookmarksBtnFunc();
@@ -1064,18 +1064,22 @@ addbookmarkEditbtnFunc();
 collExpBookmarksFunc();
 
 //modify color theme
+const styleSheet = document.styleSheets[1];
 
 const switchLDMode = () => {
   const lightBtn = document.querySelector(".lightBtn");
   const darkBtn = document.querySelector(".darkBtn");
+  const checkBox = document.querySelector(".switchForLightDarkMode");
+
   if (colorScheme[0].mode !== "light") {
     lightBtn.setAttribute("data-visible", "false");
     darkBtn.setAttribute("data-visible", "true");
+    checkBox.checked = true
   } else {
     lightBtn.setAttribute("data-visible", "true");
     darkBtn.setAttribute("data-visible", "false");
+    checkBox.checked = false
   }
-  const styleSheet = document.styleSheets[1];
   let first = colorScheme[0].colors[0].first;
   let second = colorScheme[0].colors[0].second;
   let third = colorScheme[0].colors[0].third;
@@ -1085,10 +1089,10 @@ const switchLDMode = () => {
   const mode = `:root { --first:${first}; --second:${second}; --third:${third}; --accent-first:${accentFirst}; --text-color:${textColor}; --text-color-semiTrans:${textColorSemiTrans}; }`;
   styleSheet.deleteRule(mode, 0);
   styleSheet.insertRule(mode, 0);
-  const checkBox = document.querySelector(".switchForLightDarkMode");
   if (checkBox.getAttribute("listener") !== "true") {
     checkBox.setAttribute("listener", "true");
     checkBox.addEventListener("change", () => {
+      console.log(checkBox)
       if (checkBox.checked !== true) {
         lightBtn.setAttribute("data-visible", "true");
         darkBtn.setAttribute("data-visible", "false");
@@ -1153,7 +1157,28 @@ const switchLDMode = () => {
 };
 switchLDMode();
 
-// console.log(sheet);
+
+// if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
+//   let first = "#eae6da";
+//   let second = "#f5eddc";
+//   let third = "#fff7e9";
+//   let accentFirst = "#d44b4b";
+//   let textColor = "#19282f";
+//   let textColorSemiTrans = "#19282fa6";
+//   const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
+//   styleSheet.deleteRule(mode);
+//   styleSheet.insertRule(mode);
+// } else {
+//   let first = "#1c1b22";
+//   let second = "#2b2a33";
+//   let third = "#42414d";
+//   let accentFirst = "#00ddff";
+//   let textColor = "#f8fdff";
+//   let textColorSemiTrans = "#fafeffa6";
+//   const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
+//   styleSheet.deleteRule(mode);
+//   styleSheet.insertRule(mode);
+// }
 
 //
 /// quick add bookmark toolbar
