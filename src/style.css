@@ -35,40 +35,6 @@ i {
   display: flex;
   gap: 16px;
 }
-.main-nav-icon li:last-child {
-  display: flex;
-  justify-content: center;
-  align-items: ceter;
-  position: relative;
-}
-.main-nav-icon li:last-child * {
-  position: absolute;
-}
-.main-nav-icon li:last-child *:nth-child(1) {
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  background: rgba(40, 40, 40, 0);
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: none;
-  position: relative;
-  z-index: 10;
-}
-.main-nav-icon li:last-child *:nth-child(1):hover ~ :nth-child(2),
-.main-nav-icon li:last-child *:nth-child(1):hover ~ :nth-child(3) {
-  color: var(--accent-first);
-}
-.main-nav-icon li:last-child *:nth-child(2)[data-visible="false"],
-.main-nav-icon li:last-child *:nth-child(3)[data-visible="false"] {
-  display: none;
-}
-.main-nav-icon li:last-child *:nth-child(2)[data-visible="true"],
-.main-nav-icon li:last-child *:nth-child(3)[data-visible="true"] {
-  display: inline-block;
-}
 .main-nav-icon > li {
   display: flex;
   width: 32px;
@@ -281,6 +247,7 @@ i {
   padding: 4px;
   outline: none;
   font-size: 16px;
+  height: 32px;
 }
 .addBookmark-form-input {
   height: 32px;
@@ -305,6 +272,7 @@ i {
   cursor: pointer;
   outline: none;
   font-size: 16px;
+  height: 32px;
 }
 .button:hover,
 .button:focus {
@@ -335,14 +303,8 @@ i {
   line-height: 40px;
   text-align: center;
 }
-.settings-menu-importExport {
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
+.settings-menu-importExport,
+.setting-menu-appearance,
 .settings-menu-newTab {
   margin: 0 auto;
   width: 100%;
@@ -351,26 +313,37 @@ i {
   align-items: center;
   gap: 16px;
 }
-.settings-menu-importExport > h2,
-.settings-menu-newTab > h2 {
+.settings-menu-importExport  h2,
+.settings-menu-newTab  h2,
+.setting-menu-appearance h2 {
   width: 100%;
   padding: 0.5rem 0;
   border-top: 1px solid var(--accent-first);
   line-height: 28px;
   font-size: 24px;
 }
-.settings-menu-newTab p {
-  width: 90%;
+.setting-menu-appearance-content,
+.settings-menu-newTab-content,
+.settings-menu-importExport-content{
+  width: 100%;
   line-height: 20px;
   font-size: 16px;
+  padding: 0 24px ;
+  display: flex;
+  gap: 8px;
 }
-.settings-menu-newTab-label {
-  width: 90%;
-  line-height: 24px;
-  font-size: 18px;
+.settings-menu-newTab-content,
+.settings-menu-importExport-content{
+  flex-direction: column;
+  gap: 8px;
+}
+.settings-menu-newTab-label{
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .settings-menu-form {
-  width: 100%;
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -384,25 +357,23 @@ i {
   height: 32px;
 }
 .settings-menu-textarea {
-  width: 90%;
+  width: 100%;
   height: 160px;
   resize: none;
-  margin: 0 auto;
 }
 .settings-menu-textarea::placeholder {
   text-align: center;
 }
 .settings-menu-btnContainer {
-  width: 90%;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   gap: 8px;
 }
-.settings-menu-btn {
+.settings-menu-btn,
+.setting-menu-appearance-selectColorTheme {
   flex: 1;
-  height: 32px;
 }
+
 /* End of Setting Container */
 /* Start of Editing Container */
 .linkDisabled {
