@@ -40,17 +40,7 @@ if (localStorage.getItem("ColorSheme") !== null) {
 } else {
   var colorScheme = [
     {
-      mode: "light",
-      colors: [
-        {
-          first: "#eae6da",
-          second: "#f5eddc",
-          third: "#fff7e9",
-          accentFirst: "#d44b4b",
-          textColor: "#19282f",
-          textColorSemiTrans: "#19282fa6",
-        },
-      ],
+      mode: "auto",
     },
   ];
   let colorSchemeString = JSON.stringify(colorScheme);
@@ -1064,121 +1054,104 @@ addbookmarkEditbtnFunc();
 collExpBookmarksFunc();
 
 //modify color theme
-const styleSheet = document.styleSheets[1];
 
-const switchLDMode = () => {
-  const lightBtn = document.querySelector(".lightBtn");
-  const darkBtn = document.querySelector(".darkBtn");
-  const checkBox = document.querySelector(".switchForLightDarkMode");
-
-  if (colorScheme[0].mode !== "light") {
-    lightBtn.setAttribute("data-visible", "false");
-    darkBtn.setAttribute("data-visible", "true");
-    checkBox.checked = true
+var styleSheet = document.styleSheets[1];
+const changeTheme = (value) => {
+  if (value === "auto") {
+    if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
+      colorScheme = [
+        {
+          mode: "auto",
+          colors: [
+            {
+              first: "#eae6da",
+              second: "#f5eddc",
+              third: "#fff7e9",
+              accentFirst: "#d44b4b",
+              textColor: "#19282f",
+              textColorSemiTrans: "#19282fa6",
+            },
+          ],
+        },
+      ];
+      const mode = `:root { --first:${colorScheme[0].colors[0].first}; --second: ${colorScheme[0].colors[0].second}; --third: ${colorScheme[0].colors[0].third}; --accent-first: ${colorScheme[0].colors[0].accentFirst}; --text-color: ${colorScheme[0].colors[0].textColor}; --text-color-semiTrans: ${colorScheme[0].colors[0].textColorSemiTrans}; }`;
+      styleSheet.insertRule(mode);
+    } else {
+      colorScheme = [
+        {
+          mode: "auto",
+          colors: [
+            {
+              first: "#1c1b22",
+              second: "#2b2a33",
+              third: "#42414d",
+              accentFirst: "#00ddff",
+              textColor: "#f8fdff",
+              textColorSemiTrans: "#fafeffa6",
+            },
+          ],
+        },
+      ];
+      const mode = `:root { --first:${colorScheme[0].colors[0].first}; --second: ${colorScheme[0].colors[0].second}; --third: ${colorScheme[0].colors[0].third}; --accent-first: ${colorScheme[0].colors[0].accentFirst}; --text-color: ${colorScheme[0].colors[0].textColor}; --text-color-semiTrans: ${colorScheme[0].colors[0].textColorSemiTrans}; }`;
+      styleSheet.deleteRule(mode);
+      styleSheet.insertRule(mode);
+    }
   } else {
-    lightBtn.setAttribute("data-visible", "true");
-    darkBtn.setAttribute("data-visible", "false");
-    checkBox.checked = false
-  }
-  let first = colorScheme[0].colors[0].first;
-  let second = colorScheme[0].colors[0].second;
-  let third = colorScheme[0].colors[0].third;
-  let accentFirst = colorScheme[0].colors[0].accentFirst;
-  let textColor = colorScheme[0].colors[0].textColor;
-  let textColorSemiTrans = colorScheme[0].colors[0].textColorSemiTrans;
-  const mode = `:root { --first:${first}; --second:${second}; --third:${third}; --accent-first:${accentFirst}; --text-color:${textColor}; --text-color-semiTrans:${textColorSemiTrans}; }`;
-  styleSheet.deleteRule(mode, 0);
-  styleSheet.insertRule(mode, 0);
-  if (checkBox.getAttribute("listener") !== "true") {
-    checkBox.setAttribute("listener", "true");
-    checkBox.addEventListener("change", () => {
-      console.log(checkBox)
-      if (checkBox.checked !== true) {
-        lightBtn.setAttribute("data-visible", "true");
-        darkBtn.setAttribute("data-visible", "false");
-        let first = "#eae6da";
-        let second = "#f5eddc";
-        let third = "#fff7e9";
-        let accentFirst = "#d44b4b";
-        let textColor = "#19282f";
-        let textColorSemiTrans = "#19282fa6";
-        const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
-        styleSheet.deleteRule(mode);
-        styleSheet.insertRule(mode);
-        colorScheme = [
-          {
-            mode: "light",
-            colors: [
-              {
-                first: first,
-                second: second,
-                third: third,
-                accentFirst: accentFirst,
-                textColor: textColor,
-                textColorSemiTrans: textColorSemiTrans,
-              },
-            ],
-          },
-        ];
-        colorSchemeString = JSON.stringify(colorScheme);
-        localStorage.setItem("ColorSheme", colorSchemeString);
-      } else {
-        lightBtn.setAttribute("data-visible", "false");
-        darkBtn.setAttribute("data-visible", "true");
-        let first = "#1c1b22";
-        let second = "#2b2a33";
-        let third = "#42414d";
-        let accentFirst = "#00ddff";
-        let textColor = "#f8fdff";
-        let textColorSemiTrans = "#fafeffa6";
-        const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
-        styleSheet.deleteRule(mode);
-        styleSheet.insertRule(mode);
+    if (value === "light") {
+      colorScheme = [
+        {
+          mode: "light",
+          colors: [
+            {
+              first: "#eae6da",
+              second: "#f5eddc",
+              third: "#fff7e9",
+              accentFirst: "#d44b4b",
+              textColor: "#19282f",
+              textColorSemiTrans: "#19282fa6",
+            },
+          ],
+        },
+      ];
+      const mode = `:root { --first:${colorScheme[0].colors[0].first}; --second: ${colorScheme[0].colors[0].second}; --third: ${colorScheme[0].colors[0].third}; --accent-first: ${colorScheme[0].colors[0].accentFirst}; --text-color: ${colorScheme[0].colors[0].textColor}; --text-color-semiTrans: ${colorScheme[0].colors[0].textColorSemiTrans}; }`;
+      styleSheet.deleteRule(mode);
+      styleSheet.insertRule(mode);
+    } else {
+      if (value === "dark") {
         colorScheme = [
           {
             mode: "dark",
             colors: [
               {
-                first: first,
-                second: second,
-                third: third,
-                accentFirst: accentFirst,
-                textColor: textColor,
-                textColorSemiTrans: textColorSemiTrans,
+                first: "#1c1b22",
+                second: "#2b2a33",
+                third: "#42414d",
+                accentFirst: "#00ddff",
+                textColor: "#f8fdff",
+                textColorSemiTrans: "#fafeffa6",
               },
             ],
           },
         ];
-        colorSchemeString = JSON.stringify(colorScheme);
-        localStorage.setItem("ColorSheme", colorSchemeString);
+        const mode = `:root { --first:${colorScheme[0].colors[0].first}; --second: ${colorScheme[0].colors[0].second}; --third: ${colorScheme[0].colors[0].third}; --accent-first: ${colorScheme[0].colors[0].accentFirst}; --text-color: ${colorScheme[0].colors[0].textColor}; --text-color-semiTrans: ${colorScheme[0].colors[0].textColorSemiTrans}; }`;
+        styleSheet.deleteRule(mode);
+        styleSheet.insertRule(mode);
+      } else {
+        console.info("Element isn't created yet :(");
       }
-    });
+    }
   }
+  colorSchemeString = JSON.stringify(colorScheme);
+  localStorage.setItem("ColorSheme", colorSchemeString);
 };
-switchLDMode();
-
-
-// if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
-//   let first = "#eae6da";
-//   let second = "#f5eddc";
-//   let third = "#fff7e9";
-//   let accentFirst = "#d44b4b";
-//   let textColor = "#19282f";
-//   let textColorSemiTrans = "#19282fa6";
-//   const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
-//   styleSheet.deleteRule(mode);
-//   styleSheet.insertRule(mode);
-// } else {
-//   let first = "#1c1b22";
-//   let second = "#2b2a33";
-//   let third = "#42414d";
-//   let accentFirst = "#00ddff";
-//   let textColor = "#f8fdff";
-//   let textColorSemiTrans = "#fafeffa6";
-//   const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
-//   styleSheet.deleteRule(mode);
-//   styleSheet.insertRule(mode);
-// }
+const selectTheme = document.querySelector(
+  ".setting-menu-appearance-selectColorTheme"
+);
+selectTheme.value = colorScheme[0].mode;
+changeTheme(colorScheme[0].mode);
+selectTheme.addEventListener("change", () => {
+  changeTheme(selectTheme.value);
+});
 
 //
 /// quick add bookmark toolbar
