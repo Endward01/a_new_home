@@ -1056,88 +1056,126 @@ collExpBookmarksFunc();
 //modify color theme
 
 var styleSheet = document.styleSheets[1];
+const colorPickersContainer = document.querySelector(
+  ".setting-menu-appearance-colorPickers"
+);
+var colorsCustome = [];
+
 const changeTheme = (value) => {
   if (value === "auto") {
+    colorPickersContainer.setAttribute("data-visible", "false");
     if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
-      colorScheme = [
-        {
-          mode: "auto",
-          colors: [
-            {
-              first: "#eae6da",
-              second: "#f5eddc",
-              third: "#fff7e9",
-              accentFirst: "#d44b4b",
-              textColor: "#19282f",
-              textColorSemiTrans: "#19282fa6",
-            },
-          ],
-        },
-      ];
-      const mode = `:root { --first:${colorScheme[0].colors[0].first}; --second: ${colorScheme[0].colors[0].second}; --third: ${colorScheme[0].colors[0].third}; --accent-first: ${colorScheme[0].colors[0].accentFirst}; --text-color: ${colorScheme[0].colors[0].textColor}; --text-color-semiTrans: ${colorScheme[0].colors[0].textColorSemiTrans}; }`;
+      colorScheme[0].mode = "auto";
+      colorScheme[0].colors = {
+        first: "#eae6da",
+        second: "#f5eddc",
+        third: "#fff7e9",
+        accentFirst: "#d44b4b",
+        textColor: "#19282f",
+      };
+      const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
       styleSheet.insertRule(mode);
     } else {
-      colorScheme = [
-        {
-          mode: "auto",
-          colors: [
-            {
-              first: "#1c1b22",
-              second: "#2b2a33",
-              third: "#42414d",
-              accentFirst: "#00ddff",
-              textColor: "#f8fdff",
-              textColorSemiTrans: "#fafeffa6",
-            },
-          ],
-        },
-      ];
-      const mode = `:root { --first:${colorScheme[0].colors[0].first}; --second: ${colorScheme[0].colors[0].second}; --third: ${colorScheme[0].colors[0].third}; --accent-first: ${colorScheme[0].colors[0].accentFirst}; --text-color: ${colorScheme[0].colors[0].textColor}; --text-color-semiTrans: ${colorScheme[0].colors[0].textColorSemiTrans}; }`;
+      colorScheme[0].mode = "auto";
+      colorScheme[0].colors = {
+        first: "#1c1b22",
+        second: "#2b2a33",
+        third: "#42414d",
+        accentFirst: "#00ddff",
+        textColor: "#f8fdff",
+      };
+      const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
       styleSheet.deleteRule(mode);
       styleSheet.insertRule(mode);
     }
   } else {
     if (value === "light") {
-      colorScheme = [
-        {
-          mode: "light",
-          colors: [
-            {
-              first: "#eae6da",
-              second: "#f5eddc",
-              third: "#fff7e9",
-              accentFirst: "#d44b4b",
-              textColor: "#19282f",
-              textColorSemiTrans: "#19282fa6",
-            },
-          ],
-        },
-      ];
-      const mode = `:root { --first:${colorScheme[0].colors[0].first}; --second: ${colorScheme[0].colors[0].second}; --third: ${colorScheme[0].colors[0].third}; --accent-first: ${colorScheme[0].colors[0].accentFirst}; --text-color: ${colorScheme[0].colors[0].textColor}; --text-color-semiTrans: ${colorScheme[0].colors[0].textColorSemiTrans}; }`;
+      colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme[0].mode = "light";
+      colorScheme[0].colors = {
+        first: "#eae6da",
+        second: "#f5eddc",
+        third: "#fff7e9",
+        accentFirst: "#d44b4b",
+        textColor: "#19282f",
+      };
+      const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
       styleSheet.deleteRule(mode);
       styleSheet.insertRule(mode);
     } else {
       if (value === "dark") {
-        colorScheme = [
-          {
-            mode: "dark",
-            colors: [
-              {
-                first: "#1c1b22",
-                second: "#2b2a33",
-                third: "#42414d",
-                accentFirst: "#00ddff",
-                textColor: "#f8fdff",
-                textColorSemiTrans: "#fafeffa6",
-              },
-            ],
-          },
-        ];
-        const mode = `:root { --first:${colorScheme[0].colors[0].first}; --second: ${colorScheme[0].colors[0].second}; --third: ${colorScheme[0].colors[0].third}; --accent-first: ${colorScheme[0].colors[0].accentFirst}; --text-color: ${colorScheme[0].colors[0].textColor}; --text-color-semiTrans: ${colorScheme[0].colors[0].textColorSemiTrans}; }`;
+        colorPickersContainer.setAttribute("data-visible", "false");
+        colorScheme[0].mode = "dark";
+        colorScheme[0].colors = {
+          first: "#1c1b22",
+          second: "#2b2a33",
+          third: "#42414d",
+          accentFirst: "#00ddff",
+          textColor: "#f8fdff",
+        };
+        const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
         styleSheet.deleteRule(mode);
         styleSheet.insertRule(mode);
       } else {
-        console.info("Element isn't created yet :(");
+        if (colorScheme[0].customeColors !== undefined) {
+          console.info("Custome Theme Exists");
+          colorScheme[0].mode = "custom";
+
+          const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
+          styleSheet.deleteRule(mode);
+          styleSheet.insertRule(mode);
+        } else {
+          console.warn("Custome Theme doesn't exists");
+
+          colorScheme[0].mode = "custom";
+          let newArray = colorScheme[0];
+          newArray["customeColors"] = {
+            first: colorScheme[0].colors.first,
+            second: colorScheme[0].colors.second,
+            third: colorScheme[0].colors.third,
+            accentFirst: colorScheme[0].colors.accentFirst,
+            textColor: colorScheme[0].colors.textColor,
+          };
+
+          const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
+          styleSheet.deleteRule(mode);
+          styleSheet.insertRule(mode);
+        }
+        document.querySelector(".firstColor-input").value =
+          colorScheme[0].customeColors.first;
+        document.querySelector(".secondColor-input").value =
+          colorScheme[0].customeColors.second;
+        document.querySelector(".thirdColor-input").value =
+          colorScheme[0].customeColors.third;
+        document.querySelector(".accentColor-input").value =
+          colorScheme[0].customeColors.accentFirst;
+        document.querySelector(".textColor-input").value =
+          colorScheme[0].customeColors.textColor;
+
+        document
+          .querySelectorAll(".setting-menu-appearance-colorPickers input")
+          .forEach((element) => {
+            const nameCol = element.name;
+            const value = element.value;
+
+            colorsCustome[nameCol] = value;
+            element.addEventListener("input", () => {
+              const colorName = element.name;
+              const value = element.value;
+              colorScheme[0].customeColors[colorName] = value;
+              console.log(colorScheme[0].customeColors);
+              colorSchemeString = JSON.stringify(colorScheme);
+              localStorage.setItem("ColorSheme", colorSchemeString);
+              const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
+              styleSheet.deleteRule(mode);
+              styleSheet.insertRule(mode);
+            });
+          });
+
+        // console.log(colorScheme[0].colors[0]);
+        // colorPickersContainer.setAttribute("data-visible", "false");
+        // dataVisibleSwitcher(colorPickersContainer, 1);
+        colorPickersContainer.setAttribute("data-visible", "true");
       }
     }
   }
@@ -1149,7 +1187,7 @@ const selectTheme = document.querySelector(
 );
 selectTheme.value = colorScheme[0].mode;
 changeTheme(colorScheme[0].mode);
-selectTheme.addEventListener("change", () => {
+selectTheme.addEventListener("input", () => {
   changeTheme(selectTheme.value);
 });
 
