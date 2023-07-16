@@ -669,13 +669,11 @@ const editBookmarksBtnFunc = () => {
 
       if (draggable != true) {
         draggable = true;
-        console.log(draggable);
         document
           .querySelectorAll(".main-section-bookmarks-group-title")
           .forEach((element) => (element.style.pointerEvents = "none"));
       } else {
         draggable = false;
-        console.log(draggable);
         document
           .querySelectorAll(".main-section-bookmarks-group-title")
           .forEach((element) => (element.style.pointerEvents = "all"));
@@ -1038,7 +1036,6 @@ const importExportBookmarks = () => {
     importBTN.setAttribute("listener", "true");
     importBTN.addEventListener("click", () => {
       if (textarea.value !== "") {
-        console.log;
         localStorage.setItem("Bookmarks", textarea.value);
 
         while (bookmarksSection.firstChild) {
@@ -1129,7 +1126,7 @@ const dragAndDropFunction = () => {
             bookmarks[indexOfColumn].groups
           );
           const linkName = element.target.parentNode.childNodes[0].innerHTML;
-          console.log(bookmarks[indexOfColumn].groups[indexOfGroup].bookmark);
+          // console.log(bookmarks[indexOfColumn].groups[indexOfGroup].bookmark);
           destynationArray =
             bookmarks[indexOfColumn].groups[indexOfGroup].bookmark;
 
@@ -1137,7 +1134,7 @@ const dragAndDropFunction = () => {
             elemToMoveBefore
           );
           destynationArray.splice(newIndexOfBookmark, 0, startArrayElement);
-          console.log(destynationArray);
+          // console.log(destynationArray);
           let bookmarksString = JSON.stringify(bookmarks);
           localStorage.setItem("Bookmarks", bookmarksString);
         }
