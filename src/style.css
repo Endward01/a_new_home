@@ -1,5 +1,5 @@
 @import url();
-:root{
+:root {
   --text-color-semiTrans: gray;
 }
 body {
@@ -18,6 +18,7 @@ i {
 .elementToDrag {
   border: 1px solid var(--accent-first);
   border-radius: 0.25rem;
+  box-sizing: border-box;
 }
 .main {
   width: 100%;
@@ -69,11 +70,22 @@ i {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
+  height: 99%;
+  overflow-y: scroll;
 }
 .main-section-bookmarks-group {
   position: relative;
   line-height: 1.25;
   cursor: pointer;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.main-section-bookmarks-group div:first-child{
+  padding-top: 4px;
 }
 .main-section-bookmarks-group > div:hover::before {
   right: 5%;
@@ -132,6 +144,7 @@ i {
 .main-section-bookmarks-ul-li-icons[data-visible="false"] {
   display: none;
 }
+
 .main-section-bookmarks-group-title {
   width: 100%;
   font-size: 12px;
@@ -156,7 +169,24 @@ i {
   align-items: center;
   width: 100%;
   margin: 0 auto;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  
 }
+/* .main-section-bookmarks-ul-li::before {
+  pointer-events: all;
+  left: -8px;
+  position: absolute;
+  content: "\f047";
+  font: normal normal normal 16px/1 FontAwesome;
+  color: var(--text-color-semiTrans);
+  z-index: 9;
+  cursor: grab;
+} */
 .main-section-bookmarks-ul-li-link {
   display: block;
   width: 100%;
@@ -204,7 +234,7 @@ i {
   border-radius: 4px;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  z-index: 10;
   backdrop-filter: blur(4px);
 }
 .settings[data-visible="true"],
@@ -291,12 +321,12 @@ i {
 .settings-menu {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 85%;
   width: 640px;
   padding: 32px;
   gap: 32px;
   border-radius: 4px;
-  background-color: var(--first);
+  background-color: var(--second);
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
     rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
@@ -385,19 +415,43 @@ i {
   justify-content: space-between;
   gap: 8px;
 }
-.setting-menu-appearance-colorPickers input {
+.setting-menu-appearance-colorPickers div {
+  position: relative;
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.setting-menu-appearance-colorPickers p {
+  display: none;
+  position: absolute;
+  text-align: center;
+  top: -100%;
+  width: max-content;
+  padding: 4px;
+  background-color: var(--second);
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.setting-menu-appearance-colorPickers input {
+  width: 100%;
 }
 .setting-menu-appearance-colorPickers input:hover {
   border-color: var(--accent-first);
   cursor: pointer;
+}
+.setting-menu-appearance-colorPickers input:hover ~ p {
+  display: block;
 }
 
 /* End of Setting Container */
 /* Start of Editing Container */
 .linkDisabled {
   display: inline-block;
-  pointer-events: none;
+  /* pointer-events:stroke; */
+  cursor: move;
 }
 .isEditingBookmark {
   display: flex;

@@ -4,15 +4,6 @@ var bookmarks = JSON.parse(bookmarksString);
 var colorSchemeString = localStorage.getItem("ColorSheme");
 var colorScheme = JSON.parse(colorSchemeString);
 
-// let openedWindow;
-// function openWindow() {
-//   openedWindow = window.open("tool-bar-popup.html");
-// }
-
-// function closeOpenedWindow() {
-//   openedWindow.close();
-// }
-
 const groupSelect = () => {
   while (document.querySelector(".addBookmark-form-chooseGroup").firstChild) {
     document
@@ -32,32 +23,18 @@ groupSelect();
 
 const changeStyle = () => {
   const styleSheet = document.styleSheets[1];
-  let first = colorScheme[0].colors[0].first;
-  let second = colorScheme[0].colors[0].second;
-  let third = colorScheme[0].colors[0].third;
-  let accentFirst = colorScheme[0].colors[0].accentFirst;
-  let textColor = colorScheme[0].colors[0].textColor;
-  let textColorSemiTrans = colorScheme[0].colors[0].textColorSemiTrans;
-
-  const mode = `:root { --first:${first}; --second: ${second}; --third: ${third}; --accent-first: ${accentFirst}; --text-color: ${textColor}; --text-color-semiTrans: ${textColorSemiTrans}; }`;
-  if (styleSheet.cssRules.length > 0) {
+  if (colorScheme[0].mode !== "custom") {
+    const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};  }`;
     styleSheet.deleteRule(mode);
+    styleSheet.insertRule(mode);
+  } else {
+    const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
+    styleSheet.deleteRule(mode);
+    styleSheet.insertRule(mode);
   }
-  styleSheet.insertRule(mode);
 };
 changeStyle();
 
-// window.addEventListener("storage", function (e) {
-//   if (e.key === "Bookmarks") {
-//     groupSelect();
-//     changeStyle();
-//   }
-// });
-// window.addEventListener("storage", function (e) {
-//   if (e.key === "ColorSheme") {
-//     changeStyle();
-//   }
-// });
 const dataVisibleSwitcher = (elem, position) => {
   if (elem.attributes[position].value === "true") {
     elem.setAttribute("data-visible", "false");
@@ -107,7 +84,6 @@ const addBookmark = () => {
   document
     .querySelector(".addBookmark-form-btn-add")
     .addEventListener("click", function () {
-
       const name = document.querySelector(".addBookmark-form-name").value;
       console.log(name);
       const url = document.querySelector(".addBookmark-form-url").value;
@@ -149,7 +125,7 @@ const addBookmark = () => {
         let bookmarksString = JSON.stringify(bookmarks);
         localStorage.setItem("Bookmarks", bookmarksString);
       }
-      window.close("tool-bar-popup.html")
+      window.close("tool-bar-popup.html");
     });
 };
 addBookmark();
