@@ -46,6 +46,7 @@ if (localStorage.getItem("ColorSheme") !== null) {
   let colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
 }
+var draggable = false;
 
 // window.addEventListener("storage", function (e) {
 //   if (e.key === "Bookmarks") {
@@ -87,7 +88,6 @@ document.body.addEventListener("keyup", function (e) {
   const bookmarkLink = document.querySelectorAll(
     ".main-section-bookmarks-ul-li-link"
   );
-
   if (e.key == "Escape") {
     add.setAttribute("data-visible", "false");
     settings.setAttribute("data-visible", "false");
@@ -103,6 +103,10 @@ document.body.addEventListener("keyup", function (e) {
     bookmarkLink.forEach((element) => {
       element.classList.remove("linkDisabled");
     });
+    draggable = false;
+    document
+      .querySelectorAll(".main-section-bookmarks-group-title")
+      .forEach((element) => (element.style.pointerEvents = "all"));
   }
 });
 
@@ -136,51 +140,58 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
       const bookmarksSection = document.querySelector(
         ".main-section-bookmarks"
       );
-      const divFirst = document.createElement("div");
-      divFirst.classList.add("main-section-bookmarks-group");
-      divFirst.setAttribute("data-collapsed", "false");
-      bookmarksSection.appendChild(divFirst);
-      const divSecond = document.createElement("div");
-      divFirst.append(divSecond);
-      const h2 = document.createElement("h2");
-      h2.textContent = element.groupName;
-      h2.classList.add("main-section-bookmarks-group-title");
-      divSecond.appendChild(h2);
-      const divThird = document.createElement("div");
-      divThird.classList.add("main-section-bookmarks-group-icons");
-      divThird.setAttribute("data-visible", "false");
-      divSecond.appendChild(divThird);
-      const iEdit = document.createElement("i");
-      // const iUp = document.createElement("i");
-      // const iDown = document.createElement("i");
-      iEdit.classList.add("fa-solid", "fa-pencil");
-      // iEdit.setAttribute("data-visible", "false");
-      // if (element.collapsed === "true") {
-      //   iDown.classList.add("fa-solid", "fa-angle-down");
-      //   iDown.setAttribute("data-visible", "true");
-      //   iUp.classList.add("fa-solid", "fa-angle-up");
-      //   iUp.setAttribute("data-visible", "false");
-      // } else {
-      //   iDown.classList.add("fa-solid", "fa-angle-down");
-      //   iDown.setAttribute("data-visible", "false");
-      //   iUp.classList.add("fa-solid", "fa-angle-up");
-      //   iUp.setAttribute("data-visible", "true");
-      // }
-      divThird.appendChild(iEdit);
-      // divThird.appendChild(iUp);
-      // divThird.appendChild(iDown);
-      const ul = document.createElement("ul");
-      ul.classList.add("main-section-bookmarks-ul");
-      ul.setAttribute("data-collapsed", element.collapsed);
-      divFirst.appendChild(ul);
-      createBookmarkLink(element, ul);
+      const divColumn = document.createElement("div");
+      divColumn.classList.add("main-section-column");
+      bookmarksSection.appendChild(divColumn);
+      element.groups.forEach((element) => {
+        // element.forEach((element) => {
+        const divFirst = document.createElement("div");
+        divFirst.classList.add("main-section-bookmarks-group");
+        divFirst.setAttribute("data-collapsed", "false");
+        divColumn.appendChild(divFirst);
+        const divSecond = document.createElement("div");
+        divFirst.append(divSecond);
+        const h2 = document.createElement("h2");
+        h2.textContent = element.groupName;
+        h2.classList.add("main-section-bookmarks-group-title");
+        divSecond.appendChild(h2);
+        const divThird = document.createElement("div");
+        divThird.classList.add("main-section-bookmarks-group-icons");
+        divThird.setAttribute("data-visible", "false");
+        divSecond.appendChild(divThird);
+        const iEdit = document.createElement("i");
+        // const iUp = document.createElement("i");
+        // const iDown = document.createElement("i");
+        iEdit.classList.add("fa-solid", "fa-pencil");
+        // iEdit.setAttribute("data-visible", "false");
+        // if (element.collapsed === "true") {
+        //   iDown.classList.add("fa-solid", "fa-angle-down");
+        //   iDown.setAttribute("data-visible", "true");
+        //   iUp.classList.add("fa-solid", "fa-angle-up");
+        //   iUp.setAttribute("data-visible", "false");
+        // } else {
+        //   iDown.classList.add("fa-solid", "fa-angle-down");
+        //   iDown.setAttribute("data-visible", "false");
+        //   iUp.classList.add("fa-solid", "fa-angle-up");
+        //   iUp.setAttribute("data-visible", "true");
+        // }
+        divThird.appendChild(iEdit);
+        // divThird.appendChild(iUp);
+        // divThird.appendChild(iDown);
+        const ul = document.createElement("ul");
+        ul.classList.add("main-section-bookmarks-ul");
+        ul.setAttribute("data-collapsed", element.collapsed);
+        divFirst.appendChild(ul);
+        createBookmarkLink(element, ul);
+        // });
+      });
     });
   } else {
-    const bookmarksSection = document.querySelector(".main-section-bookmarks");
+    const sectionCollumn = document.querySelectorAll(".main-section-column");
     const divFirst = document.createElement("div");
     divFirst.classList.add("main-section-bookmarks-group");
     divFirst.setAttribute("data-collapsed", "false");
-    bookmarksSection.appendChild(divFirst);
+    sectionCollumn[0].appendChild(divFirst);
     const divSecond = document.createElement("div");
     divFirst.append(divSecond);
     const h2 = document.createElement("h2");
@@ -215,6 +226,7 @@ const createBookmarkLink = (array, parent, name, url) => {
     array.bookmark.forEach((element) => {
       const li = document.createElement("li");
       li.classList.add("main-section-bookmarks-ul-li");
+      // li.setAttribute("draggable", "false");
       parent.appendChild(li);
       const a = document.createElement("a");
       a.textContent = element.name;
@@ -227,6 +239,7 @@ const createBookmarkLink = (array, parent, name, url) => {
       li.appendChild(btnDiv);
       const iconDelete = document.createElement("i");
       const iconEdit = document.createElement("i");
+
       if (editBookmarksBtn.attributes[1].value === "true") {
         btnDiv.setAttribute("data-visible", "true");
       } else {
@@ -266,7 +279,7 @@ const createBookmarkLink = (array, parent, name, url) => {
 
 //Draw bookmarks from localstorage to body
 
-createBookmarkGroup(bookmarks[0].groups);
+createBookmarkGroup(bookmarks);
 
 // remove child from section
 
@@ -387,6 +400,13 @@ const collExpBookmarksFunc = () => {
           element.setAttribute("listener", "true");
 
           element.addEventListener("click", function () {
+            const sectionMain =
+              this.parentNode.parentNode.parentNode.parentNode.childNodes;
+            const sectionColumn = this.parentNode.parentNode.parentNode;
+
+            const indexOfColumn =
+              Array.from(sectionMain).indexOf(sectionColumn);
+
             if (
               this.parentNode.parentNode.childNodes[1].attributes[1]
                 .nodeValue !== "true"
@@ -398,9 +418,10 @@ const collExpBookmarksFunc = () => {
               const positionInArry = getPositionGroupName(
                 this.parentNode.parentNode.childNodes[0].childNodes[0]
                   .innerHTML,
-                bookmarks[0].groups
+                bookmarks[indexOfColumn].groups
               );
-              bookmarks[0].groups[positionInArry].collapsed = "true";
+              bookmarks[indexOfColumn].groups[positionInArry].collapsed =
+                "true";
             } else {
               this.parentNode.parentNode.childNodes[1].setAttribute(
                 "data-collapsed",
@@ -409,9 +430,10 @@ const collExpBookmarksFunc = () => {
               const positionInArry = getPositionGroupName(
                 this.parentNode.parentNode.childNodes[0].childNodes[0]
                   .innerHTML,
-                bookmarks[0].groups
+                bookmarks[indexOfColumn].groups
               );
-              bookmarks[0].groups[positionInArry].collapsed = "false";
+              bookmarks[indexOfColumn].groups[positionInArry].collapsed =
+                "false";
             }
 
             let bookmarksString = JSON.stringify(bookmarks);
@@ -507,19 +529,28 @@ addBookmarkBtnAdd.addEventListener("click", function () {
   const newGroup = addBookmarksNewGroup.value;
 
   if (newGroupCheckBox.checked !== true) {
-    const position = getPositionGroupName(group, bookmarks[0].groups);
+    const findElement = getElementsByText(group, "h2");
+
+    const sectionMain =
+      findElement[0].parentNode.parentNode.parentNode.parentNode.childNodes;
+    const sectionColumn = findElement[0].parentNode.parentNode.parentNode;
+
+    const indexOfColumn = Array.from(sectionMain).indexOf(sectionColumn);
+
+    const parentNodeToAppend =
+      findElement[0].parentNode.parentNode.childNodes[1];
+    const position = getPositionGroupName(
+      group,
+      bookmarks[indexOfColumn].groups
+    );
     const newBookmark = {
       name: name,
       url: url,
     };
-    const arrBookmark = bookmarks[0].groups[position].bookmark;
+    const arrBookmark = bookmarks[indexOfColumn].groups[position].bookmark;
     arrBookmark.push(newBookmark);
     let bookmarksString = JSON.stringify(bookmarks);
     localStorage.setItem("Bookmarks", bookmarksString);
-    const findElement = getElementsByText(group, "h2");
-    const parentNodeToAppend =
-      findElement[0].parentNode.parentNode.childNodes[1];
-    // createNewElement(parentNodeToAppend, name, url);
     createBookmarkLink(null, parentNodeToAppend, name, url);
   } else {
     const newBookmark = {
@@ -537,11 +568,8 @@ addBookmarkBtnAdd.addEventListener("click", function () {
     let bookmarksString = JSON.stringify(bookmarks);
     localStorage.setItem("Bookmarks", bookmarksString);
     createBookmarkGroup(null, name, url, newGroup);
-    // collExpBookmarksFunc();
   }
 
-  // appendBookmarks();
-  // editBookmarksBtnFunc();
   addbookmarkDeleteBtnFunc();
   addbookmarkEditbtnFunc();
   collExpBookmarksFunc();
@@ -571,11 +599,13 @@ const groupSelect = () => {
   while (addBookmarkSelectGroup.firstChild) {
     addBookmarkSelectGroup.removeChild(addBookmarkSelectGroup.firstChild);
   }
-  bookmarks[0].groups.forEach((element) => {
-    const option = document.createElement("option");
-    option.textContent = element.groupName;
-    option.setAttribute("value", element.groupName);
-    addBookmarkSelectGroup.appendChild(option);
+  bookmarks.forEach((element) => {
+    element.groups.forEach((element) => {
+      const option = document.createElement("option");
+      option.textContent = element.groupName;
+      option.setAttribute("value", element.groupName);
+      addBookmarkSelectGroup.appendChild(option);
+    });
   });
 };
 groupSelect();
@@ -603,6 +633,7 @@ function getPositionName(elementToFind, arrayElements) {
 // show/ hide edit delete btn
 const editBookmarksBtnFunc = () => {
   const editBookmarksBtn = document.querySelector(".editBookmarks-btn");
+  const bookmarkLi = document.querySelectorAll(".main-section-bookmarks-ul-li");
 
   if (editBookmarksBtn.getAttribute("listener") !== "true") {
     editBookmarksBtn.setAttribute("listener", "true");
@@ -635,6 +666,20 @@ const editBookmarksBtnFunc = () => {
           });
         }
       });
+
+      if (draggable != true) {
+        draggable = true;
+        console.log(draggable);
+        document
+          .querySelectorAll(".main-section-bookmarks-group-title")
+          .forEach((element) => (element.style.pointerEvents = "none"));
+      } else {
+        draggable = false;
+        console.log(draggable);
+        document
+          .querySelectorAll(".main-section-bookmarks-group-title")
+          .forEach((element) => (element.style.pointerEvents = "all"));
+      }
     });
   }
 };
@@ -651,26 +696,32 @@ const addbookmarkDeleteBtnFunc = () => {
         element.addEventListener(
           "click",
           function () {
+            const sectionMain =
+              this.parentNode.parentNode.parentNode.parentNode.parentNode
+                .parentNode.childNodes;
+            const sectionColumn =
+              this.parentNode.parentNode.parentNode.parentNode.parentNode;
+
+            const indexOfColumn =
+              Array.from(sectionMain).indexOf(sectionColumn);
+
             const bookmarkGroupName =
               this.parentNode.parentNode.parentNode.parentNode.childNodes[0]
                 .childNodes[0].innerHTML;
-            const groupNamePosition = getPositionGroupName(
+
+            const indexOfGroup = getPositionGroupName(
               bookmarkGroupName,
-              bookmarks[0].groups
+              bookmarks[indexOfColumn].groups
             );
+            const array =
+              bookmarks[indexOfColumn].groups[indexOfGroup].bookmark;
 
             const bookmarkName =
               this.parentNode.parentNode.childNodes[0].childNodes[0].data;
-            const namePosition = getPositionName(
-              bookmarkName,
-              bookmarks[0].groups[groupNamePosition].bookmark
-            );
+            const indexOfBookmakr = getPositionName(bookmarkName, array);
 
-            const array = bookmarks[0].groups[groupNamePosition].bookmark;
-            const indexToDelete = namePosition;
-
-            if (indexToDelete > -1) {
-              array.splice(indexToDelete, 1);
+            if (indexOfBookmakr > -1) {
+              array.splice(indexOfBookmakr, 1);
             } else {
               return;
             }
@@ -689,8 +740,8 @@ const addbookmarkDeleteBtnFunc = () => {
               if (parentNode.parentNode) {
                 parentNode.parentNode.removeChild(parentNode);
               }
-              if (groupNamePosition > -1) {
-                bookmarks[0].groups.splice(groupNamePosition, 1);
+              if (indexOfGroup > -1) {
+                bookmarks[indexOfColumn].groups.splice(indexOfGroup, 1);
               } else {
                 return;
               }
@@ -720,6 +771,14 @@ const addbookmarkEditbtnFunc = () => {
         element.addEventListener(
           "click",
           function () {
+            const sectionMain =
+              this.parentNode.parentNode.parentNode.parentNode.parentNode
+                .parentNode.childNodes;
+            const sectionColumn =
+              this.parentNode.parentNode.parentNode.parentNode.parentNode;
+
+            const indexOfColumn =
+              Array.from(sectionMain).indexOf(sectionColumn);
             const linkName =
               element.parentNode.parentNode.childNodes[0].firstChild.data;
             const linkUrl =
@@ -731,15 +790,17 @@ const addbookmarkEditbtnFunc = () => {
                 .childNodes[0].innerHTML;
             const groupNamePosition = getPositionGroupName(
               linkGroupName,
-              bookmarks[0].groups
+              bookmarks[indexOfColumn].groups
             );
 
             const namePosition = getPositionName(
               linkName,
-              bookmarks[0].groups[groupNamePosition].bookmark
+              bookmarks[indexOfColumn].groups[groupNamePosition].bookmark
             );
             const bookmarkToChange =
-              bookmarks[0].groups[groupNamePosition].bookmark[namePosition];
+              bookmarks[indexOfColumn].groups[groupNamePosition].bookmark[
+                namePosition
+              ];
 
             const linkBookmarkElement = element.parentNode.parentNode;
 
@@ -878,12 +939,23 @@ const addbookmarkEditbtnFunc = () => {
             div3.appendChild(btnCancel);
 
             //confirm edit
-            const groupNamePosition = getPositionGroupName(
+
+            const sectionMain =
+              element.parentNode.parentNode.parentNode.parentNode.parentNode
+                .childNodes;
+            const sectionColumn =
+              element.parentNode.parentNode.parentNode.parentNode;
+
+            const indexOfColumn =
+              Array.from(sectionMain).indexOf(sectionColumn);
+
+            const indexOfGroup = getPositionGroupName(
               groupName,
-              bookmarks[0].groups
+              bookmarks[indexOfColumn].groups
             );
 
-            const bookmarkToChange = bookmarks[0].groups[groupNamePosition];
+            const bookmarkToChange =
+              bookmarks[indexOfColumn].groups[indexOfGroup];
 
             const editBookmarksBtnConfirm = groupParent.querySelector(
               ".editBookmarks-btn-confirm"
@@ -965,10 +1037,8 @@ const importExportBookmarks = () => {
   if (importBTN.getAttribute("listener") !== "true") {
     importBTN.setAttribute("listener", "true");
     importBTN.addEventListener("click", () => {
-      // const check = '[{"groups":';
-      // textarea.value.includes(check);
-      // console.log(JSON.parse(textarea.value));
       if (textarea.value !== "") {
+        console.log;
         localStorage.setItem("Bookmarks", textarea.value);
 
         while (bookmarksSection.firstChild) {
@@ -979,7 +1049,7 @@ const importExportBookmarks = () => {
         bookmarks = JSON.parse(bookmarksString);
         // dataActiveSwitcher(settingBtn, 1);
         // dataVisibleSwitcher(settingDiv, 1);
-        createBookmarkGroup(bookmarks[0].groups);
+        createBookmarkGroup(bookmarks);
         addbookmarkDeleteBtnFunc();
         addbookmarkEditbtnFunc();
         collExpBookmarksFunc();
@@ -1016,36 +1086,270 @@ copyURLBtn.addEventListener("click", () => {
 });
 
 // drag and drop
-const elementToDrag = document.querySelectorAll(
+const linkElementToDrag = document.querySelectorAll(
   ".main-section-bookmarks-ul-li"
+);
+const groupElementToDrag = document.querySelectorAll(
+  ".main-section-bookmarks-group div:first-child"
 );
 const dragAndDropFunction = () => {
   let elemToMove;
-  let elemToMoveBefore;
-  let parent;
+  let destynationArray;
+  let startArrayElement;
 
-  elementToDrag.forEach((elem) => {
-    elem.addEventListener("dragend", (element) => {
-      parent.insertBefore(elemToMove, elemToMoveBefore);
-      elemToMove.classList.remove("elementToDrag");
-    });
-    elem.addEventListener("dragover", (element) => {
-      elemToMoveBefore = element.target.parentNode;
-      parent.insertBefore(elemToMove, elemToMoveBefore);
-    });
-    elem.addEventListener("dragenter", (element) => {
-      elemToMoveBefore = element.target.parentNode;
-      parent.insertBefore(elemToMove, elemToMoveBefore);
-    });
-    elem.addEventListener("dragleave", (element) => {});
-    elem.addEventListener("dragstart", (element) => {
-      parent = element.target.parentNode.parentNode;
-      elemToMove = element.target.parentNode;
-      elemToMove.classList.add("elementToDrag");
-    });
+  linkElementToDrag.forEach((element) => {
+    if (element.getAttribute("listenerDrag") !== "true") {
+      element.setAttribute("listenerDrag", "true");
+      element.addEventListener("dragend", (element) => {
+        if (draggable) {
+          let elemToMoveBefore = element.target.parentNode;
+          let parent = element.target.parentNode.parentNode;
+          if (elemToMoveBefore.localName === "li") {
+            if (parent.localName === "ul") {
+              parent.insertBefore(elemToMove, elemToMoveBefore.nextSibling);
+            }
+          }
+          elemToMove.classList.remove("elementToDrag");
+          const sectionMain =
+            element.target.parentNode.parentNode.parentNode.parentNode
+              .parentNode;
+          const sectionColumn =
+            element.target.parentNode.parentNode.parentNode.parentNode;
+
+          const indexOfColumn = Array.from(sectionMain.childNodes).indexOf(
+            sectionColumn
+          );
+
+          const groupName =
+            element.target.parentNode.parentNode.parentNode.childNodes[0]
+              .childNodes[0].innerHTML;
+
+          const indexOfGroup = getPositionGroupName(
+            groupName,
+            bookmarks[indexOfColumn].groups
+          );
+          const linkName = element.target.parentNode.childNodes[0].innerHTML;
+          console.log(bookmarks[indexOfColumn].groups[indexOfGroup].bookmark);
+          destynationArray =
+            bookmarks[indexOfColumn].groups[indexOfGroup].bookmark;
+
+          const newIndexOfBookmark = Array.from(parent.childNodes).indexOf(
+            elemToMoveBefore
+          );
+          destynationArray.splice(newIndexOfBookmark, 0, startArrayElement);
+          console.log(destynationArray);
+          let bookmarksString = JSON.stringify(bookmarks);
+          localStorage.setItem("Bookmarks", bookmarksString);
+        }
+      });
+      element.addEventListener("dragover", (element) => {
+        if (draggable) {
+          let elemToMoveBefore = element.target.parentNode;
+          let parent = element.target.parentNode.parentNode;
+          let parentChildNode = element.target.parentNode.parentNode.childNodes;
+          if (elemToMoveBefore.localName === "li") {
+            if (parent.localName == "ul") {
+              if (
+                Array.from(parentChildNode).indexOf(elemToMoveBefore) == "0"
+              ) {
+                parent.insertBefore(elemToMove, elemToMoveBefore);
+              } else {
+                parent.insertBefore(elemToMove, elemToMoveBefore.nextSibling);
+              }
+            }
+          }
+        }
+      });
+      element.addEventListener("dragstart", (element) => {
+        if (draggable) {
+          elemToMove = element.target.parentNode;
+          // console.log(elemToMove)
+          elemToMove.classList.add("elementToDrag");
+          const sectionMain =
+            element.target.parentNode.parentNode.parentNode.parentNode
+              .parentNode;
+          const sectionColumn =
+            element.target.parentNode.parentNode.parentNode.parentNode;
+
+          const indexOfColumn = Array.from(sectionMain.childNodes).indexOf(
+            sectionColumn
+          );
+          // console.log(indexOfColumn);
+
+          const groupName =
+            element.target.parentNode.parentNode.parentNode.childNodes[0]
+              .childNodes[0].innerHTML;
+          // console.log(groupName);
+          const indexOfGroup = getPositionGroupName(
+            groupName,
+            bookmarks[indexOfColumn].groups
+          );
+          // console.log(indexOfGroup);
+          const linkName = element.target.parentNode.childNodes[0].innerHTML;
+          // console.log(linkName);
+
+          const indexOfBookmakr = getPositionName(
+            linkName,
+            bookmarks[indexOfColumn].groups[indexOfGroup].bookmark
+          );
+          // console.log(indexOfBookmakr);
+
+          startArray = bookmarks[indexOfColumn].groups[indexOfGroup];
+          startArrayElement =
+            bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
+              indexOfBookmakr
+            ];
+
+          if (indexOfBookmakr > -1) {
+            bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
+              indexOfBookmakr,
+              1
+            );
+          } else {
+            return;
+          }
+        }
+      });
+    }
   });
+  // groupElementToDrag.forEach((element) => {
+  //   if (element.getAttribute("listenerDrag") !== "true") {
+  //     element.setAttribute("listenerDrag", "true");
+  //     element.addEventListener("dragend", (element) => {
+  //       if (draggable) {
+  //         let elemToMoveBefore = element.target.parentNode;
+  //         let parent = element.target.parentNode.parentNode;
+  //         if (elemToMoveBefore.localName === "li") {
+  //           if (parent.localName === "ul") {
+  //             parent.insertBefore(elemToMove, elemToMoveBefore.nextSibling);
+  //           }
+  //         }
+  //         elemToMove.classList.remove("elementToDrag");
+  //         const sectionMain =
+  //           element.target.parentNode.parentNode.parentNode.parentNode
+  //             .parentNode;
+  //         const sectionColumn =
+  //           element.target.parentNode.parentNode.parentNode.parentNode;
+
+  //         const indexOfColumn = Array.from(sectionMain.childNodes).indexOf(
+  //           sectionColumn
+  //         );
+
+  //         const groupName =
+  //           element.target.parentNode.parentNode.parentNode.childNodes[0]
+  //             .childNodes[0].innerHTML;
+
+  //         const indexOfGroup = getPositionGroupName(
+  //           groupName,
+  //           bookmarks[indexOfColumn].groups
+  //         );
+  //         const linkName = element.target.parentNode.childNodes[0].innerHTML;
+  //         console.log(bookmarks[indexOfColumn].groups[indexOfGroup].bookmark);
+  //         destynationArray =
+  //           bookmarks[indexOfColumn].groups[indexOfGroup].bookmark;
+
+  //         const newIndexOfBookmark = Array.from(parent.childNodes).indexOf(
+  //           elemToMoveBefore
+  //         );
+  //         destynationArray.splice(newIndexOfBookmark, 0, startArrayElement);
+  //         console.log(destynationArray);
+  //         // let bookmarksString = JSON.stringify(bookmarks);
+  //         // localStorage.setItem("Bookmarks", bookmarksString);
+  //       }
+  //     });
+  //     element.addEventListener("dragover", (element) => {
+  //       if (draggable) {
+  //         let elemToMoveBefore = element.target.parentNode;
+  //         let parent = element.target.parentNode.parentNode;
+  //         let parentChildNode = element.target.parentNode.parentNode.childNodes;
+  //         if (elemToMoveBefore.localName === "li") {
+  //           if (parent.localName == "ul") {
+  //             if (
+  //               Array.from(parentChildNode).indexOf(elemToMoveBefore) == "0"
+  //             ) {
+  //               parent.insertBefore(elemToMove, elemToMoveBefore);
+  //             } else {
+  //               parent.insertBefore(elemToMove, elemToMoveBefore.nextSibling);
+  //             }
+  //           }
+  //         }
+  //       }
+  //     });
+  //     element.addEventListener("dragstart", (element) => {
+  //       if (draggable) {
+  //         const elemToMove = element.target.parentNode.parentNode;
+  //         console.log(elemToMove);
+  //         elemToMove.classList.add("elementToDrag");
+  //         // const sectionMain =
+  //         //   element.target.parentNode.parentNode.parentNode.parentNode
+  //         //     .parentNode;
+  //         // const sectionColumn =
+  //         //   element.target.parentNode.parentNode.parentNode.parentNode;
+
+  //         // const indexOfColumn = Array.from(sectionMain.childNodes).indexOf(
+  //         //   sectionColumn
+  //         // );
+  //         // console.log(indexOfColumn);
+
+  //         // const groupName =
+  //         //   element.target.parentNode.parentNode.parentNode.childNodes[0]
+  //         //     .childNodes[0].innerHTML;
+  //         // console.log(groupName);
+  //         // const indexOfGroup = getPositionGroupName(
+  //           groupName,
+  //           bookmarks[indexOfColumn].groups
+  //         // );
+  //         // console.log(indexOfGroup);
+  //         // const linkName = element.target.parentNode.childNodes[0].innerHTML;
+  //         // console.log(linkName);
+
+  //         // const indexOfBookmakr = getPositionName(
+  //         //   linkName,
+  //         //   bookmarks[indexOfColumn].groups[indexOfGroup].bookmark
+  //         // );
+  //         // console.log(indexOfBookmakr);
+
+  //         // startArray = bookmarks[indexOfColumn].groups[indexOfGroup];
+  //         // startArrayElement =
+  //         //   bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
+  //         //     indexOfBookmakr
+  //         //   ];
+
+  //         // if (indexOfBookmakr > -1) {
+  //         //   bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
+  //         //     indexOfBookmakr,
+  //         //     1
+  //         //   );
+  //         // } 
+  //       }
+  //     });
+  //     element.addEventListener("click", () => {
+  //       console.log("click");
+  //     });
+  //   }
+  // });
 };
-// dragAndDropFunction();
+
+// const dragAndDropFunction = () => {
+//   elementToDrag.forEach((element) => {
+//     let moving = false;
+
+//     element.addEventListener("mousemove", () => {
+//       if (moving) {
+//         console.log("mousemove");
+//       }
+//     });
+//     element.addEventListener("mousedown", () => {
+//       console.log("mousedown");
+//       moving = true;
+//     });
+//     element.addEventListener("mouseup", () => {
+//       console.log("mouseup");
+//       moving = false;
+//     });
+//   });
+// };
+dragAndDropFunction();
 
 showSettingsUI();
 editBookmarksBtnFunc();
@@ -1060,36 +1364,38 @@ const colorPickersContainer = document.querySelector(
   ".setting-menu-appearance-colorPickers"
 );
 var colorsCustome = [];
-
+let mode;
 const changeTheme = (value) => {
-  if (value === "auto") {
-    colorPickersContainer.setAttribute("data-visible", "false");
-    if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
-      colorScheme[0].mode = "auto";
-      colorScheme[0].colors = {
-        first: "#eae6da",
-        second: "#f5eddc",
-        third: "#fff7e9",
-        accentFirst: "#d44b4b",
-        textColor: "#19282f",
-      };
-      const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-      styleSheet.insertRule(mode);
-    } else {
-      colorScheme[0].mode = "auto";
-      colorScheme[0].colors = {
-        first: "#1c1b22",
-        second: "#2b2a33",
-        third: "#42414d",
-        accentFirst: "#00ddff",
-        textColor: "#f8fdff",
-      };
-      const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-      styleSheet.deleteRule(mode);
-      styleSheet.insertRule(mode);
-    }
-  } else {
-    if (value === "light") {
+  switch (value) {
+    case "auto":
+      colorPickersContainer.setAttribute("data-visible", "false");
+      if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
+        colorScheme[0].mode = "auto";
+        colorScheme[0].colors = {
+          first: "#eae6da",
+          second: "#f5eddc",
+          third: "#fff7e9",
+          accentFirst: "#d44b4b",
+          textColor: "#19282f",
+        };
+        mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
+        styleSheet.insertRule(mode);
+      } else {
+        colorScheme[0].mode = "auto";
+        colorScheme[0].colors = {
+          first: "#1c1b22",
+          second: "#2b2a33",
+          third: "#42414d",
+          accentFirst: "#00ddff",
+          textColor: "#f8fdff",
+        };
+        mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
+        styleSheet.deleteRule(mode);
+        styleSheet.insertRule(mode);
+      }
+      break;
+
+    case "light":
       colorPickersContainer.setAttribute("data-visible", "false");
       colorScheme[0].mode = "light";
       colorScheme[0].colors = {
@@ -1099,86 +1405,81 @@ const changeTheme = (value) => {
         accentFirst: "#d44b4b",
         textColor: "#19282f",
       };
-      const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
+      mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
       styleSheet.deleteRule(mode);
       styleSheet.insertRule(mode);
-    } else {
-      if (value === "dark") {
-        colorPickersContainer.setAttribute("data-visible", "false");
-        colorScheme[0].mode = "dark";
-        colorScheme[0].colors = {
-          first: "#1c1b22",
-          second: "#2b2a33",
-          third: "#42414d",
-          accentFirst: "#00ddff",
-          textColor: "#f8fdff",
-        };
-        const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
+      break;
+
+    case "dark":
+      colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme[0].mode = "dark";
+      colorScheme[0].colors = {
+        first: "#1c1b22",
+        second: "#2b2a33",
+        third: "#42414d",
+        accentFirst: "#00ddff",
+        textColor: "#f8fdff",
+      };
+      mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
+      styleSheet.deleteRule(mode);
+      styleSheet.insertRule(mode);
+      break;
+
+    default:
+      if (colorScheme[0].customeColors !== undefined) {
+        colorScheme[0].mode = "custom";
+
+        const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
         styleSheet.deleteRule(mode);
         styleSheet.insertRule(mode);
       } else {
-        if (colorScheme[0].customeColors !== undefined) {
-          console.info("Custome Theme Exists");
-          colorScheme[0].mode = "custom";
+        colorScheme[0].mode = "custom";
+        let newArray = colorScheme[0];
+        newArray["customeColors"] = {
+          first: colorScheme[0].colors.first,
+          second: colorScheme[0].colors.second,
+          third: colorScheme[0].colors.third,
+          accentFirst: colorScheme[0].colors.accentFirst,
+          textColor: colorScheme[0].colors.textColor,
+        };
 
-          const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-          styleSheet.deleteRule(mode);
-          styleSheet.insertRule(mode);
-        } else {
-          console.warn("Custome Theme doesn't exists");
-
-          colorScheme[0].mode = "custom";
-          let newArray = colorScheme[0];
-          newArray["customeColors"] = {
-            first: colorScheme[0].colors.first,
-            second: colorScheme[0].colors.second,
-            third: colorScheme[0].colors.third,
-            accentFirst: colorScheme[0].colors.accentFirst,
-            textColor: colorScheme[0].colors.textColor,
-          };
-
-          const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-          styleSheet.deleteRule(mode);
-          styleSheet.insertRule(mode);
-        }
-        document.querySelector(".firstColor-input").value =
-          colorScheme[0].customeColors.first;
-        document.querySelector(".secondColor-input").value =
-          colorScheme[0].customeColors.second;
-        document.querySelector(".thirdColor-input").value =
-          colorScheme[0].customeColors.third;
-        document.querySelector(".accentColor-input").value =
-          colorScheme[0].customeColors.accentFirst;
-        document.querySelector(".textColor-input").value =
-          colorScheme[0].customeColors.textColor;
-
-        document
-          .querySelectorAll(".setting-menu-appearance-colorPickers input")
-          .forEach((element) => {
-            const nameCol = element.name;
-            const value = element.value;
-
-            colorsCustome[nameCol] = value;
-            element.addEventListener("input", () => {
-              const colorName = element.name;
-              const value = element.value;
-              colorScheme[0].customeColors[colorName] = value;
-              console.log(colorScheme[0].customeColors);
-              colorSchemeString = JSON.stringify(colorScheme);
-              localStorage.setItem("ColorSheme", colorSchemeString);
-              const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-              styleSheet.deleteRule(mode);
-              styleSheet.insertRule(mode);
-            });
-          });
-
-        // console.log(colorScheme[0].colors[0]);
-        // colorPickersContainer.setAttribute("data-visible", "false");
-        // dataVisibleSwitcher(colorPickersContainer, 1);
-        colorPickersContainer.setAttribute("data-visible", "true");
+        const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
+        styleSheet.deleteRule(mode);
+        styleSheet.insertRule(mode);
       }
-    }
+      document.querySelector(".firstColor-input").value =
+        colorScheme[0].customeColors.first;
+      document.querySelector(".secondColor-input").value =
+        colorScheme[0].customeColors.second;
+      document.querySelector(".thirdColor-input").value =
+        colorScheme[0].customeColors.third;
+      document.querySelector(".accentColor-input").value =
+        colorScheme[0].customeColors.accentFirst;
+      document.querySelector(".textColor-input").value =
+        colorScheme[0].customeColors.textColor;
+
+      document
+        .querySelectorAll(".setting-menu-appearance-colorPickers input")
+        .forEach((element) => {
+          const nameCol = element.name;
+          const value = element.value;
+
+          colorsCustome[nameCol] = value;
+          element.addEventListener("input", () => {
+            const colorName = element.name;
+            const value = element.value;
+            colorScheme[0].customeColors[colorName] = value;
+            colorSchemeString = JSON.stringify(colorScheme);
+            localStorage.setItem("ColorSheme", colorSchemeString);
+            const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
+            styleSheet.deleteRule(mode);
+            styleSheet.insertRule(mode);
+          });
+        });
+      colorPickersContainer.setAttribute("data-visible", "true");
+      break;
   }
+
   colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
 };
