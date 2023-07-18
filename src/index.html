@@ -22,25 +22,12 @@
               class="fa-solid fa-plus addBookmark-btn main-nav-icon-btn icon"
               data-active="false"></i>
           </li>
-          <li>
-            <i
-              class="fa-solid fa-pen-to-square editBookmarks-btn main-nav-icon-btn icon"
-              data-active="false"></i>
-          </li>
+
           <li>
             <i
               class="fa-solid fa-gear settings-btn main-nav-icon-btn icon"
               data-active="false"></i>
           </li>
-          <!-- <li>
-            <input type="checkbox" class="switchForLightDarkMode" />
-            <i
-              class="fa-solid fa-moon main-nav-icon-btn icon darkBtn"
-              data-visible=""></i>
-            <i
-              class="fa-solid fa-sun main-nav-icon-btn icon lightBtn"
-              data-visible=""></i>
-          </li> -->
         </ul>
       </nav>
       <section class="main-section">
@@ -151,6 +138,21 @@
                     <p>Text Color</p>
                   </div>
                 </div>
+
+                <label>
+                  <input
+                    type="checkbox"
+                    autocomplete="off"
+                    class="hideAddBookamrkBtn" />Hide add bookmark button in top
+                  right corner</label
+                >
+                <label>
+                  <input
+                    type="checkbox"
+                    autocomplete="off"
+                    class="hideSettingBtn" />Hide settings button in top right
+                  corner</label
+                >
               </div>
             </div>
             <div class="settings-menu-newTab">
@@ -202,9 +204,7 @@
         </div>
         <div class="main-section-bookmarks"></div>
       </section>
-      <footer class="main-footer">
-        <p class="main-footer-textarea">Some kinde of text :)</p>
-      </footer>
+      <footer class="main-footer"></footer>
     </main>
 
     <script src="main.js"></script>

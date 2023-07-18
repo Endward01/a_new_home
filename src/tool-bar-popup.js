@@ -5,18 +5,19 @@ var colorSchemeString = localStorage.getItem("ColorSheme");
 var colorScheme = JSON.parse(colorSchemeString);
 
 const groupSelect = () => {
-  while (document.querySelector(".addBookmark-form-chooseGroup").firstChild) {
-    document
-      .querySelector(".addBookmark-form-chooseGroup")
-      .removeChild(
-        document.querySelector(".addBookmark-form-chooseGroup").firstChild
-      );
+  const addBookmarkSelectGroup = document.querySelector(
+    ".addBookmark-form-chooseGroup"
+  );
+  while (addBookmarkSelectGroup.firstChild) {
+    addBookmarkSelectGroup.removeChild(addBookmarkSelectGroup.firstChild);
   }
-  bookmarks[0].groups.forEach((element) => {
-    const option = document.createElement("option");
-    option.textContent = element.groupName;
-    option.setAttribute("value", element.groupName);
-    document.querySelector(".addBookmark-form-chooseGroup").appendChild(option);
+  bookmarks.forEach((element) => {
+    element.groups.forEach((element) => {
+      const option = document.createElement("option");
+      option.textContent = element.groupName;
+      option.setAttribute("value", element.groupName);
+      addBookmarkSelectGroup.appendChild(option);
+    });
   });
 };
 groupSelect();
@@ -85,28 +86,31 @@ const addBookmark = () => {
     .querySelector(".addBookmark-form-btn-add")
     .addEventListener("click", function () {
       const name = document.querySelector(".addBookmark-form-name").value;
-      console.log(name);
       const url = document.querySelector(".addBookmark-form-url").value;
-      console.log(url);
       const group = document.querySelector(
         ".addBookmark-form-chooseGroup"
       ).value;
-      console.log(group);
       const newGroup = document.querySelector(
         ".addBookmark-form-newGroup"
       ).value;
-
       if (
         document.querySelector(".addBookmark-form-checkbox").checked !== true
       ) {
-        const position = getPositionGroupName(group, bookmarks[0].groups);
+        let groupPosition;
+        let columnPosition;
+        for (let i = 0; i < bookmarks.length; i++) {
+          groupPosition = getPositionGroupName(group, bookmarks[i].groups);
+          if (groupPosition !== -1) {
+            columnPosition = i;
+          }
+        }
         const newBookmark = {
           name: name,
           url: url,
         };
-        const arrBookmark = bookmarks[0].groups[position].bookmark;
+        const arrBookmark =
+          bookmarks[columnPosition].groups[groupPosition].bookmark;
         arrBookmark.push(newBookmark);
-
         let bookmarksString = JSON.stringify(bookmarks);
         localStorage.setItem("Bookmarks", bookmarksString);
       } else {
@@ -142,14 +146,14 @@ document.querySelector(".addBookmark-form").addEventListener("input", () => {
         .setAttribute("disabled", "true");
       document
         .querySelector(".addBookmark-form-btn-add")
-        .classList.add("addBookmark-form-btnIsDisabled");
+        .classList.add("btnIsDisabled");
     } else {
       document
         .querySelector(".addBookmark-form-btn-add")
         .removeAttribute("disabled", "true");
       document
         .querySelector(".addBookmark-form-btn-add")
-        .classList.remove("addBookmark-form-btnIsDisabled");
+        .classList.remove("btnIsDisabled");
     }
   } else {
     if (name === "" || url === "" || newGroup == "") {
@@ -158,14 +162,14 @@ document.querySelector(".addBookmark-form").addEventListener("input", () => {
         .setAttribute("disabled", "true");
       document
         .querySelector(".addBookmark-form-btn-add")
-        .classList.add("addBookmark-form-btnIsDisabled");
+        .classList.add("btnIsDisabled");
     } else {
       document
         .querySelector(".addBookmark-form-btn-add")
         .removeAttribute("disabled", "true");
       document
         .querySelector(".addBookmark-form-btn-add")
-        .classList.remove("addBookmark-form-btnIsDisabled");
+        .classList.remove("btnIsDisabled");
     }
   }
 });

@@ -12,15 +12,12 @@
   "chrome_url_overrides": {
     "newtab": "src/index.html"
   },
-  "page_action": {
+  "browser_action": {
     "default_popup": "src/tool-bar-popup.html",
     "default_title": "Quickly add current page to bookmarks",
-    "show_matches": [
-      "<all_urls>"
-    ],
+    
     "default_icon": {
-      "48": "src/icons/logo-48.png",
-      "96": "src/icons/logo-98.png"
+      "48": "src/icons/logo-48.png"
     }
   },
   "permissions": [
