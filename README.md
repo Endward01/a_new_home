@@ -1,20 +1,29 @@
-<p align="center" style="font-size: 42px; font-weight: bold;" >
-  A New HOMEpage <br><p align="center" style="font-size: 38px;">Browser Extansion</p>
-</p>
+### Browser Extansion 
+<h1 align="center" >
+A New HOMEpage 
+</h1>
 
-<p align="center" style="font-size: 20px;">
+<p align="center">
  An extension for firefox and chromium browsers that adds a homepage and new tab page for your minimalistic needs.
 </p>
-
+&nbsp
+&nbsp
+&nbsp
 <p align="center">
-  <img src="images/1.png" style="border-radius:8px;"/>
+  <img src="images/1.png" />
+</p>
+&nbsp
+&nbsp
+&nbsp
+<p align="center">
+  <img src="images/2.png" width="30%" />
+  <img src="images/3.png" width="30%" />
+  <img src="images/4.png" width="30%" />
+  <img src="images/5.png" width="30%" />
+  <img src="images/6.png" width="30%" />
 </p>
 
-<p align="center">
-  <img src="images/2.png" width="30%" style="border-radius:4px;"/>
-  <img src="images/3.png" width="30%" style="border-radius:4px;"/>
-  <img src="images/4.png" width="30%" style="border-radius:4px;"/>
-  <img src="images/5.png" width="30%" style="border-radius:4px;"/>
-  <img src="images/6.png" width="30%" style="border-radius:4px;"/>
-</p>
-<div style="border-bottom: 1px solid white" width="100%"></div>
+
+
+
+      
