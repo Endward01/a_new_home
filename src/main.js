@@ -58,10 +58,9 @@ document
     popUp.style = `top:${element.pageY}px;left:${element.pageX}px`;
 
     const text = document.elementFromPoint(element.pageX, element.pageY);
-    const topBtnDiv = document.createElement("div")
-    topBtnDiv.classList.add("contextTopBtnDiv")
+    const topBtnDiv = document.createElement("div");
+    topBtnDiv.classList.add("contextTopBtnDiv");
     popUp.appendChild(topBtnDiv);
-    
 
     // add bookmark
     const addBookmakrBtn = document.createElement("a");
@@ -99,9 +98,9 @@ document
     // settingsBtn.textContent = "Settings";
     // settingsBtn.setAttribute("type", "button");
     topBtnDiv.appendChild(refreshBtn);
-    refreshBtn.addEventListener("click", e => {
+    refreshBtn.addEventListener("click", (e) => {
       window.location.reload();
-    })
+    });
     const line = document.createElement("div");
     line.classList.add("line");
     popUp.appendChild(line);
@@ -206,7 +205,6 @@ document
       changeIndex(text);
     }
 
-  
     //enable draggable elements
 
     const draggableLinkBtn = document.createElement("a");
@@ -1314,15 +1312,18 @@ function drop(e) {
   const indexOfColumn = Array.from(
     elementToMove.parentNode.parentNode.parentNode.parentNode.childNodes
   ).indexOf(elementToMove.parentNode.parentNode.parentNode);
+  console.log(bookmarks[indexOfColumn].groups[indexOfGroup].bookmark);
+  console.log(indexOfElement);
+  console.log(arrayElementToMove);
 
+  if (indexOfElementToMove > -1) {
+    groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
+  }
   bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
     indexOfElement,
     0,
     arrayElementToMove
   );
-  if (indexOfElementToMove > -1) {
-    groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
-  }
   let bookmarksString = JSON.stringify(bookmarks);
   localStorage.setItem("Bookmarks", bookmarksString);
 }
