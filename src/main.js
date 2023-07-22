@@ -37,7 +37,8 @@ if (localStorage.getItem("ColorSheme") !== null) {
   localStorage.setItem("ColorSheme", colorSchemeString);
 }
 
-var drag = false;
+var dragLink = false;
+var dragGroup = false;
 
 // right mouse button constext menu
 document
@@ -57,6 +58,54 @@ document
     popUp.style = `top:${element.pageY}px;left:${element.pageX}px`;
 
     const text = document.elementFromPoint(element.pageX, element.pageY);
+    const topBtnDiv = document.createElement("div")
+    topBtnDiv.classList.add("contextTopBtnDiv")
+    popUp.appendChild(topBtnDiv);
+    
+
+    // add bookmark
+    const addBookmakrBtn = document.createElement("a");
+    addBookmakrBtn.classList.add(
+      "fa-solid",
+      "fa-plus",
+      "contextBtn",
+      "addBookmark-btn"
+    );
+    // addBookmakrBtn.textContent = "Add New Bookmark";
+    // addBookmakrBtn.setAttribute("type", "button");
+    topBtnDiv.appendChild(addBookmakrBtn);
+    addBookmakrBtnFuntion();
+
+    // settings btn
+    const settingsBtn = document.createElement("a");
+    settingsBtn.classList.add(
+      "fa-solid",
+      "fa-gear",
+      "contextBtn",
+      "settings-btn"
+    );
+    // settingsBtn.textContent = "Settings";
+    // settingsBtn.setAttribute("type", "button");
+    topBtnDiv.appendChild(settingsBtn);
+    showSettingsUI();
+    // refresh btn
+    const refreshBtn = document.createElement("a");
+    refreshBtn.classList.add(
+      "fa-solid",
+      "fa-rotate-right",
+      "contextBtn",
+      "settings-btn"
+    );
+    // settingsBtn.textContent = "Settings";
+    // settingsBtn.setAttribute("type", "button");
+    topBtnDiv.appendChild(refreshBtn);
+    refreshBtn.addEventListener("click", e => {
+      window.location.reload();
+    })
+    const line = document.createElement("div");
+    line.classList.add("line");
+    popUp.appendChild(line);
+
     // title name
     if (text.text !== undefined) {
       const p = document.createElement("p");
@@ -105,19 +154,19 @@ document
     }
     // move btn
     if (text.text !== undefined) {
-      const moveDiv = document.createElement("div");
-      popUp.appendChild(moveDiv);
-      moveDiv.classList.add("moveDiv");
-      const moveBtn1 = document.createElement("a");
-      moveBtn1.classList.add("moveBtn", "contextBtn");
-      moveBtn1.textContent = "Move to Group";
-      moveDiv.appendChild(moveBtn1);
-      const listDiv = document.createElement("div");
-      listDiv.classList.add("listDiv");
-      moveDiv.appendChild(listDiv);
-      const line = document.createElement("div");
-      line.classList.add("line");
-      popUp.appendChild(line);
+      // const moveDiv = document.createElement("div");
+      // popUp.appendChild(moveDiv);
+      // moveDiv.classList.add("moveDiv");
+      // const moveBtn1 = document.createElement("a");
+      // moveBtn1.classList.add("moveBtn", "contextBtn");
+      // moveBtn1.textContent = "Move to Group";
+      // moveDiv.appendChild(moveBtn1);
+      // const listDiv = document.createElement("div");
+      // listDiv.classList.add("listDiv");
+      // moveDiv.appendChild(listDiv);
+      // const line = document.createElement("div");
+      // line.classList.add("line");
+      // popUp.appendChild(line);
     } else if (text.tagName === "H2") {
       const moveDiv = document.createElement("div");
       popUp.appendChild(moveDiv);
@@ -157,50 +206,113 @@ document
       changeIndex(text);
     }
 
-    // add bookmark
-    const addBookmakrBtn = document.createElement("a");
-    addBookmakrBtn.classList.add("contextBtn", "addBookmark-btn");
-    addBookmakrBtn.textContent = "Add New Bookmark";
-    // addBookmakrBtn.setAttribute("type", "button");
-    popUp.appendChild(addBookmakrBtn);
-    addBookmakrBtnFuntion();
-
-    // settings btn
-    const settingsBtn = document.createElement("a");
-    settingsBtn.classList.add("contextBtn", "settings-btn");
-    settingsBtn.textContent = "Settings";
-    // settingsBtn.setAttribute("type", "button");
-    popUp.appendChild(settingsBtn);
-    showSettingsUI();
-
+  
     //enable draggable elements
-    if (drag === true) {
-      const line = document.createElement("div");
-      line.classList.add("line");
-      popUp.appendChild(line);
-      const draggableBtn = document.createElement("a");
-      draggableBtn.classList.add("contextBtn", "dragging-btn");
-      if (draggable !== true) {
-        draggableBtn.textContent = "Enable Link Dragging";
+
+    const draggableLinkBtn = document.createElement("a");
+    const draggableGroupBtn = document.createElement("a");
+    draggableLinkBtn.classList.add("contextBtn", "dragging-btn");
+    draggableGroupBtn.classList.add("contextBtn", "dragging-btn");
+    if (dragLink !== true) {
+      draggableLinkBtn.textContent = "Enable Link Dragging";
+    } else {
+      draggableLinkBtn.textContent = "Disable Link Dragging";
+    }
+    if (dragGroup !== true) {
+      draggableGroupBtn.textContent = "Enable Group Dragging";
+    } else {
+      draggableGroupBtn.textContent = "Disable Group Dragging";
+    }
+    popUp.appendChild(draggableLinkBtn);
+    popUp.appendChild(draggableGroupBtn);
+    draggableLinkBtn.addEventListener("click", (e) => {
+      const elemToDrag = document.querySelectorAll(
+        ".main-section-bookmarks-ul-li"
+      );
+      const elemToDragAppend = document.querySelectorAll(
+        ".main-section-bookmarks-ul-li"
+      );
+
+      const elemToDragOver = document.querySelectorAll(
+        ".main-section-bookmarks-ul"
+      );
+
+      // fun seyHello = () => {
+      //   console.log("hello");
+      // };
+
+      // console.log(e.target);
+      if (dragLink !== true) {
+        dragLink = true;
+        console.log("add");
+        elemToDrag.forEach((elemToDrag) => {
+          elemToDrag.addEventListener("dragstart", dragstart, true);
+          elemToDrag.setAttribute("draggable", "true");
+          elemToDrag.classList.add("move");
+          elemToDrag.childNodes[0].removeAttribute("href");
+        });
+
+        elemToDragOver.forEach((elemToDragOver) => {
+          elemToDragOver.addEventListener("dragover", dragover, true);
+          elemToDragOver.addEventListener("drop", drop, true);
+          // elemToDragOver.addEventListener("dragenter", dragenter, true);
+          elemToDragOver.classList.add("dragOverList");
+        });
       } else {
-        draggableBtn.textContent = "Disable Link Dragging";
-      }
-      draggableBtn.setAttribute("type", "button");
-      popUp.appendChild(draggableBtn);
-      document.querySelector(".dragging-btn").addEventListener("click", () => {
-        if (draggable !== true) {
-          draggable = true;
-        } else {
-          draggable = false;
+        dragLink = false;
+        console.log("remove");
+        elemToDrag.forEach((elemToDrag) => {
+          elemToDrag.removeEventListener("dragstart", dragstart, true);
+        });
+        elemToDragOver.forEach((elemToDragOver) => {
+          elemToDragOver.removeEventListener("dragover", dragover, true);
+          elemToDragOver.removeEventListener("drop", drop, true);
+          // elemToDragOver.removeEventListener("dragenter", dragenter, true);
+          elemToDragOver.classList.remove("dragOverList");
+        });
+        while (document.querySelector(".main-section-bookmarks").firstChild) {
+          document
+            .querySelector(".main-section-bookmarks")
+            .removeChild(
+              document.querySelector(".main-section-bookmarks").firstChild
+            );
         }
+        createBookmarkGroup(bookmarks);
+      }
+      if (document.querySelector(".rmb-popup") !== null) {
         if (document.querySelector(".rmb-popup").parentNode) {
           document
             .querySelector(".rmb-popup")
             .parentNode.removeChild(document.querySelector(".rmb-popup"));
         }
-      });
-    }
+      }
+    });
 
+    draggableGroupBtn.addEventListener("click", (e) => {
+      const elemToDrag = document.querySelectorAll(
+        ".main-section-bookmarks-group"
+      );
+
+      const seyHello = () => {
+        console.log("hello");
+      };
+
+      console.log(e.target);
+      if (dragGroup !== true) {
+        dragGroup = true;
+      } else {
+        dragGroup = false;
+      }
+      if (document.querySelector(".rmb-popup") !== null) {
+        if (document.querySelector(".rmb-popup").parentNode) {
+          document
+            .querySelector(".rmb-popup")
+            .parentNode.removeChild(document.querySelector(".rmb-popup"));
+        }
+      }
+    });
+
+    // close contextmenu
     document.querySelector(".main-section").addEventListener(
       "mouseup",
       function (e) {
@@ -217,8 +329,6 @@ document
       false
     );
   });
-
-
 
 window.addEventListener("storage", function (e) {
   if (e.key === "Bookmarks") {
@@ -266,7 +376,6 @@ document.body.addEventListener("keyup", function (e) {
     bookmarkLink.forEach((element) => {
       element.classList.remove("linkDisabled");
     });
-    draggable = false;
     document
       .querySelectorAll(".main-section-bookmarks-group-title")
       .forEach((element) => (element.style.pointerEvents = "all"));
@@ -280,7 +389,6 @@ document.body.addEventListener("keyup", function (e) {
     }
   }
 });
-
 
 // SELECT EXISTING NODES
 
@@ -305,7 +413,7 @@ const addBookmarkInpName = document.querySelector(".addBookmark-form-name");
 
 //Draw bookmarks from localstorage to body
 const createBookmarkGroup = (array, name, url, newGroup) => {
-  console.log(array)
+  // console.log(array);
   if (array !== null) {
     array.forEach((element) => {
       const bookmarksSection = document.querySelector(
@@ -334,7 +442,6 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
         ul.setAttribute("data-collapsed", element.collapsed);
         divFirst.appendChild(ul);
         createBookmarkLink(element, ul);
- 
       });
     });
   } else {
@@ -821,7 +928,6 @@ const editBtnLogic = (domElement) => {
       const indexOfGroup = Array.from(
         element.parentNode.parentNode.parentNode.parentNode.childNodes
       ).indexOf(element.parentNode.parentNode.parentNode);
-
       const indexOfColumn = Array.from(
         element.parentNode.parentNode.parentNode.parentNode.parentNode
           .childNodes
@@ -1128,132 +1234,120 @@ copyURLBtn.addEventListener("click", () => {
 
 // drag and drop
 
-var draggable = false;
-const linkElementToDrag = document.querySelectorAll(
-  ".main-section-bookmarks-ul-li"
-);
-const groupElementToDrag = document.querySelectorAll(
-  ".main-section-bookmarks-group"
-);
+let elementToMove,
+  positionToMove,
+  arrayElementToMove,
+  indexOfElementToMove,
+  groupOfElementToMove,
+  positionY,
+  parentToInsert,
+  position;
 
-const dragAndDropFunction = () => {
-  let elemToMove;
-  let destynationArray;
-  let startArrayElement;
-
-  linkElementToDrag.forEach((element) => {
-    if (element.getAttribute("listenerDrag") !== "true") {
-      element.setAttribute("listenerDrag", "true");
-
-      element.addEventListener("dragend", (element) => {
-        if (draggable) {
-          let elemToMoveBefore = element.target.parentNode;
-          let parent = element.target.parentNode.parentNode;
-          if (elemToMoveBefore.localName === "li") {
-            if (parent.localName === "ul") {
-              parent.insertBefore(elemToMove, elemToMoveBefore.nextSibling);
-            }
-          }
-          elemToMove.classList.remove("dragging");
-          const sectionMain =
-            element.target.parentNode.parentNode.parentNode.parentNode
-              .parentNode;
-          const sectionColumn =
-            element.target.parentNode.parentNode.parentNode.parentNode;
-
-          const indexOfColumn = Array.from(sectionMain.childNodes).indexOf(
-            sectionColumn
-          );
-
-          const groupName =
-            element.target.parentNode.parentNode.parentNode.childNodes[0]
-              .childNodes[0].innerHTML;
-
-          const indexOfGroup = getPositionGroupName(
-            groupName,
-            bookmarks[indexOfColumn].groups
-          );
-          const linkName = element.target.parentNode.childNodes[0].innerHTML;
-          destynationArray =
-            bookmarks[indexOfColumn].groups[indexOfGroup].bookmark;
-
-          const newIndexOfBookmark = Array.from(parent.childNodes).indexOf(
-            elemToMoveBefore
-          );
-          destynationArray.splice(newIndexOfBookmark, 0, startArrayElement);
-          let bookmarksString = JSON.stringify(bookmarks);
-          localStorage.setItem("Bookmarks", bookmarksString);
-        }
-      });
-
-      element.addEventListener("dragover", (element) => {
-        if (draggable) {
-          let elemToMoveBefore = element.target.parentNode;
-          let parent = element.target.parentNode.parentNode;
-          let parentChildNode = element.target.parentNode.parentNode.childNodes;
-          if (elemToMoveBefore.localName === "li") {
-            if (parent.localName == "ul") {
-              if (
-                Array.from(parentChildNode).indexOf(elemToMoveBefore) == "0"
-              ) {
-                parent.insertBefore(elemToMove, elemToMoveBefore);
-              } else {
-                parent.insertBefore(elemToMove, elemToMoveBefore.nextSibling);
-              }
-            }
+function dragover(e) {
+  if (e.target.nodeName === "A") {
+    positionY = e.layerY;
+  }
+  if (e.target.parentNode.nodeName === "LI") {
+    position = e.target.parentNode;
+  }
+  if (e.target.parentNode.parentNode.nodeName === "UL") {
+    parentToInsert = e.target.parentNode.parentNode;
+  } else {
+    parentToInsert = position.parentNode;
+  }
+  if (parentToInsert.childNodes.length !== 0) {
+    if (e.target.parentNode.getAttribute("draggable") !== undefined) {
+      if (positionY <= 14) {
+        if ((e.target.nodeName = "A")) {
+          if (position !== undefined) {
+            parentToInsert.insertBefore(elementToMove, position);
           }
         }
-      });
-
-      element.addEventListener("dragstart", (element) => {
-        if (draggable) {
-          elemToMove = element.target.parentNode;
-          elemToMove.classList.add("dragging");
-          const sectionMain =
-            element.target.parentNode.parentNode.parentNode.parentNode
-              .parentNode;
-          const sectionColumn =
-            element.target.parentNode.parentNode.parentNode.parentNode;
-
-          const indexOfColumn = Array.from(sectionMain.childNodes).indexOf(
-            sectionColumn
-          );
-
-          const groupName =
-            element.target.parentNode.parentNode.parentNode.childNodes[0]
-              .childNodes[0].innerHTML;
-          const indexOfGroup = getPositionGroupName(
-            groupName,
-            bookmarks[indexOfColumn].groups
-          );
-          const linkName = element.target.parentNode.childNodes[0].innerHTML;
-
-          const indexOfBookmakr = getPositionName(
-            linkName,
-            bookmarks[indexOfColumn].groups[indexOfGroup].bookmark
-          );
-
-          startArray = bookmarks[indexOfColumn].groups[indexOfGroup];
-          startArrayElement =
-            bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
-              indexOfBookmakr
-            ];
-
-          if (indexOfBookmakr > -1) {
-            bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
-              indexOfBookmakr,
-              1
-            );
-          } else {
-            return;
+      } else {
+        if ((e.target.parentNode.nodeName = "A")) {
+          if (position !== undefined) {
+            parentToInsert.insertBefore(elementToMove, position.nextSibling);
           }
         }
-      });
+      }
     }
-  });
-};
+  } else {
+    // console.log(e.target)
+    e.target.appendChild(elementToMove);
+  }
 
-dragAndDropFunction();
+  e.preventDefault();
+}
+function drop(e) {
+  e.preventDefault();
+
+  if (e.target.childNodes.length !== 0) {
+    if (e.target.parentNode.getAttribute("draggable") !== undefined) {
+      if (positionY <= 14) {
+        if ((e.target.nodeName = "A")) {
+          if (position !== undefined) {
+            parentToInsert.insertBefore(elementToMove, position);
+          }
+        }
+      } else {
+        if ((e.target.parentNode.nodeName = "A")) {
+          if (position !== undefined) {
+            parentToInsert.insertBefore(elementToMove, position.nextSibling);
+          }
+        }
+      }
+    }
+  } else {
+    // console.log(e.target)
+    e.target.appendChild(elementToMove);
+  }
+  elementToMove.classList.remove("dragging");
+
+  const indexOfElement = Array.from(
+    elementToMove.parentNode.childNodes
+  ).indexOf(elementToMove);
+
+  const indexOfGroup = Array.from(
+    elementToMove.parentNode.parentNode.parentNode.childNodes
+  ).indexOf(elementToMove.parentNode.parentNode);
+
+  const indexOfColumn = Array.from(
+    elementToMove.parentNode.parentNode.parentNode.parentNode.childNodes
+  ).indexOf(elementToMove.parentNode.parentNode.parentNode);
+
+  bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
+    indexOfElement,
+    0,
+    arrayElementToMove
+  );
+  if (indexOfElementToMove > -1) {
+    groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
+  }
+  let bookmarksString = JSON.stringify(bookmarks);
+  localStorage.setItem("Bookmarks", bookmarksString);
+}
+function dragstart(e) {
+  elementToMove = e.target;
+  elementToMove.classList.add("dragging");
+
+  const indexOfElement = Array.from(e.target.parentNode.childNodes).indexOf(
+    e.target
+  );
+  const indexOfGroup = Array.from(
+    e.target.parentNode.parentNode.parentNode.childNodes
+  ).indexOf(e.target.parentNode.parentNode);
+  const indexOfColumn = Array.from(
+    e.target.parentNode.parentNode.parentNode.parentNode.childNodes
+  ).indexOf(e.target.parentNode.parentNode.parentNode);
+
+  arrayElementToMove =
+    bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[indexOfElement];
+
+  indexOfElementToMove = indexOfElement;
+  groupOfElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
+}
+
+// dragAndDropFunction()
 
 showSettingsUI();
 collExpBookmarksFunc();
