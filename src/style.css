@@ -16,12 +16,22 @@ i {
   display: inline-block;
 }
 .dragging {
-  border: 1px solid var(--accent-first);
-  border-radius: 0.25rem;
+  outline: 1px solid var(--accent-first);
+  border-radius: 4px;
   box-sizing: border-box;
+  user-drag: none;
+  opacity: 0.5;
 }
 .drag {
   border-top: 1px solid var(--accent-first);
+}
+.dragOverList {
+  outline: 1px dashed var(--accent-first);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.move {
+  cursor: move;
 }
 .main {
   width: 100%;
@@ -76,6 +86,7 @@ i {
   gap: 8px;
   height: 99%;
   overflow-y: scroll;
+  padding: 0 2px;
 }
 .main-section-bookmarks::-webkit-scrollbar {
   display: none;
@@ -160,6 +171,9 @@ i {
   font-size: 12px;
   line-height: 16px;
   color: var(--text-color-semiTrans);
+}
+.main-section-bookmarks-ul {
+  min-height: 32px;
 }
 .main-section-bookmarks-ul[data-collapsed="true"] > li {
   display: none;
@@ -265,9 +279,7 @@ input.btnIsDisabled:focus {
   flex-direction: column;
   gap: 16px;
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0 54px 55px, rgba(0, 0, 0, 0.12) 0 -12px 30px,
-    rgba(0, 0, 0, 0.12) 0 4px 6px, rgba(0, 0, 0, 0.17) 0 12px 13px,
-    rgba(0, 0, 0, 0.09) 0 -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .addBookmark-form-label {
   width: 100%;
@@ -297,9 +309,7 @@ input.btnIsDisabled:focus {
   width: 640px;
   flex-direction: column;
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0 54px 55px, rgba(0, 0, 0, 0.12) 0 -12px 30px,
-    rgba(0, 0, 0, 0.12) 0 4px 6px, rgba(0, 0, 0, 0.17) 0 12px 13px,
-    rgba(0, 0, 0, 0.09) 0 -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .confirmDiv form * {
   width: 100%;
@@ -379,15 +389,13 @@ input.btnIsDisabled:focus {
 .settings-menu {
   display: flex;
   flex-direction: column;
-  height: 85%;
+  height: 100%;
   width: 640px;
   padding: 32px;
   gap: 32px;
   border-radius: 4px;
   background-color: var(--second);
-  box-shadow: rgba(0, 0, 0, 0.25) 0 54px 55px, rgba(0, 0, 0, 0.12) 0 -12px 30px,
-    rgba(0, 0, 0, 0.12) 0 4px 6px, rgba(0, 0, 0, 0.17) 0 12px 13px,
-    rgba(0, 0, 0, 0.09) 0 -3px 5px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -524,7 +532,7 @@ input.btnIsDisabled:focus {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .rmb-popup p {
   line-height: 20px;
@@ -541,6 +549,16 @@ input.btnIsDisabled:focus {
   color: var(--accent-first);
   background-color: var(--third);
   border-radius: 4px;
+}
+.contextTopBtnDiv{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+.contextTopBtnDiv a{
+  width: max-content;
 }
 .line {
   border-top: 1px solid var(--accent-first);
@@ -593,7 +611,7 @@ input.btnIsDisabled:focus {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   display: none;
 }
 .moveDiv:hover .listDiv {
