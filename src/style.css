@@ -1,4 +1,5 @@
-@import url();
+:root {
+}
 :root {
   --text-color-semiTrans: gray;
 }
@@ -11,28 +12,50 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   color: var(--text-color);
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 i {
   display: inline-block;
 }
 .dragging {
-  outline: 1px solid var(--accent-first);
+  outline: 1px dashed var(--accent-first);
   border-radius: 4px;
-  box-sizing: border-box;
-  user-drag: none;
   opacity: 0.5;
 }
+.dragging > * {
+  pointer-events: none;
+}
+
 .drag {
   border-top: 1px solid var(--accent-first);
 }
 .dragOverList {
   outline: 1px dashed var(--accent-first);
   border-radius: 4px;
-  box-sizing: border-box;
+  min-height: 32px;
+  position: relative;
 }
 .move {
   cursor: move;
 }
+.relative {
+  position: relative;
+}
+.mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  cursor: move;
+}
+
 .main {
   width: 100%;
   margin: 0 auto;
@@ -86,7 +109,7 @@ i {
   gap: 8px;
   height: 99%;
   overflow-y: scroll;
-  padding: 0 2px;
+  padding: 1px;
 }
 .main-section-bookmarks::-webkit-scrollbar {
   display: none;
@@ -99,12 +122,6 @@ i {
   position: relative;
   line-height: 1.25;
   cursor: pointer;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 .main-section-bookmarks-group-title,
 .main-section-bookmarks-group-icons {
@@ -172,9 +189,9 @@ i {
   line-height: 16px;
   color: var(--text-color-semiTrans);
 }
-.main-section-bookmarks-ul {
+/* .main-section-bookmarks-ul {
   min-height: 32px;
-}
+} */
 .main-section-bookmarks-ul[data-collapsed="true"] > li {
   display: none;
 }
@@ -201,7 +218,12 @@ i {
   user-select: none;
 }
 .main-section-bookmarks-ul-li-link {
-  display: block;
+  display: flex;
+  /* justify-content: space-between; */
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 6px;
+  align-items: center;
   width: 100%;
   padding: 4px 16px 4px 16px;
   line-height: 20px;
@@ -241,6 +263,8 @@ i {
   justify-content: center;
   align-items: center;
   z-index: 10;
+  background-color: var(--second);
+  /* background-color: var(--first); */
   backdrop-filter: blur(4px);
 }
 .settings[data-visible="true"],
@@ -264,10 +288,10 @@ input.btnIsDisabled:focus {
   border: none;
   border: 0 solid transparent;
   pointer-events: none;
-  box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset,
+  /* box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset,
     rgba(0, 0, 0, 0.3) 0 18px 36px -18px inset;
   transition-duration: 0.1s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); */
 }
 .addBookmark-form {
   position: absolute;
@@ -279,7 +303,9 @@ input.btnIsDisabled:focus {
   flex-direction: column;
   gap: 16px;
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+  /* box-shadow: rgba(0, 0, 0, 0.25) 3px 3px 6px 0px inset, rgba(0, 0, 0, 0.25) -3px -3px 6px 1px inset; */
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
 }
 .addBookmark-form-label {
   width: 100%;
@@ -309,7 +335,8 @@ input.btnIsDisabled:focus {
   width: 640px;
   flex-direction: column;
   border-radius: 4px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+  /* box-shadow: rgba(50, 50, 93, 0.25) 0px 5px 15px; */
 }
 .confirmDiv form * {
   width: 100%;
@@ -395,7 +422,8 @@ input.btnIsDisabled:focus {
   gap: 32px;
   border-radius: 4px;
   background-color: var(--second);
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  /* box-shadow: rgba(50, 50, 93, 0.25) 0px 5px 15px; */
+  /* box-shadow: 12px 0 15px -4px rgba(50, 50, 93, 0.25), -12px 0 8px -4px rgba(50, 50, 93, 0.25); */
   overflow-y: scroll;
   overflow-x: hidden;
 }
@@ -550,16 +578,15 @@ input.btnIsDisabled:focus {
   background-color: var(--third);
   border-radius: 4px;
 }
-.contextTopBtnDiv{
+.contextTopBtnDiv {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
 }
-.contextTopBtnDiv a{
+.contextTopBtnDiv a {
   width: max-content;
-  
 }
 .line {
   border-top: 1px solid var(--accent-first);
@@ -632,6 +659,15 @@ input.btnIsDisabled:focus {
   content: "";
   font: normal normal normal 16px/1 FontAwesome;
   color: var(--text-color);
+}
+.disable {
+  color: rgb(128, 128, 128, 0.75);
+  cursor: auto;
+  border: none;
+  border: 0 solid transparent;
+  pointer-events: none;
+  /* box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0 18px 36px -18px inset; */
 }
 @media screen and (min-width: 1440px) {
   .main {

@@ -1,5 +1,5 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "A New Homepage",
   "short_name": "a_new_home",
   "version": "0.1",
@@ -12,7 +12,7 @@
   "chrome_url_overrides": {
     "newtab": "src/index.html"
   },
-  "action": {
+  "browser_action": {
     "default_popup": "src/tool-bar-popup.html",
     "default_title": "Quickly add current page to bookmarks",
     "default_icon": {
