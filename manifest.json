@@ -1,8 +1,8 @@
 {
-  "manifest_version": 3,
-  "name": "A New Homepage",
+  "manifest_version": 2,
+  "name": "A New HOME𝘱𝘢𝘨𝘦",
   "short_name": "a_new_home",
-  "version": "0.1",
+  "version": "0.9",
   "author": "Daniel Prętki",
   "description": "An extension that adds a homepage and new tab page for your minimalistic needs.",
   "icons": {
@@ -12,7 +12,7 @@
   "chrome_url_overrides": {
     "newtab": "src/index.html"
   },
-  "action": {
+  "browser_action": {
     "default_popup": "src/tool-bar-popup.html",
     "default_title": "Quickly add current page to bookmarks",
     "default_icon": {
