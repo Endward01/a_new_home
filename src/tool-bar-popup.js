@@ -97,17 +97,23 @@ const addBookmark = () => {
         document.querySelector(".addBookmark-form-checkbox").checked !== true
       ) {
         let groupPosition;
-        let columnPosition;
+        let elemCol;
+
         for (let i = 0; i < bookmarks.length; i++) {
-          groupPosition = getPositionGroupName(group, bookmarks[i].groups);
-          if (groupPosition !== -1) {
-            columnPosition = i;
+          index = getPositionGroupName(group, bookmarks[i].groups);
+          if (index !== -1) {
+            groupPosition = index;
+            elemCol = bookmarks[i];
           }
         }
+
+        const columnPosition = Array.from(bookmarks).indexOf(elemCol);
+
         const newBookmark = {
           name: name,
           url: url,
         };
+
         const arrBookmark =
           bookmarks[columnPosition].groups[groupPosition].bookmark;
         arrBookmark.push(newBookmark);

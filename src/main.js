@@ -1,12 +1,8 @@
 // set/get info from localstorage
 if (localStorage.getItem("Bookmarks") !== null) {
-  console.info(`Bookmarks address exists`);
-  console.info(`Loading bookmarks from localstorage`);
   var bookmarksString = localStorage.getItem("Bookmarks");
   var bookmarks = JSON.parse(bookmarksString);
 } else {
-  console.warn(`Bookmarks address doesn't exists`);
-  console.warn(`Making default templat`);
   var bookmarks = [
     {
       groups: [],
@@ -36,6 +32,45 @@ if (localStorage.getItem("ColorSheme") !== null) {
   let colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
 }
+if (localStorage.getItem("Settings") !== null) {
+  var settingsString = localStorage.getItem("Settings");
+  var settings = JSON.parse(settingsString);
+} else {
+  var settings = [
+    {
+      menuIcons: false,
+      linkIcons: false,
+    },
+  ];
+  let settingsString = JSON.stringify(settings);
+  localStorage.setItem("Settings", settingsString);
+}
+const styleSheet = document.styleSheets[1];
+
+// onload = (e) => {
+//   console.log(e)
+// };
+
+onload = () => {
+  const windowHeight = document.body.clientHeight;
+  // console.log(windowHeight);
+  const sectionHeight = (windowHeight * 87) / 100;
+  // console.log(sectionHeight);
+  // const style = `.sectionHeight{height:${sectionHeight}px;}`;
+  // console.log(style);
+  // styleSheet.insertRule(style);
+  // styleSheet.deleteRule(style);
+  document
+    .querySelector(".main-section-bookmarks")
+    .setAttribute("style", `height:${sectionHeight}px;`);
+};
+onresize = () => {
+  const windowHeight = document.body.clientHeight;
+  const sectionHeight = (windowHeight * 88) / 100;
+  document
+    .querySelector(".main-section-bookmarks")
+    .setAttribute("style", `height:${sectionHeight}px;`);
+};
 
 var dragLink = false;
 var dragGroup = false;
@@ -171,7 +206,7 @@ document
     } else {
       draggableLinkBtn.textContent = "Disable Link Dragging";
     }
-    if (draggableLinkBtn.innerText === "Disable Link Dragging") {
+    if (draggableLinkBtn.textContent === "Disable Link Dragging") {
       draggableGroupBtn.classList.add("disable");
     }
     if (dragGroup !== true) {
@@ -179,7 +214,7 @@ document
     } else {
       draggableGroupBtn.textContent = "Disable Group Dragging";
     }
-    if (draggableGroupBtn.innerText === "Disable Group Dragging") {
+    if (draggableGroupBtn.textContent === "Disable Group Dragging") {
       draggableLinkBtn.classList.add("disable");
     }
     popUp.appendChild(draggableLinkBtn);
@@ -197,7 +232,6 @@ document
         ".main-section-bookmarks-ul"
       );
 
- 
       let elementToMove,
         positionToMove,
         arrayElementToMove,
@@ -250,7 +284,6 @@ document
         const indexOfColumn = Array.from(
           elementToMove.parentNode.parentNode.parentNode.parentNode.childNodes
         ).indexOf(elementToMove.parentNode.parentNode.parentNode);
-
 
         if (indexOfElementToMove > -1) {
           groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
@@ -328,6 +361,7 @@ document
           }
           createBookmarkGroup(bookmarks);
           document.body.removeEventListener("dragover", dragover, true);
+          document.body.removeEventListener("keyup", closeOnESC);
         }
         document.body.addEventListener("keyup", closeOnESC);
       } else {
@@ -431,22 +465,14 @@ document
       function drop(e) {
         e.preventDefault();
         elementToMove.classList.remove("dragging");
-        
-
-     
 
         const indexOfGroup = Array.from(
           elementToMove.parentNode.childNodes
         ).indexOf(elementToMove);
 
-
         const indexOfColumn = Array.from(
           elementToMove.parentNode.parentNode.childNodes
         ).indexOf(elementToMove.parentNode);
-
-
-
-
 
         if (indexOfElementToMove > -1) {
           groupOfElementToMove.groups.splice(indexOfElementToMove, 1);
@@ -478,7 +504,6 @@ document
         const indexOfColumn = Array.from(
           elementToMove.parentNode.parentNode.childNodes
         ).indexOf(elementToMove.parentNode);
-        
 
         arrayElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
         indexOfElementToMove = indexOfGroup;
@@ -524,6 +549,7 @@ document
             createBookmarkGroup(bookmarks);
           });
           document.body.removeEventListener("dragover", dragover, true);
+          document.body.removeEventListener("keyup", closeOnESC);
         }
         document.body.addEventListener("keyup", closeOnESC);
       } else {
@@ -707,6 +733,7 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
     createBookmarkLink(null, ul, name, url);
   }
 };
+
 const createBookmarkLink = (array, parent, name, url) => {
   if (array !== null) {
     array.bookmark.forEach((element) => {
@@ -719,16 +746,18 @@ const createBookmarkLink = (array, parent, name, url) => {
       a.setAttribute("href", element.url);
       a.classList.add("main-section-bookmarks-ul-li-link");
       a.setAttribute("target", "_blank");
-      const imgIcon = document.createElement("img");
-      imgIcon.setAttribute("height", 16);
-      imgIcon.setAttribute("width", 16);
-      imgIcon.setAttribute(
-        "src",
-        `https://s2.googleusercontent.com/s2/favicons?domain_url=${element.url}`
-      );
 
+      if (settings[0].linkIcons !== true) {
+        const imgIcon = document.createElement("img");
+        imgIcon.setAttribute("height", 16);
+        imgIcon.setAttribute("width", 16);
+        imgIcon.setAttribute(
+          "src",
+          `https://s2.googleusercontent.com/s2/favicons?domain_url=${element.url}`
+        );
+        a.appendChild(imgIcon);
+      }
       li.appendChild(a);
-      a.appendChild(imgIcon);
     });
   } else {
     const li = document.createElement("li");
@@ -739,15 +768,18 @@ const createBookmarkLink = (array, parent, name, url) => {
     a.setAttribute("href", url);
     a.classList.add("main-section-bookmarks-ul-li-link");
     a.setAttribute("target", "_blank");
-    const imgIcon = document.createElement("img");
-    imgIcon.setAttribute("height", 16);
-    imgIcon.setAttribute("width", 16);
-    imgIcon.setAttribute(
-      "src",
-      `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`
-    );
+
+    if (settings[0].linkIcons !== true) {
+      const imgIcon = document.createElement("img");
+      imgIcon.setAttribute("height", 16);
+      imgIcon.setAttribute("width", 16);
+      imgIcon.setAttribute(
+        "src",
+        `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`
+      );
+      a.appendChild(imgIcon);
+    }
     li.appendChild(a);
-    a.appendChild(img);
   }
 };
 
@@ -812,7 +844,7 @@ const collExpBookmarksFunc = () => {
               );
               const positionInArry = getPositionGroupName(
                 this.parentNode.parentNode.childNodes[0].childNodes[0]
-                  .innerHTML,
+                  .textContent,
                 bookmarks[indexOfColumn].groups
               );
               bookmarks[indexOfColumn].groups[positionInArry].collapsed =
@@ -824,7 +856,7 @@ const collExpBookmarksFunc = () => {
               );
               const positionInArry = getPositionGroupName(
                 this.parentNode.parentNode.childNodes[0].childNodes[0]
-                  .innerHTML,
+                  .textContent,
                 bookmarks[indexOfColumn].groups
               );
               bookmarks[indexOfColumn].groups[positionInArry].collapsed =
@@ -1204,7 +1236,7 @@ const editBtnLogic = (domElement) => {
       editDiv({ name: name, url: url });
 
       document.querySelector(".confirmBtn").addEventListener("click", () => {
-        element.innerHTML = document.querySelector(".editInpName").value;
+        element.textContent = document.querySelector(".editInpName").value;
         element.href = document.querySelector(".editInpUrl").value;
 
         bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
@@ -1244,10 +1276,10 @@ const editBtnLogic = (domElement) => {
         column: indexOfColumn,
         group: indexOfGroup,
       };
-      const name = element.innerHTML;
+      const name = element.textContent;
       editDiv({ name: name, url: null });
       document.querySelector(".confirmBtn").addEventListener("click", () => {
-        element.innerHTML = document.querySelector(".editInpName").value;
+        element.textContent = document.querySelector(".editInpName").value;
         bookmarks[indexOfColumn].groups[indexOfGroup].groupName =
           document.querySelector(".editInpName").value;
         let bookmarksString = JSON.stringify(bookmarks);
@@ -1288,39 +1320,76 @@ const showSettingsUI = () => {
       element.addEventListener("click", () => {
         dataActiveSwitcher(element, 1);
         dataVisibleSwitcher(settingDiv, 1);
-        document.querySelector(".settings-menu-textarea").value = "";
+        // document.querySelector(".settings-menu-textarea").value = "";
       });
     }
   });
 };
 
-const hideNavMenuBtn = () => {
+// show/hide UI elements
+const hideMenuIcons = () => {
   document
-    .querySelector(".hideAddBookamrkBtn")
-    .addEventListener("change", () => {
-      if (document.querySelector(".hideAddBookamrkBtn").checked === true) {
-        document.querySelector(".addBookmark-btn").classList.add("hide");
+    .querySelector(".hideMenuBtnCheckBox")
+    .addEventListener("input", (e) => {
+      settings[0].menuIcons = e.target.checked;
+      if (e.target.checked !== true) {
+        document
+          .querySelector(".main-nav-icon")
+          .setAttribute("data-visible", "true");
       } else {
-        document.querySelector(".addBookmark-btn").classList.remove("hide");
+        document
+          .querySelector(".main-nav-icon")
+          .setAttribute("data-visible", "false");
       }
+      let settingsString = JSON.stringify(settings);
+      localStorage.setItem("Settings", settingsString);
     });
-  document.querySelector(".hideSettingBtn").addEventListener("change", () => {
-    if (document.querySelector(".hideSettingBtn").checked === true) {
-      document.querySelector(".settings-btn").classList.add("hide");
+  if (settings[0].menuIcons === true) {
+    document.querySelector(".hideMenuBtnCheckBox").click();
+    if (document.querySelector(".hideMenuBtnCheckBox").checked !== true) {
+      document
+        .querySelector(".main-nav-icon")
+        .setAttribute("data-active", "true");
     } else {
-      document.querySelector(".settings-btn").classList.remove("hide");
+      document
+        .querySelector(".main-nav-icon")
+        .setAttribute("data-active", "false");
     }
-  });
+  }
 };
-hideNavMenuBtn();
+hideMenuIcons();
+
+const hideLinkIcons = () => {
+  document
+    .querySelector(".hideLinkIconCheckbox")
+    .addEventListener("input", (e) => {
+      settings[0].linkIcons = e.target.checked;
+
+      let settingsString = JSON.stringify(settings);
+      localStorage.setItem("Settings", settingsString);
+      while (document.querySelector(".main-section-bookmarks").firstChild) {
+        document
+          .querySelector(".main-section-bookmarks")
+          .removeChild(
+            document.querySelector(".main-section-bookmarks").firstChild
+          );
+      }
+      createBookmarkGroup(bookmarks);
+    });
+
+  if (settings[0].linkIcons === true) {
+    document.querySelector(".hideLinkIconCheckbox").click();
+  }
+};
+hideLinkIcons();
 
 //import export bookmarks logic
 
 const importExportBookmarks = () => {
   const textarea = document.querySelector(".settings-menu-textarea");
+  const textDiv = document.querySelector(".settings-menu-textDiv");
   const importBTN = document.querySelector(".settings-menu-import");
   const exportBTN = document.querySelector(".settings-menu-export");
-  const clearBTN = document.querySelector(".settings-menu-clear");
   const settingDiv = document.querySelector(".settings");
   const settingBtn = document.querySelector(".settings-btn");
   const bookmarksSection = document.querySelector(".main-section-bookmarks");
@@ -1328,32 +1397,95 @@ const importExportBookmarks = () => {
   if (importBTN.getAttribute("listener") !== "true") {
     importBTN.setAttribute("listener", "true");
     importBTN.addEventListener("click", () => {
-      if (textarea.value !== "") {
-        localStorage.setItem("Bookmarks", textarea.value);
-
-        while (bookmarksSection.firstChild) {
-          bookmarksSection.removeChild(bookmarksSection.firstChild);
-        }
-        bookmarksString = localStorage.getItem("Bookmarks");
-        bookmarks = JSON.parse(bookmarksString);
-
-        createBookmarkGroup(bookmarks);
-        collExpBookmarksFunc();
-        dataVisibleSwitcher(settingDiv, 1);
+      while (textDiv.firstChild) {
+        textDiv.removeChild(textDiv.firstChild);
       }
+      const paragraph = document.createElement("p");
+      paragraph.textContent =
+        "If you have export code from another device or browser, you can paste it in the box below and click Import to load the new bookmarks. Warning: This will replace the current bookmarks. ";
+      textDiv.appendChild(paragraph);
+      const textarea = document.createElement("textarea");
+      textarea.classList.add("settings-menu-textarea", "input");
+      textDiv.appendChild(textarea);
+
+      const btnDiv = document.createElement("div");
+      textDiv.appendChild(btnDiv);
+
+      const btn1 = document.createElement("input");
+      btn1.classList.add("button");
+      btn1.value = "Import ";
+      btnDiv.appendChild(btn1);
+      const btn2 = document.createElement("input");
+      btn2.classList.add("button");
+      btn2.value = "Close Import";
+      btnDiv.appendChild(btn2);
+
+      btn1.addEventListener("click", (e) => {
+        if (textarea.value !== "") {
+          localStorage.setItem("Bookmarks", textarea.value);
+
+          while (bookmarksSection.firstChild) {
+            bookmarksSection.removeChild(bookmarksSection.firstChild);
+          }
+          bookmarksString = localStorage.getItem("Bookmarks");
+          bookmarks = JSON.parse(bookmarksString);
+
+          createBookmarkGroup(bookmarks);
+          collExpBookmarksFunc();
+          dataVisibleSwitcher(settingDiv, 1);
+        } else {
+          return;
+        }
+        while (textDiv.firstChild) {
+          textDiv.removeChild(textDiv.firstChild);
+        }
+      });
+      btn2.addEventListener("click", (e) => {
+        while (textDiv.firstChild) {
+          textDiv.removeChild(textDiv.firstChild);
+        }
+      });
     });
   }
   if (exportBTN.getAttribute("listener") !== "true") {
     exportBTN.setAttribute("listener", "true");
     exportBTN.addEventListener("click", () => {
-      textarea.value = "";
+      while (textDiv.firstChild) {
+        textDiv.removeChild(textDiv.firstChild);
+      }
+      const paragraph = document.createElement("p");
+      paragraph.textContent =
+        "The code below can be used to import your bookmarks on another device or web browser.";
+      textDiv.appendChild(paragraph);
+      const textarea = document.createElement("textarea");
+      textarea.classList.add("settings-menu-textarea", "input");
       textarea.value = localStorage.getItem("Bookmarks");
-    });
-  }
-  if (clearBTN.getAttribute("listener") !== "true") {
-    clearBTN.setAttribute("listener", "true");
-    clearBTN.addEventListener("click", () => {
-      textarea.value = "";
+      textDiv.appendChild(textarea);
+      textDiv.appendChild(textarea);
+
+      const btnDiv = document.createElement("div");
+      textDiv.appendChild(btnDiv);
+
+      const btn1 = document.createElement("input");
+      btn1.classList.add("button");
+      btn1.value = "Copy Code";
+      btnDiv.appendChild(btn1);
+      const btn2 = document.createElement("input");
+      btn2.classList.add("button");
+      btn2.value = "Close Export";
+      btnDiv.appendChild(btn2);
+
+      btn1.addEventListener("click", (e) => {
+        // let urlNewtab = document.querySelector(".settings-menu-form-inp");
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(textarea.value);
+      });
+      btn2.addEventListener("click", (e) => {
+        while (textDiv.firstChild) {
+          textDiv.removeChild(textDiv.firstChild);
+        }
+      });
     });
   }
 };
@@ -1375,7 +1507,6 @@ collExpBookmarksFunc();
 
 //modify color theme
 
-var styleSheet = document.styleSheets[1];
 const colorPickersContainer = document.querySelector(
   ".setting-menu-appearance-colorPickers"
 );
@@ -1406,8 +1537,8 @@ const changeTheme = (value) => {
           textColor: "#f8fdff",
         };
         mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-        styleSheet.deleteRule(mode);
-        styleSheet.insertRule(mode);
+        styleSheet.deleteRule(mode, 0);
+        styleSheet.insertRule(mode, 0);
       }
       break;
 
@@ -1422,8 +1553,8 @@ const changeTheme = (value) => {
         textColor: "#19282f",
       };
       mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-      styleSheet.deleteRule(mode);
-      styleSheet.insertRule(mode);
+      styleSheet.deleteRule(mode, 0);
+      styleSheet.insertRule(mode, 0);
       break;
 
     case "dark":
@@ -1437,8 +1568,8 @@ const changeTheme = (value) => {
         textColor: "#f8fdff",
       };
       mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-      styleSheet.deleteRule(mode);
-      styleSheet.insertRule(mode);
+      styleSheet.deleteRule(mode, 0);
+      styleSheet.insertRule(mode, 0);
       break;
 
     default:
@@ -1446,8 +1577,8 @@ const changeTheme = (value) => {
         colorScheme[0].mode = "custom";
 
         const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-        styleSheet.deleteRule(mode);
-        styleSheet.insertRule(mode);
+        styleSheet.deleteRule(mode, 0);
+        styleSheet.insertRule(mode, 0);
       } else {
         colorScheme[0].mode = "custom";
         let newArray = colorScheme[0];
@@ -1460,8 +1591,8 @@ const changeTheme = (value) => {
         };
 
         const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-        styleSheet.deleteRule(mode);
-        styleSheet.insertRule(mode);
+        styleSheet.deleteRule(mode, 0);
+        styleSheet.insertRule(mode, 0);
       }
       document.querySelector(".firstColor-input").value =
         colorScheme[0].customeColors.first;
@@ -1488,8 +1619,8 @@ const changeTheme = (value) => {
             colorSchemeString = JSON.stringify(colorScheme);
             localStorage.setItem("ColorSheme", colorSchemeString);
             const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-            styleSheet.deleteRule(mode);
-            styleSheet.insertRule(mode);
+            styleSheet.deleteRule(mode, 0);
+            styleSheet.insertRule(mode, 0);
           });
         });
       colorPickersContainer.setAttribute("data-visible", "true");
