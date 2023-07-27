@@ -47,23 +47,22 @@ if (localStorage.getItem("Settings") !== null) {
 }
 const styleSheet = document.styleSheets[1];
 
-// onload = (e) => {
-//   console.log(e)
-// };
+//on fully load website
 
 onload = () => {
   const windowHeight = document.body.clientHeight;
   // console.log(windowHeight);
   const sectionHeight = (windowHeight * 87) / 100;
-  // console.log(sectionHeight);
-  // const style = `.sectionHeight{height:${sectionHeight}px;}`;
-  // console.log(style);
-  // styleSheet.insertRule(style);
-  // styleSheet.deleteRule(style);
   document
     .querySelector(".main-section-bookmarks")
     .setAttribute("style", `height:${sectionHeight}px;`);
+
+  if (settings[0].linkIcons !== true) {
+    appendIcons();
+  }
 };
+//on resize window
+
 onresize = () => {
   const windowHeight = document.body.clientHeight;
   const sectionHeight = (windowHeight * 88) / 100;
@@ -613,6 +612,7 @@ window.addEventListener("storage", function (e) {
     bookmarks = JSON.parse(bookmarksString);
     createBookmarkGroup(bookmarks);
     collExpBookmarksFunc();
+    appendIcons();
   }
 });
 //press escepe to quickly quit manu functions
@@ -739,24 +739,12 @@ const createBookmarkLink = (array, parent, name, url) => {
     array.bookmark.forEach((element) => {
       const li = document.createElement("li");
       li.classList.add("main-section-bookmarks-ul-li");
-      // li.setAttribute("draggable", "false");
       parent.appendChild(li);
       const a = document.createElement("a");
       a.textContent = element.name;
       a.setAttribute("href", element.url);
       a.classList.add("main-section-bookmarks-ul-li-link");
       a.setAttribute("target", "_blank");
-
-      if (settings[0].linkIcons !== true) {
-        const imgIcon = document.createElement("img");
-        imgIcon.setAttribute("height", 16);
-        imgIcon.setAttribute("width", 16);
-        imgIcon.setAttribute(
-          "src",
-          `https://s2.googleusercontent.com/s2/favicons?domain_url=${element.url}`
-        );
-        a.appendChild(imgIcon);
-      }
       li.appendChild(a);
     });
   } else {
@@ -768,22 +756,26 @@ const createBookmarkLink = (array, parent, name, url) => {
     a.setAttribute("href", url);
     a.classList.add("main-section-bookmarks-ul-li-link");
     a.setAttribute("target", "_blank");
-
-    if (settings[0].linkIcons !== true) {
-      const imgIcon = document.createElement("img");
-      imgIcon.setAttribute("height", 16);
-      imgIcon.setAttribute("width", 16);
-      imgIcon.setAttribute(
-        "src",
-        `https://s2.googleusercontent.com/s2/favicons?domain_url=${url}`
-      );
-      a.appendChild(imgIcon);
-    }
     li.appendChild(a);
   }
 };
 
 createBookmarkGroup(bookmarks);
+
+//append websiteIcons to links
+const appendIcons = () => {
+  const link = document.querySelectorAll(".main-section-bookmarks-ul-li-link");
+  link.forEach((link) => {
+    const imgIcon = document.createElement("img");
+    imgIcon.setAttribute("height", 16);
+    imgIcon.setAttribute("width", 16);
+    imgIcon.setAttribute(
+      "src",
+      `https://s2.googleusercontent.com/s2/favicons?domain_url=${link.href}`
+    );
+    link.appendChild(imgIcon);
+  });
+};
 
 //find element by text in main-section-bookmarks
 const getElementsByText = (string, tag) => {
@@ -1374,6 +1366,9 @@ const hideLinkIcons = () => {
             document.querySelector(".main-section-bookmarks").firstChild
           );
       }
+      // if (settings[0].linkIcons !== true) {
+      //   appendIcons();
+      // }
       createBookmarkGroup(bookmarks);
     });
 
@@ -1413,17 +1408,22 @@ const importExportBookmarks = () => {
 
       const btn1 = document.createElement("input");
       btn1.classList.add("button");
+      btn1.setAttribute("type", "button");
       btn1.value = "Import ";
       btnDiv.appendChild(btn1);
       const btn2 = document.createElement("input");
       btn2.classList.add("button");
+      btn2.setAttribute("type", "button");
+
       btn2.value = "Close Import";
       btnDiv.appendChild(btn2);
 
       btn1.addEventListener("click", (e) => {
-        if (textarea.value !== "") {
-          localStorage.setItem("Bookmarks", textarea.value);
+        let regex =
+          /^\[\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\}\]$/i;
 
+        if (regex.test(textarea.value)) {
+          localStorage.setItem("Bookmarks", textarea.value);
           while (bookmarksSection.firstChild) {
             bookmarksSection.removeChild(bookmarksSection.firstChild);
           }
@@ -1433,6 +1433,9 @@ const importExportBookmarks = () => {
           createBookmarkGroup(bookmarks);
           collExpBookmarksFunc();
           dataVisibleSwitcher(settingDiv, 1);
+          if (settings[0].linkIcons !== true) {
+            appendIcons();
+          }
         } else {
           return;
         }
