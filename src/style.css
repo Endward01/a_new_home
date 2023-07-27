@@ -2,7 +2,9 @@
   --text-color-semiTrans: gray;
 }
 /* html{background-color: var(--first);} */
+
 body {
+  line-height: 1;
   height: 100vh;
   overflow: hidden;
   background-color: var(--first);
@@ -17,7 +19,18 @@ body {
   -o-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+  font-size: 16px;
 }
+
+ol,
+ul {
+  list-style: none;
+}
+
 i {
   display: inline-block;
 }
@@ -169,7 +182,6 @@ i {
 .main-section-bookmarks-ul-li-icons > i,
 .main-section-bookmarks-group-icons > i {
   color: gray;
-  font-size: 16px;
   overflow: none;
   cursor: pointer;
 }
@@ -235,7 +247,6 @@ i {
   width: 100%;
   padding: 4px 16px 4px 16px;
   line-height: 20px;
-  font-size: 16px;
   text-decoration: none;
 }
 .main-section-bookmarks-ul-li-link:hover,
@@ -374,7 +385,6 @@ input.btnIsDisabled:focus {
   border-radius: 4px;
   padding: 4px;
   outline: none;
-  font-size: 16px;
   height: 32px;
   box-shadow: 1px 1px 0 0 var(--second);
   transform: translateY(-1.5px);
@@ -402,7 +412,6 @@ input.btnIsDisabled:focus {
   border-radius: 4px;
   cursor: pointer;
   outline: none;
-  font-size: 16px;
   height: 32px;
   box-shadow: 1px 1.5px 0 0 var(--second);
   transition-duration: 0.1s;
@@ -467,7 +476,6 @@ input.btnIsDisabled:focus {
 .setting-menu-appearance-settings {
   width: 100%;
   line-height: 20px;
-  font-size: 16px;
   padding: 0 24px;
   display: flex;
   gap: 8px;
@@ -679,7 +687,6 @@ input.btnIsDisabled:focus {
   gap: 6px;
 }
 .positionDiv div p {
-  font-size: 16px;
   text-align: center;
   width: 20px;
   border-radius: 4px;
@@ -728,9 +735,7 @@ input.btnIsDisabled:focus {
   cursor: auto;
   border: none;
   border: 0 solid transparent;
-  pointer-events: none;
-  /* box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset,
-    rgba(0, 0, 0, 0.3) 0 18px 36px -18px inset; */
+
 }
 @media screen and (min-width: 1440px) {
   .main {
