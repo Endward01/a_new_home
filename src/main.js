@@ -1423,7 +1423,6 @@ const importExportBookmarks = () => {
           /^\[\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\}\]$/i;
 
         if (regex.test(textarea.value)) {
-          console.log(regex.test(textarea.value));
           localStorage.setItem("Bookmarks", textarea.value);
           while (bookmarksSection.firstChild) {
             bookmarksSection.removeChild(bookmarksSection.firstChild);
@@ -1434,9 +1433,9 @@ const importExportBookmarks = () => {
           createBookmarkGroup(bookmarks);
           collExpBookmarksFunc();
           dataVisibleSwitcher(settingDiv, 1);
-          // if (settings[0].linkIcons !== true) {
-          //   appendIcons();
-          // }
+          if (settings[0].linkIcons !== true) {
+            appendIcons();
+          }
         } else {
           return;
         }
