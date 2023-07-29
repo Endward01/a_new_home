@@ -1406,22 +1406,31 @@ const importExportBookmarks = () => {
       const btnDiv = document.createElement("div");
       textDiv.appendChild(btnDiv);
 
-      const btn1 = document.createElement("input");
+      const btn1 = document.createElement("button");
       btn1.classList.add("button");
       btn1.setAttribute("type", "button");
-      btn1.value = "Import ";
+      btn1.classList.add("importBtn", "btnIsDisabled");
+
+      btn1.textContent = "Import";
       btnDiv.appendChild(btn1);
-      const btn2 = document.createElement("input");
+      const btn2 = document.createElement("button");
       btn2.classList.add("button");
       btn2.setAttribute("type", "button");
 
-      btn2.value = "Close Import";
+      btn2.textContent = "Close Import";
       btnDiv.appendChild(btn2);
+      let regex =
+        /^\[\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\}\]$/i;
+
+      textarea.addEventListener("input", (e) => {
+        if (regex.test(textarea.value) || textarea.value == "" && textarea.value == " ") {
+          btn1.classList.remove("importBtn", "btnIsDisabled");
+        } else {
+          btn1.classList.add("importBtn", "btnIsDisabled");
+        }
+      });
 
       btn1.addEventListener("click", (e) => {
-        let regex =
-          /^\[\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\}\]$/i;
-
         if (regex.test(textarea.value)) {
           localStorage.setItem("Bookmarks", textarea.value);
           while (bookmarksSection.firstChild) {
@@ -1569,6 +1578,36 @@ const changeTheme = (value) => {
         third: "#42414d",
         accentFirst: "#00ddff",
         textColor: "#f8fdff",
+      };
+      mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
+      styleSheet.deleteRule(mode, 0);
+      styleSheet.insertRule(mode, 0);
+      break;
+
+    case "moonlight":
+      colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme[0].mode = "moonlight";
+      colorScheme[0].colors = {
+        first: "#162635",
+        second: "#243D51",
+        third: "#366577",
+        accentFirst: "#e9d9ca",
+        textColor: "#FFFFFF",
+      };
+      mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
+      styleSheet.deleteRule(mode, 0);
+      styleSheet.insertRule(mode, 0);
+      break;
+
+    case "forest":
+      colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme[0].mode = "forest";
+      colorScheme[0].colors = {
+        first: "#344E41",
+        second: "#3A5A40",
+        third: "#588157",
+        accentFirst: "#cbb1be",
+        textColor: "#FFFFFF",
       };
       mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
       styleSheet.deleteRule(mode, 0);

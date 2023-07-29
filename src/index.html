@@ -66,14 +66,14 @@
               <input type="checkbox" class="addBookmark-form-checkbox" />
             </label>
             <div class="addBookmkar-form-btnContainer">
-              <input
+              <button
                 type="button"
                 class="addBookmark-form-btn-add button addBookmark-form-input addBookmark-form-btn"
-                value="Add" />
-              <input
+                value="Add" >Add</button>
+              <button
                 type="button"
                 class="addBookmark-form-btn-cancel button addBookmark-form-input addBookmark-form-btn"
-                value="Cancel" />
+                value="Cancel" >Cancel</button>
             </div>
           </form>
         </div>
@@ -91,6 +91,8 @@
                   </option>
                   <option value="light">Light</option>
                   <option value="dark">Dark</option>
+                  <option value="moonlight">Moonlight</option>
+                  <option value="forest">Green Forest</option>
                   <option value="custom">Custom</option>
                 </select>
                 <div
@@ -201,7 +203,10 @@
             <a href="https://danielpretki.dev/"target="_blank">My Website</a>
           </div>
         </div>
-        <div class="main-section-bookmarks sectionHeight"></div>
+        <div class="main-section-bookmarks sectionHeight">
+        </div>
+        <div class="undo"><button class="button">Undo Delete</button>
+        </div>
       </section>
       <footer class="main-footer"></footer>
     </main>
