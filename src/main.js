@@ -21,45 +21,51 @@ if (localStorage.getItem("Bookmarks") !== null) {
   localStorage.setItem("Bookmarks", bookmarksString);
 }
 if (localStorage.getItem("ColorSheme") !== null) {
-  var colorSchemeString = localStorage.getItem("ColorSheme");
+  let colorSchemeString = localStorage.getItem("ColorSheme");
   var colorScheme = JSON.parse(colorSchemeString);
 } else {
-  var colorScheme = [
-    {
-      mode: "auto",
-    },
-  ];
+  var colorScheme = {
+    mode: "auto",
+  };
   let colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
 }
-if (localStorage.getItem("Settings") !== null) {
-  var settingsString = localStorage.getItem("Settings");
-  var settings = JSON.parse(settingsString);
+
+if (localStorage.getItem("Setting") !== null) {
+  var settingString = localStorage.getItem("Setting");
+  var setting = JSON.parse(settingString);
+
+  var hideMenuIconsString = localStorage.getItem("hideMenuIcons");
+  var hideMenuIcons = JSON.parse(hideMenuIconsString);
+
+  var hideLinkIconsString = localStorage.getItem("hideLinkIcons");
+  var hideLinkIcons = JSON.parse(hideLinkIconsString);
 } else {
-  var settings = [
-    {
-      menuIcons: false,
-      linkIcons: false,
-    },
-  ];
-  let settingsString = JSON.stringify(settings);
-  localStorage.setItem("Settings", settingsString);
+  let setting = true;
+  let settingString = JSON.stringify(setting);
+  localStorage.setItem("Setting", settingString);
+
+  let hideMenuIcons = false;
+  let hideMenuIconsString = JSON.stringify(hideMenuIcons);
+  localStorage.setItem("hideMenuIcons", hideMenuIconsString);
+
+  let hideLinkIcons = false;
+  let hideLinkIconsString = JSON.stringify(hideLinkIcons);
+  localStorage.setItem("hideLinkIcons", hideLinkIconsString);
 }
+
 const styleSheet = document.styleSheets[1];
 
 //on fully load website
 
 onload = () => {
   const windowHeight = document.body.clientHeight;
-  // console.log(windowHeight);
   const sectionHeight = (windowHeight * 87) / 100;
   document
     .querySelector(".main-section-bookmarks")
     .setAttribute("style", `height:${sectionHeight}px;`);
 
-  if (settings[0].linkIcons !== true) {
-    appendIcons();
-  }
+  appendIcons();
 };
 //on resize window
 
@@ -75,6 +81,33 @@ var dragLink = false;
 var dragGroup = false;
 
 // right mouse button constext menu
+if (
+  document.querySelector(".main-section").getAttribute("listener") !== "true"
+) {
+  document.querySelector(".main-section").setAttribute("listener", "true");
+  document
+    .querySelector(".main-section")
+    .addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+
+  document.querySelector(".main-section").addEventListener(
+    "mouseup",
+    function (e) {
+      if (e.button === 0) {
+        if (document.querySelector(".rmb-popup") !== null) {
+          if (document.querySelector(".rmb-popup").parentNode) {
+            document
+              .querySelector(".rmb-popup")
+              .parentNode.removeChild(document.querySelector(".rmb-popup"));
+          }
+        }
+      }
+    },
+    false
+  );
+}
+
 document
   .querySelector(".main-section-bookmarks")
   .addEventListener("contextmenu", (element) => {
@@ -106,8 +139,8 @@ document
     );
     // addBookmakrBtn.textContent = "Add New Bookmark";
     // addBookmakrBtn.setAttribute("type", "button");
+    addBookmakrBtn.addEventListener("click", drawAddBookmark);
     topBtnDiv.appendChild(addBookmakrBtn);
-    addBookmakrBtnFuntion();
 
     // settings btn
     const settingsBtn = document.createElement("a");
@@ -119,8 +152,9 @@ document
     );
     // settingsBtn.textContent = "Settings";
     // settingsBtn.setAttribute("type", "button");
+    settingsBtn.addEventListener("click", drawSettings);
+
     topBtnDiv.appendChild(settingsBtn);
-    showSettingsUI();
     // refresh btn
     const refreshBtn = document.createElement("a");
     refreshBtn.classList.add(
@@ -337,7 +371,7 @@ document
         elemToDragOver.forEach((elemToDragOver) => {
           elemToDragOver.addEventListener("dragover", dragover, true);
           elemToDragOver.addEventListener("drop", drop, true);
-          // elemToDragOver.addEventListener("dragenter", dragenter, true);
+
           elemToDragOver.classList.add("dragOverList");
         });
         function closeOnESC() {
@@ -359,6 +393,7 @@ document
               );
           }
           createBookmarkGroup(bookmarks);
+          appendIcons();
           document.body.removeEventListener("dragover", dragover, true);
           document.body.removeEventListener("keyup", closeOnESC);
         }
@@ -382,6 +417,7 @@ document
             );
         }
         createBookmarkGroup(bookmarks);
+        appendIcons();
       }
 
       if (document.querySelector(".rmb-popup") !== null) {
@@ -546,6 +582,7 @@ document
                 );
             }
             createBookmarkGroup(bookmarks);
+            appendIcons();
           });
           document.body.removeEventListener("dragover", dragover, true);
           document.body.removeEventListener("keyup", closeOnESC);
@@ -569,6 +606,7 @@ document
               );
           }
           createBookmarkGroup(bookmarks);
+          appendIcons();
         });
       }
 
@@ -582,21 +620,27 @@ document
     });
 
     // close contextmenu
-    document.querySelector(".main-section").addEventListener(
-      "mouseup",
-      function (e) {
-        if (e.button === 0) {
-          if (document.querySelector(".rmb-popup") !== null) {
-            if (document.querySelector(".rmb-popup").parentNode) {
-              document
-                .querySelector(".rmb-popup")
-                .parentNode.removeChild(document.querySelector(".rmb-popup"));
-            }
-          }
-        }
-      },
-      false
-    );
+    // if (
+    //   document.querySelector(".main-section").getAttribute("listenerClosePoP") !==
+    //   "true"
+    // ) {
+    //   document.querySelector(".main-section").setAttribute("listener", "true");
+    //   document.querySelector(".main-section").addEventListener(
+    //     "mouseup",
+    //     function (e) {
+    //       if (e.button === 0) {
+    //         if (document.querySelector(".rmb-popup") !== null) {
+    //           if (document.querySelector(".rmb-popup").parentNode) {
+    //             document
+    //               .querySelector(".rmb-popup")
+    //               .parentNode.removeChild(document.querySelector(".rmb-popup"));
+    //           }
+    //         }
+    //       }
+    //     },
+    //     false
+    //   );
+    // }
   });
 
 window.addEventListener("storage", function (e) {
@@ -611,41 +655,14 @@ window.addEventListener("storage", function (e) {
     bookmarksString = localStorage.getItem("Bookmarks");
     bookmarks = JSON.parse(bookmarksString);
     createBookmarkGroup(bookmarks);
-    collExpBookmarksFunc();
     appendIcons();
+    collExpBookmarksFunc();
   }
 });
 //press escepe to quickly quit manu functions
 
 document.body.addEventListener("keyup", function (e) {
-  const add = document.querySelector(".addBookmark");
-  const addBtn = document.querySelector(".addBookmark-btn");
-  const settings = document.querySelector(".settings");
-  const settingsBtn = document.querySelector(".settings-btn");
-  const editBtn = document.querySelector(".editBookmarks-btn");
-  const bookmarkGroupIconContainer = document.querySelectorAll(
-    ".main-section-bookmarks-group-icons"
-  );
-  const bookmarksEditDeleteBtn = document.querySelectorAll(
-    ".main-section-bookmarks-ul-li-icons"
-  );
-  const bookmarkLink = document.querySelectorAll(
-    ".main-section-bookmarks-ul-li-link"
-  );
   if (e.key == "Escape") {
-    add.setAttribute("data-visible", "false");
-    settings.setAttribute("data-visible", "false");
-    addBtn.setAttribute("data-active", "false");
-    settingsBtn.setAttribute("data-active", "false");
-    bookmarkGroupIconContainer.forEach((element) => {
-      element.setAttribute("data-visible", "false");
-    });
-    bookmarksEditDeleteBtn.forEach((element) => {
-      element.setAttribute("data-visible", "false");
-    });
-    bookmarkLink.forEach((element) => {
-      element.classList.remove("linkDisabled");
-    });
     document
       .querySelectorAll(".main-section-bookmarks-group-title")
       .forEach((element) => (element.style.pointerEvents = "all"));
@@ -680,6 +697,25 @@ const addBookmarksNewGroup = document.querySelector(
 );
 const checkToAddNewGroup = document.querySelectorAll(".addCreateNewGroup");
 const addBookmarkInpName = document.querySelector(".addBookmark-form-name");
+
+//append websiteIcons to links
+const appendIcons = () => {
+  if (hideLinkIcons !== true) {
+    const link = document.querySelectorAll(
+      ".main-section-bookmarks-ul-li-link"
+    );
+    link.forEach((link) => {
+      const imgIcon = document.createElement("img");
+      imgIcon.setAttribute("height", 16);
+      imgIcon.setAttribute("width", 16);
+      imgIcon.setAttribute(
+        "src",
+        `https://s2.googleusercontent.com/s2/favicons?domain_url=${link.href}`
+      );
+      link.appendChild(imgIcon);
+    });
+  }
+};
 
 //Draw bookmarks from localstorage to body
 const createBookmarkGroup = (array, name, url, newGroup) => {
@@ -761,21 +797,6 @@ const createBookmarkLink = (array, parent, name, url) => {
 };
 
 createBookmarkGroup(bookmarks);
-
-//append websiteIcons to links
-const appendIcons = () => {
-  const link = document.querySelectorAll(".main-section-bookmarks-ul-li-link");
-  link.forEach((link) => {
-    const imgIcon = document.createElement("img");
-    imgIcon.setAttribute("height", 16);
-    imgIcon.setAttribute("width", 16);
-    imgIcon.setAttribute(
-      "src",
-      `https://s2.googleusercontent.com/s2/favicons?domain_url=${link.href}`
-    );
-    link.appendChild(imgIcon);
-  });
-};
 
 //find element by text in main-section-bookmarks
 const getElementsByText = (string, tag) => {
@@ -867,184 +888,257 @@ const collExpBookmarksFunc = () => {
 //
 /// addBookmark Container logic
 //
+//draw addBookmark Element
+const drawAddBookmark = () => {
+  const div = document.createElement("div");
+  div.classList.add("addBookmark");
+  document.querySelector(".main-section").appendChild(div);
+  const form = document.createElement("form");
+  form.classList.add("addBookmark-form");
+  form.setAttribute("autocomplete", "off");
+  div.appendChild(form);
 
-// show/hide addBookmark card
-const addBookmakrBtnFuntion = () => {
-  const addShowBookmark = document.querySelectorAll(".addBookmark-btn");
+  const labelName = document.createElement("label");
+  labelName.setAttribute("for", "name");
+  labelName.classList.add("addBookmark-form-label");
+  labelName.textContent = "Name";
+  form.appendChild(labelName);
+  const inputName = document.createElement("input");
+  inputName.classList.add(
+    "addBookmark-form-name",
+    "addBookmark-form-input",
+    "input"
+  );
+  inputName.setAttribute("type", "text");
+  inputName.setAttribute("autocomplete", "off");
+  labelName.appendChild(inputName);
 
-  addShowBookmark.forEach((element) => {
-    if (element.getAttribute("listener") !== "true") {
-      element.setAttribute("listener", "true");
-      element.addEventListener("click", function () {
-        dataActiveSwitcher(element, 1);
-        dataVisibleSwitcher(addBookmark, 1);
-        const selectGroup = document.querySelector(
-          ".addBookmark-form-chooseGroup"
-        );
-        if (selectGroup.childNodes.length === 0) {
-          newGroupCheckBox.click();
-          newGroupCheckBox.setAttribute("disabled", "true");
-        } else {
-          newGroupCheckBox.removeAttribute("disabled", "true");
-        }
+  const labelUrl = document.createElement("label");
+  labelUrl.setAttribute("for", "url");
+  labelUrl.classList.add("addBookmark-form-label");
+  labelUrl.textContent = "Url";
+  form.appendChild(labelUrl);
+  const inputUrl = document.createElement("input");
+  inputUrl.classList.add(
+    "addBookmark-form-url",
+    "addBookmark-form-input",
+    "input"
+  );
+  inputUrl.setAttribute("type", "text");
+  inputUrl.setAttribute("autocomplete", "off");
 
-        addBookmarkBtnAdd.setAttribute("disabled", "true");
-        addBookmarkBtnAdd.classList.add("btnIsDisabled");
-      });
-    }
-  });
-};
-addBookmakrBtnFuntion();
-// validation for addBookmark form
-const form = document.querySelector(".addBookmark-form");
-form.addEventListener("input", () => {
-  const name = addBookmarkInpName.value;
-  const url = addBookmarkInpUrl.value;
-  const newGroup = addBookmarksNewGroup.value;
+  labelUrl.appendChild(inputUrl);
 
-  if (document.querySelector(".addBookmark-form-checkbox").checked !== true) {
-    if (name === "" || url === "") {
-      document
-        .querySelector(".addBookmark-form-btn-add")
-        .setAttribute("disabled", "true");
-      document
-        .querySelector(".addBookmark-form-btn-add")
-        .classList.add("btnIsDisabled");
-    } else {
-      document
-        .querySelector(".addBookmark-form-btn-add")
-        .removeAttribute("disabled", "true");
-      document
-        .querySelector(".addBookmark-form-btn-add")
-        .classList.remove("btnIsDisabled");
-    }
-  } else {
-    if (name === "" || url === "" || newGroup == "") {
-      document
-        .querySelector(".addBookmark-form-btn-add")
-        .setAttribute("disabled", "true");
-      document
-        .querySelector(".addBookmark-form-btn-add")
-        .classList.add("btnIsDisabled");
-    } else {
-      document
-        .querySelector(".addBookmark-form-btn-add")
-        .removeAttribute("disabled", "true");
-      document
-        .querySelector(".addBookmark-form-btn-add")
-        .classList.remove("btnIsDisabled");
-    }
-  }
-});
+  const labelToGroup = document.createElement("label");
+  labelToGroup.setAttribute("for", "to group");
+  labelToGroup.setAttribute("data-visible", "true");
+  labelToGroup.classList.add("addBookmark-form-label", "addCreateNewGroup");
+  labelToGroup.textContent = "Add to Group";
+  form.appendChild(labelToGroup);
+  const selectToGroup = document.createElement("select");
+  selectToGroup.classList.add(
+    "addBookmark-form-chooseGroup",
+    "input",
+    "addBookmark-form-input"
+  );
+  labelToGroup.appendChild(selectToGroup);
 
-// close addBookmarks card
-const addBookmakrBtnCloseFuntion = () => {
-  const addShowBookmark = document.querySelectorAll(".addBookmark-btn");
+  const labelNewGroup = document.createElement("label");
+  labelNewGroup.setAttribute("for", "new group");
+  labelNewGroup.setAttribute("data-visible", "false");
+  labelNewGroup.classList.add("addBookmark-form-label", "addCreateNewGroup");
+  labelNewGroup.textContent = "New Group";
+  form.appendChild(labelNewGroup);
+  const inputNewGroup = document.createElement("input");
+  inputNewGroup.classList.add(
+    "addBookmark-form-newGroup",
+    "addBookmark-form-input",
+    "input"
+  );
+  inputNewGroup.setAttribute("type", "text");
+  inputNewGroup.setAttribute("autocomplete", "off");
 
-  addBookmarksBtnCancel.addEventListener("click", function () {
-    addShowBookmark.forEach((element) => {
-      dataActiveSwitcher(element, 1);
-    });
-    dataVisibleSwitcher(addBookmark, 1);
-    const selectGroup = document.querySelector(".addBookmark-form-chooseGroup");
-    if (selectGroup.childNodes.length !== 0) {
-      checkToAddNewGroup[0].setAttribute("data-visible", "true");
-      checkToAddNewGroup[1].setAttribute("data-visible", "false");
-      document.querySelector(".addBookmark-form").reset();
-    }
-  });
-};
-addBookmakrBtnCloseFuntion();
+  labelNewGroup.appendChild(inputNewGroup);
 
-//add new bookmark to group or create new group
+  const labelCheckBox = document.createElement("label");
+  labelCheckBox.setAttribute("for", "group checkbox");
+  labelCheckBox.classList.add("addBookmark-form-label");
+  labelCheckBox.textContent = "Add new group";
+  form.appendChild(labelCheckBox);
+  const inputCheckBox = document.createElement("input");
+  inputCheckBox.setAttribute("type", "checkbox");
+  inputCheckBox.classList.add("addBookmark-form-checkbox");
+  labelCheckBox.appendChild(inputCheckBox);
 
-addBookmarkBtnAdd.addEventListener("click", function () {
-  const name = addBookmarkInpName.value;
-  const url = addBookmarkInpUrl.value;
-  const group = addBookmarkSelectGroup.value;
-  const newGroup = addBookmarksNewGroup.value;
+  const btnDiv = document.createElement("div");
+  btnDiv.classList.add("addBookmkar-form-btnContainer");
+  form.appendChild(btnDiv);
+  const addBtn = document.createElement("button");
+  addBtn.classList.add(
+    "addBookmark-form-btn-add",
+    "button",
+    "addBookmark-form-input",
+    "addBookmark-form-btn"
+  );
+  addBtn.setAttribute("type", "button");
+  addBtn.textContent = "Add";
+  btnDiv.appendChild(addBtn);
+  const cancelBtn = document.createElement("button");
+  cancelBtn.classList.add(
+    "addBookmark-form-btn-cancel",
+    "button",
+    "addBookmark-form-input",
+    "addBookmark-form-btn"
+  );
+  cancelBtn.setAttribute("type", "button");
+  cancelBtn.textContent = "Cancel";
+  btnDiv.appendChild(cancelBtn);
 
-  if (newGroupCheckBox.checked !== true) {
-    const findElement = getElementsByText(group, "h2");
-
-    const sectionMain =
-      findElement[0].parentNode.parentNode.parentNode.parentNode.childNodes;
-    const sectionColumn = findElement[0].parentNode.parentNode.parentNode;
-
-    const indexOfColumn = Array.from(sectionMain).indexOf(sectionColumn);
-
-    const parentNodeToAppend =
-      findElement[0].parentNode.parentNode.childNodes[1];
-    const position = getPositionGroupName(
-      group,
-      bookmarks[indexOfColumn].groups
-    );
-    const newBookmark = {
-      name: name,
-      url: url,
-    };
-    const arrBookmark = bookmarks[indexOfColumn].groups[position].bookmark;
-    arrBookmark.push(newBookmark);
-    let bookmarksString = JSON.stringify(bookmarks);
-    localStorage.setItem("Bookmarks", bookmarksString);
-    createBookmarkLink(null, parentNodeToAppend, name, url);
-  } else {
-    const newBookmark = {
-      groupName: newGroup,
-      bookmark: [
-        {
-          name: name,
-          url: url,
-        },
-      ],
-    };
-
-    const arrBookmark = bookmarks[0].groups;
-    arrBookmark.push(newBookmark);
-    let bookmarksString = JSON.stringify(bookmarks);
-    localStorage.setItem("Bookmarks", bookmarksString);
-    createBookmarkGroup(null, name, url, newGroup);
-  }
-  collExpBookmarksFunc();
-  groupSelect();
-  const addShowBookmark = document.querySelectorAll(".addBookmark-btn");
-
-  addShowBookmark.forEach((element) => {
-    dataActiveSwitcher(element, 1);
-  });
-  dataVisibleSwitcher(addBookmark, 1);
-  checkToAddNewGroup[0].setAttribute("data-visible", "true");
-  checkToAddNewGroup[1].setAttribute("data-visible", "false");
-
-  document.querySelector(".addBookmark-form").reset();
-});
-
-// append new group input
-newGroupCheckBox.addEventListener("change", () => {
-  checkToAddNewGroup.forEach((element) => {
-    if (newGroupCheckBox.checked === true) {
-      dataVisibleSwitcher(element, 2);
-    } else {
-      dataVisibleSwitcher(element, 2);
-    }
-  });
-});
-
-// append groups to select
-const groupSelect = () => {
-  while (addBookmarkSelectGroup.firstChild) {
-    addBookmarkSelectGroup.removeChild(addBookmarkSelectGroup.firstChild);
-  }
+  //append group to select
   bookmarks.forEach((element) => {
     element.groups.forEach((element) => {
       const option = document.createElement("option");
       option.textContent = element.groupName;
       option.setAttribute("value", element.groupName);
-      addBookmarkSelectGroup.appendChild(option);
+      selectToGroup.appendChild(option);
     });
   });
+  //
+
+  // form validation
+
+  if (inputName.valu === "" || inputUrl.value === "") {
+    addBtn.setAttribute("disabled", "true");
+    addBtn.classList.add("btnIsDisabled");
+  } else {
+    addBtn.removeAttribute("disabled", "true");
+    addBtn.classList.remove("btnIsDisabled");
+  }
+
+  form.addEventListener("input", (e) => {
+    const name = inputName.value;
+    const url = inputUrl.value;
+    const newGroup = inputNewGroup.value;
+
+    if (inputCheckBox.checked !== true) {
+      if (name === "" || url === "") {
+        addBtn.setAttribute("disabled", "true");
+        addBtn.classList.add("btnIsDisabled");
+      } else {
+        addBtn.removeAttribute("disabled", "true");
+        addBtn.classList.remove("btnIsDisabled");
+      }
+    } else {
+      if (name === "" || url === "" || newGroup == "") {
+        addBtn.setAttribute("disabled", "true");
+        addBtn.classList.add("btnIsDisabled");
+      } else {
+        addBtn.removeAttribute("disabled", "true");
+        addBtn.classList.remove("btnIsDisabled");
+      }
+    }
+  });
+  //
+
+  //close window
+  const closeWindow = () => {
+    document.body.removeEventListener("keyup", closeWindowKey);
+
+    document
+      .querySelector(".main-section")
+      .removeChild(document.querySelector(".addBookmark"));
+  };
+  const closeWindowKey = (e) => {
+    if (e.key == "Escape") {
+      document
+        .querySelector(".main-section")
+        .removeChild(document.querySelector(".addBookmark"));
+      document.body.removeEventListener("keyup", closeWindowKey);
+    }
+  };
+  cancelBtn.addEventListener("click", closeWindow);
+  document.body.addEventListener("keyup", closeWindowKey);
+  div.addEventListener(
+    "mouseup",
+    (e) => {
+      if (e.target.className === "addBookmark") {
+        document.body.removeEventListener("keyup", closeWindowKey);
+
+        document
+          .querySelector(".main-section")
+          .removeChild(document.querySelector(".addBookmark"));
+      }
+    },
+    true
+  );
+  //
+
+  //checkbox logic
+  inputCheckBox.addEventListener("change", () => {
+    document.querySelectorAll(".addCreateNewGroup").forEach((element) => {
+      if (inputCheckBox.checked) {
+        dataVisibleSwitcher(element, 1);
+      } else {
+        dataVisibleSwitcher(element, 1);
+      }
+    });
+  });
+  //
+
+  //add bookmark/ group function
+  addBtn.addEventListener("click", function () {
+    const name = inputName.value;
+    const url = inputUrl.value;
+    const groupName = selectToGroup.value;
+    const newGroupName = inputNewGroup.value;
+
+    if (!inputCheckBox.checked) {
+      const newBookmark = {
+        name: name,
+        url: url,
+      };
+      const findElement = getElementsByText(groupName, "h2");
+      const parentNodeToAppend =
+        findElement[0].parentNode.parentNode.childNodes[1];
+
+      bookmarks.forEach((column) => {
+        column.groups.forEach((group) => {
+          if (group.groupName === groupName) {
+            group.bookmark.push(newBookmark);
+            let bookmarksString = JSON.stringify(bookmarks);
+            localStorage.setItem("Bookmarks", bookmarksString);
+          }
+        });
+      });
+
+      createBookmarkLink(null, parentNodeToAppend, name, url);
+    } else {
+      const newBookmark = {
+        groupName: newGroupName,
+        bookmark: [
+          {
+            name: name,
+            url: url,
+          },
+        ],
+      };
+
+      const arrBookmark = bookmarks[0].groups;
+      arrBookmark.push(newBookmark);
+      let bookmarksString = JSON.stringify(bookmarks);
+      localStorage.setItem("Bookmarks", bookmarksString);
+      createBookmarkGroup(null, name, url, newGroupName);
+      appendIcons();
+      collExpBookmarksFunc();
+    }
+    closeWindow();
+  });
 };
-groupSelect();
+//
+document
+  .querySelector(".addBookmark-btn ")
+  .addEventListener("click", drawAddBookmark);
+//
 
 // find possition in array
 function getPositionGroupName(elementToFind, arrayElements) {
@@ -1061,49 +1155,49 @@ function getPositionName(elementToFind, arrayElements) {
     })
     .indexOf(elementToFind);
 }
+//
 
 // delete Button Logic
-
 const deleteBtnLogic = (domElement) => {
   const element = domElement;
   const deleteBtn = document.querySelector(".delete-btn");
+
   deleteBtn.addEventListener("click", () => {
     if (element.tagName === "A") {
       // delete link
-      const indexOfElement = Array.from(
-        element.parentNode.parentNode.childNodes
-      ).indexOf(element.parentNode);
-      const indexOfGroup = Array.from(
-        element.parentNode.parentNode.parentNode.parentNode.childNodes
-      ).indexOf(element.parentNode.parentNode.parentNode);
-
-      const indexOfColumn = Array.from(
-        element.parentNode.parentNode.parentNode.parentNode.parentNode
-          .childNodes
-      ).indexOf(element.parentNode.parentNode.parentNode.parentNode);
-
-      if (element.parentNode.parentNode) {
-        element.parentNode.parentNode.removeChild(element.parentNode);
+      const domParent = element.parentNode.parentNode;
+      const domElement = element.parentNode;
+      if (domParent) {
+        domParent.removeChild(domElement);
       }
+      const name = element.textContent;
+      const array = bookmarks;
 
-      if (indexOfElement > -1) {
-        bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
-          indexOfElement,
-          1
-        );
-      }
-      let bookmarksString = JSON.stringify(bookmarks);
-      localStorage.setItem("Bookmarks", bookmarksString);
+      bookmarks.forEach((column) => {
+        column.groups.forEach((group) => {
+          group.bookmark.forEach((bookamrk) => {
+            if (bookamrk.name === name) {
+              const index = group.bookmark.indexOf(bookamrk);
+              if (index > -1) {
+                group.bookmark.splice(index, 1);
+              }
+              createUndoElement(
+                "deletion",
+                group.bookmark,
+                index,
+                bookamrk,
+                domElement,
+                domParent
+              );
+
+              let bookmarksString = JSON.stringify(bookmarks);
+              localStorage.setItem("Bookmarks", bookmarksString);
+            }
+          });
+        });
+      });
     } else {
       // delete group
-
-      const indexOfGroup = Array.from(
-        element.parentNode.parentNode.parentNode.childNodes
-      ).indexOf(element.parentNode.parentNode);
-
-      const indexOfColumn = Array.from(
-        element.parentNode.parentNode.parentNode.parentNode.childNodes
-      ).indexOf(element.parentNode.parentNode.parentNode);
 
       const div1 = document.createElement("div");
       document.querySelector(".main-section").appendChild(div1);
@@ -1125,6 +1219,7 @@ const deleteBtnLogic = (domElement) => {
       inputNo.classList.add("button", "cancelBtn");
       div2.appendChild(inputYes);
       div2.appendChild(inputNo);
+
       document.querySelector(".confirmBtn").addEventListener("click", () => {
         console.info("Group has been deleted");
         if (element.parentNode.parentNode.parentNode) {
@@ -1132,11 +1227,20 @@ const deleteBtnLogic = (domElement) => {
             element.parentNode.parentNode
           );
         }
-        if (indexOfGroup > -1) {
-          bookmarks[indexOfColumn].groups.splice(indexOfGroup, 1);
-        }
-        let bookmarksString = JSON.stringify(bookmarks);
-        localStorage.setItem("Bookmarks", bookmarksString);
+        const name = element.textContent;
+        bookmarks.forEach((column) => {
+          column.groups.forEach((group) => {
+            if (group.groupName === name) {
+              const index = column.groups.indexOf(group);
+              if (index > -1) {
+                column.groups.splice(index, 1);
+              }
+              let bookmarksString = JSON.stringify(bookmarks);
+              localStorage.setItem("Bookmarks", bookmarksString);
+            }
+          });
+        });
+
         if (document.querySelector(".confirmDiv").parentNode) {
           document
             .querySelector(".confirmDiv")
@@ -1151,6 +1255,25 @@ const deleteBtnLogic = (domElement) => {
             .parentNode.removeChild(document.querySelector(".confirmDiv"));
         }
       });
+      //close window on "escape" and "mouse click"
+      const closeWindowKey = (e) => {
+        if (e.key == "Escape") {
+          document.querySelector(".main-section").removeChild(div1);
+          document.body.removeEventListener("keyup", closeWindowKey);
+        }
+      };
+      document.body.addEventListener("keyup", closeWindowKey);
+      div1.addEventListener(
+        "mouseup",
+        (e) => {
+          if (e.target.className === "confirmDiv") {
+            document.body.removeEventListener("keyup", closeWindowKey);
+
+            document.querySelector(".main-section").removeChild(div1);
+          }
+        },
+        true
+      );
     }
     if (document.querySelector(".rmb-popup").parentNode) {
       document
@@ -1159,9 +1282,9 @@ const deleteBtnLogic = (domElement) => {
     }
   });
 };
+//
 
 // edit bookmark logic
-
 const editBtnLogic = (domElement) => {
   const element = domElement;
   const editBtn = document.querySelector(".edit-btn");
@@ -1206,23 +1329,6 @@ const editBtnLogic = (domElement) => {
   editBtn.addEventListener("click", () => {
     if (element.tagName === "A") {
       // edit link
-      const indexOfElement = Array.from(
-        element.parentNode.parentNode.childNodes
-      ).indexOf(element.parentNode);
-      const indexOfGroup = Array.from(
-        element.parentNode.parentNode.parentNode.parentNode.childNodes
-      ).indexOf(element.parentNode.parentNode.parentNode);
-      const indexOfColumn = Array.from(
-        element.parentNode.parentNode.parentNode.parentNode.parentNode
-          .childNodes
-      ).indexOf(element.parentNode.parentNode.parentNode.parentNode);
-
-      const arrayPosition = {
-        column: indexOfColumn,
-        group: indexOfGroup,
-        element: indexOfElement,
-      };
-
       const name = element.textContent;
       const url = element.href;
       editDiv({ name: name, url: url });
@@ -1231,12 +1337,18 @@ const editBtnLogic = (domElement) => {
         element.textContent = document.querySelector(".editInpName").value;
         element.href = document.querySelector(".editInpUrl").value;
 
-        bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
-          indexOfElement
-        ].name = document.querySelector(".editInpName").value;
-        bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
-          indexOfElement
-        ].url = document.querySelector(".editInpUrl").value;
+        bookmarks.forEach((column) => {
+          column.groups.forEach((group) => {
+            group.bookmark.forEach((bookamrk) => {
+              if (bookamrk.name === name) {
+                bookamrk.name = document.querySelector(".editInpName").value;
+                bookamrk.url = document.querySelector(".editInpUrl").value;
+                let bookmarksString = JSON.stringify(bookmarks);
+                localStorage.setItem("Bookmarks", bookmarksString);
+              }
+            });
+          });
+        });
 
         let bookmarksString = JSON.stringify(bookmarks);
         localStorage.setItem("Bookmarks", bookmarksString);
@@ -1254,28 +1366,47 @@ const editBtnLogic = (domElement) => {
             .parentNode.removeChild(document.querySelector(".editDiv"));
         }
       });
+      //close window on "escape" and "mouse click"
+      const closeWindowKey = (e) => {
+        if (e.key == "Escape") {
+          document
+            .querySelector(".main-section")
+            .removeChild(document.querySelector(".editDiv"));
+          document.body.removeEventListener("keyup", closeWindowKey);
+        }
+      };
+      document.body.addEventListener("keyup", closeWindowKey);
+      document.querySelector(".editDiv").addEventListener(
+        "mouseup",
+        (e) => {
+          if (e.target.className === "editDiv") {
+            document.body.removeEventListener("keyup", closeWindowKey);
+
+            document
+              .querySelector(".main-section")
+              .removeChild(document.querySelector(".editDiv"));
+          }
+        },
+        true
+      );
     } else {
       //edit group
-      const indexOfGroup = Array.from(
-        element.parentNode.parentNode.parentNode.childNodes
-      ).indexOf(element.parentNode.parentNode);
-
-      const indexOfColumn = Array.from(
-        element.parentNode.parentNode.parentNode.parentNode.childNodes
-      ).indexOf(element.parentNode.parentNode.parentNode);
-
-      const arrayPosition = {
-        column: indexOfColumn,
-        group: indexOfGroup,
-      };
       const name = element.textContent;
       editDiv({ name: name, url: null });
       document.querySelector(".confirmBtn").addEventListener("click", () => {
         element.textContent = document.querySelector(".editInpName").value;
-        bookmarks[indexOfColumn].groups[indexOfGroup].groupName =
-          document.querySelector(".editInpName").value;
-        let bookmarksString = JSON.stringify(bookmarks);
-        localStorage.setItem("Bookmarks", bookmarksString);
+
+        bookmarks.forEach((column) => {
+          column.groups.forEach((group) => {
+            if (group.groupName === name) {
+              group.groupName = document.querySelector(".editInpName").value;
+
+              let bookmarksString = JSON.stringify(bookmarks);
+              localStorage.setItem("Bookmarks", bookmarksString);
+            }
+          });
+        });
+
         if (document.querySelector(".editDiv").parentNode) {
           document
             .querySelector(".editDiv")
@@ -1289,6 +1420,29 @@ const editBtnLogic = (domElement) => {
             .parentNode.removeChild(document.querySelector(".editDiv"));
         }
       });
+      //close window on "escape" and "mouse click"
+      const closeWindowKey = (e) => {
+        if (e.key == "Escape") {
+          document
+            .querySelector(".main-section")
+            .removeChild(document.querySelector(".editDiv"));
+          document.body.removeEventListener("keyup", closeWindowKey);
+        }
+      };
+      document.body.addEventListener("keyup", closeWindowKey);
+      document.querySelector(".editDiv").addEventListener(
+        "mouseup",
+        (e) => {
+          if (e.target.className === "editDiv") {
+            document.body.removeEventListener("keyup", closeWindowKey);
+
+            document
+              .querySelector(".main-section")
+              .removeChild(document.querySelector(".editDiv"));
+          }
+        },
+        true
+      );
     }
     if (document.querySelector(".rmb-popup").parentNode) {
       document
@@ -1297,119 +1451,292 @@ const editBtnLogic = (domElement) => {
     }
   });
 };
+//
 
 //
 // settings logic
 //
 
-const showSettingsUI = () => {
-  const settingDiv = document.querySelector(".settings");
-  const settingBtn = document.querySelectorAll(".settings-btn");
+//draw settings element
 
-  settingBtn.forEach((element) => {
-    if (element.getAttribute("listener") !== "true") {
-      element.setAttribute("listener", "true");
-      element.addEventListener("click", () => {
-        dataActiveSwitcher(element, 1);
-        dataVisibleSwitcher(settingDiv, 1);
-        // document.querySelector(".settings-menu-textarea").value = "";
-      });
-    }
+const drawSettings = () => {
+  const divMain = document.createElement("div");
+  divMain.classList.add("settings");
+  document.querySelector(".main-section").appendChild(divMain);
+
+  const divMenu = document.createElement("div");
+  divMenu.classList.add("settings-menu");
+  divMain.appendChild(divMenu);
+  const h1 = document.createElement("h1");
+  h1.textContent = "Settings";
+  divMenu.appendChild(h1);
+
+  //apperance
+  const divAppe = document.createElement("div");
+  divAppe.classList.add("setting-menu-appearance");
+  divMenu.appendChild(divAppe);
+  const h2Appe = document.createElement("h2");
+  h2Appe.textContent = "Apperance";
+  divAppe.appendChild(h2Appe);
+  const divTheme = document.createElement("div");
+  divTheme.classList.add("setting-menu-appearance-theme");
+  divAppe.appendChild(divTheme);
+  const selectTheme = document.createElement("select");
+  selectTheme.classList.add("etting-menu-appearance-selectColorTheme", "input");
+  selectTheme.setAttribute("autocomplete", "off");
+  divTheme.appendChild(selectTheme);
+  const listOfOptions = [
+    {
+      value: "auto",
+      name: "Auto (based on your system setting)",
+    },
+    {
+      value: "light",
+      name: "Light Mode",
+    },
+    {
+      value: "dark",
+      name: "Dark Mode",
+    },
+    {
+      value: "creamy",
+      name: "Creamy (Light)",
+    },
+    {
+      value: "firefox",
+      name: "Firefox Inspired (Dark)",
+    },
+    {
+      value: "midnight",
+      name: "Midnight (Dark)",
+    },
+    {
+      value: "custom",
+      name: "Custom",
+    },
+  ];
+  listOfOptions.forEach((element) => {
+    const option = document.createElement("option");
+    option.setAttribute("value", element.value);
+    option.textContent = element.name;
+    selectTheme.appendChild(option);
   });
-};
+  const divColorPickers = document.createElement("div");
+  divColorPickers.classList.add("setting-menu-appearance-colorPickers");
+  divColorPickers.setAttribute("data-visible", "false");
+  divTheme.appendChild(divColorPickers);
+  const listOfColors = [
+    {
+      value: "background",
+      name: "Background",
+    },
+    {
+      value: "primary",
+      name: "Primary",
+    },
+    {
+      value: "secondary",
+      name: "Secondary",
+    },
+    {
+      value: "accent",
+      name: "Accent",
+    },
+    {
+      value: "text",
+      name: "Text",
+    },
+  ];
+  listOfColors.forEach((element) => {
+    const div = document.createElement("div");
+    divColorPickers.appendChild(div);
+    const input = document.createElement("input");
+    input.setAttribute("type", "color");
+    input.setAttribute("name", element.value);
+    input.setAttribute("autocomplete", "off");
+    input.classList.add("input", `${element.value}Color-input`);
+    div.appendChild(input);
+    const p = document.createElement("p");
+    p.classList.add("colorPickerName");
+    p.textContent = element.name;
+    div.appendChild(p);
+  });
+  const divAppeSett = document.createElement("div");
+  divAppeSett.classList.add("setting-menu-appearance-settings");
+  divAppe.appendChild(divAppeSett);
+  const labelMenuIco = document.createElement("label");
+  labelMenuIco.textContent = "Hide main button in right top corner";
+  divAppeSett.appendChild(labelMenuIco);
+  const inputMenuIco = document.createElement("input");
+  inputMenuIco.setAttribute("type", "checkbox");
+  inputMenuIco.setAttribute("autocomplete", "off");
+  inputMenuIco.classList.add(".hideMenuBtnCheckBox");
+  labelMenuIco.appendChild(inputMenuIco);
 
-// show/hide UI elements
-const hideMenuIcons = () => {
-  document
-    .querySelector(".hideMenuBtnCheckBox")
-    .addEventListener("input", (e) => {
-      settings[0].menuIcons = e.target.checked;
-      if (e.target.checked !== true) {
-        document
-          .querySelector(".main-nav-icon")
-          .setAttribute("data-visible", "true");
-      } else {
-        document
-          .querySelector(".main-nav-icon")
-          .setAttribute("data-visible", "false");
-      }
-      let settingsString = JSON.stringify(settings);
-      localStorage.setItem("Settings", settingsString);
-    });
-  if (settings[0].menuIcons === true) {
-    document.querySelector(".hideMenuBtnCheckBox").click();
-    if (document.querySelector(".hideMenuBtnCheckBox").checked !== true) {
+  const labelLinkIco = document.createElement("label");
+  labelLinkIco.textContent = "Hide website icons next to links";
+  divAppeSett.appendChild(labelLinkIco);
+  const inputLinkIco = document.createElement("input");
+  inputLinkIco.setAttribute("type", "checkbox");
+  inputLinkIco.setAttribute("autocomplete", "off");
+  inputLinkIco.classList.add(".hideLinkIconCheckbox");
+  labelLinkIco.appendChild(inputLinkIco);
+
+  //Import Export
+
+  const divImpExp = document.createElement("div");
+  divImpExp.classList.add("settings-menu-importExport");
+
+  divMenu.appendChild(divImpExp);
+  const h2ImpExp = document.createElement("h2");
+  h2ImpExp.textContent = "Import/Export Bookmarks";
+  divImpExp.appendChild(h2ImpExp);
+  const divImpExpCont = document.createElement("div");
+  divImpExpCont.classList.add("settings-menu-importExport-content");
+  divImpExp.appendChild(divImpExpCont);
+  const divImpExpBtnCon = document.createElement("div");
+  divImpExpBtnCon.classList.add("settings-menu-btnContainer");
+  divImpExpCont.appendChild(divImpExpBtnCon);
+  const exportBtn = document.createElement("button");
+  exportBtn.setAttribute("type", "button");
+  exportBtn.classList.add(
+    "settings-menu-export",
+    "settings-menu-btn",
+    "button"
+  );
+  exportBtn.textContent = "Export Bookmarks";
+  divImpExpBtnCon.appendChild(exportBtn);
+
+  const importBtn = document.createElement("button");
+  importBtn.setAttribute("type", "button");
+  importBtn.classList.add(
+    "settings-menu-import",
+    "settings-menu-btn",
+    "button"
+  );
+  importBtn.textContent = "Import Bookmarks";
+  divImpExpBtnCon.appendChild(importBtn);
+  const divTextArea = document.createElement("div");
+  divTextArea.classList.add("settings-menu-textDiv");
+  divImpExpCont.appendChild(divTextArea);
+
+  // Homepage Url
+  const divTab = document.createElement("div");
+  divTab.classList.add("settings-menu-newTab");
+  divMenu.appendChild(divTab);
+
+  const h2Tab = document.createElement("h2");
+  h2Tab.textContent = "Setup your homepage URL";
+  divTab.appendChild(h2Tab);
+
+  const divTabCont = document.createElement("div");
+  divTabCont.classList.add("settings-menu-newTab-content");
+  divTab.appendChild(divTabCont);
+  const pTabCont = document.createElement("div");
+  pTabCont.textContent =
+    "If you want this extension to be your homepage, set the homepage to the URL below.";
+  divTabCont.appendChild(pTabCont);
+  const labelTabCont = document.createElement("label");
+  labelTabCont.classList.add("settings-menu-newTab-label");
+  labelTabCont.textContent = "URL";
+  divTabCont.appendChild(labelTabCont);
+  const formTabCont = document.createElement("form");
+  formTabCont.classList.add("settings-menu-form");
+  formTabCont.setAttribute("for", "URL");
+  labelTabCont.appendChild(formTabCont);
+
+  const inputTabCont = document.createElement("input");
+  inputTabCont.setAttribute("type", "text");
+  inputTabCont.classList.add("input", "settings-menu-form-inp");
+  inputTabCont.value = window.location.href;
+  formTabCont.appendChild(inputTabCont);
+  const btnTabCont = document.createElement("button");
+  btnTabCont.setAttribute("type", "button");
+  btnTabCont.classList.add("button", "settings-menu-form-btn");
+  btnTabCont.textContent = "Copy";
+  formTabCont.appendChild(btnTabCont);
+
+  //bottom links
+
+  const divLinks = document.createElement("div");
+  divLinks.classList.add("settings-links");
+  divMain.appendChild(divLinks);
+  const a1 = document.createElement("a");
+  a1.setAttribute("href", "https://github.com/Endward01");
+  a1.setAttribute("target", "_blank");
+  a1.textContent = "My Github";
+  divLinks.appendChild(a1);
+  const a2 = document.createElement("a");
+  a2.setAttribute("href", "https://github.com/Endward01/a_new_home");
+  a2.setAttribute("target", "_blank");
+  a2.textContent = "Github Page of this Project";
+  divLinks.appendChild(a2);
+  const a3 = document.createElement("a");
+  a3.setAttribute("href", "https://danielpretki.dev/");
+  a3.setAttribute("target", "_blank");
+  a3.textContent = "My Website";
+  divLinks.appendChild(a3);
+
+  //apperance settings
+  if (hideMenuIcons === true) {
+    inputMenuIco.click();
+  }
+  inputMenuIco.addEventListener("input", (e) => {
+    hideMenuIcons = e.target.checked;
+    if (e.target.checked !== true) {
       document
         .querySelector(".main-nav-icon")
-        .setAttribute("data-active", "true");
+        .setAttribute("data-visible", "true");
     } else {
       document
         .querySelector(".main-nav-icon")
-        .setAttribute("data-active", "false");
+        .setAttribute("data-visible", "false");
     }
+    let hideMenuIconsString = JSON.stringify(hideMenuIcons);
+    localStorage.setItem("hideMenuIcons", hideMenuIconsString);
+  });
+  if (hideLinkIcons === true) {
+    inputLinkIco.click();
   }
-};
-hideMenuIcons();
+  inputLinkIco.addEventListener("input", (e) => {
+    hideLinkIcons = e.target.checked;
 
-const hideLinkIcons = () => {
-  document
-    .querySelector(".hideLinkIconCheckbox")
-    .addEventListener("input", (e) => {
-      settings[0].linkIcons = e.target.checked;
+    let hideLinkIconsString = JSON.stringify(hideLinkIcons);
+    localStorage.setItem("hideLinkIcons", hideLinkIconsString);
+    while (document.querySelector(".main-section-bookmarks").firstChild) {
+      document
+        .querySelector(".main-section-bookmarks")
+        .removeChild(
+          document.querySelector(".main-section-bookmarks").firstChild
+        );
+    }
+    createBookmarkGroup(bookmarks);
+    appendIcons();
+  });
+  //
 
-      let settingsString = JSON.stringify(settings);
-      localStorage.setItem("Settings", settingsString);
-      while (document.querySelector(".main-section-bookmarks").firstChild) {
-        document
-          .querySelector(".main-section-bookmarks")
-          .removeChild(
-            document.querySelector(".main-section-bookmarks").firstChild
-          );
-      }
-      // if (settings[0].linkIcons !== true) {
-      //   appendIcons();
-      // }
-      createBookmarkGroup(bookmarks);
-    });
-
-  if (settings[0].linkIcons === true) {
-    document.querySelector(".hideLinkIconCheckbox").click();
-  }
-};
-hideLinkIcons();
-
-//import export bookmarks logic
-
-const importExportBookmarks = () => {
-  const textarea = document.querySelector(".settings-menu-textarea");
-  const textDiv = document.querySelector(".settings-menu-textDiv");
-  const importBTN = document.querySelector(".settings-menu-import");
-  const exportBTN = document.querySelector(".settings-menu-export");
-  const settingDiv = document.querySelector(".settings");
-  const settingBtn = document.querySelector(".settings-btn");
-  const bookmarksSection = document.querySelector(".main-section-bookmarks");
-
-  if (importBTN.getAttribute("listener") !== "true") {
-    importBTN.setAttribute("listener", "true");
-    importBTN.addEventListener("click", () => {
-      while (textDiv.firstChild) {
-        textDiv.removeChild(textDiv.firstChild);
+  //import export bookmarks logic
+  if (importBtn.getAttribute("listener") !== "true") {
+    importBtn.setAttribute("listener", "true");
+    importBtn.addEventListener("click", () => {
+      while (divTextArea.firstChild) {
+        divTextArea.removeChild(divTextArea.firstChild);
       }
       const paragraph = document.createElement("p");
       paragraph.textContent =
         "If you have export code from another device or browser, you can paste it in the box below and click Import to load the new bookmarks. Warning: This will replace the current bookmarks. ";
-      textDiv.appendChild(paragraph);
+      divTextArea.appendChild(paragraph);
       const textarea = document.createElement("textarea");
       textarea.classList.add("settings-menu-textarea", "input");
-      textDiv.appendChild(textarea);
+      divTextArea.appendChild(textarea);
 
       const btnDiv = document.createElement("div");
-      textDiv.appendChild(btnDiv);
+      divTextArea.appendChild(btnDiv);
 
       const btn1 = document.createElement("button");
       btn1.classList.add("button");
       btn1.setAttribute("type", "button");
-      btn1.classList.add("importBtn", "btnIsDisabled");
+      btn1.classList.add("importBtn", "btnIsDisabled", "importbtn");
 
       btn1.textContent = "Import";
       btnDiv.appendChild(btn1);
@@ -1423,7 +1750,10 @@ const importExportBookmarks = () => {
         /^\[\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\}\]$/i;
 
       textarea.addEventListener("input", (e) => {
-        if (regex.test(textarea.value) || textarea.value == "" && textarea.value == " ") {
+        if (
+          regex.test(textarea.value) ||
+          (textarea.value == "" && textarea.value == " ")
+        ) {
           btn1.classList.remove("importBtn", "btnIsDisabled");
         } else {
           btn1.classList.add("importBtn", "btnIsDisabled");
@@ -1433,53 +1763,51 @@ const importExportBookmarks = () => {
       btn1.addEventListener("click", (e) => {
         if (regex.test(textarea.value)) {
           localStorage.setItem("Bookmarks", textarea.value);
-          while (bookmarksSection.firstChild) {
-            bookmarksSection.removeChild(bookmarksSection.firstChild);
+          while (document.querySelector(".main-section-bookmarks").firstChild) {
+            document
+              .querySelector(".main-section-bookmarks")
+              .removeChild(
+                document.querySelector(".main-section-bookmarks").firstChild
+              );
           }
           bookmarksString = localStorage.getItem("Bookmarks");
           bookmarks = JSON.parse(bookmarksString);
 
           createBookmarkGroup(bookmarks);
           collExpBookmarksFunc();
-          dataVisibleSwitcher(settingDiv, 1);
-          if (settings[0].linkIcons !== true) {
-            appendIcons();
-          }
+          appendIcons();
         } else {
           return;
         }
-        while (textDiv.firstChild) {
-          textDiv.removeChild(textDiv.firstChild);
-        }
       });
       btn2.addEventListener("click", (e) => {
-        while (textDiv.firstChild) {
-          textDiv.removeChild(textDiv.firstChild);
+        while (divTextArea.firstChild) {
+          divTextArea.removeChild(divTextArea.firstChild);
         }
       });
     });
   }
-  if (exportBTN.getAttribute("listener") !== "true") {
-    exportBTN.setAttribute("listener", "true");
-    exportBTN.addEventListener("click", () => {
-      while (textDiv.firstChild) {
-        textDiv.removeChild(textDiv.firstChild);
+  if (exportBtn.getAttribute("listener") !== "true") {
+    exportBtn.setAttribute("listener", "true");
+    exportBtn.addEventListener("click", () => {
+      while (divTextArea.firstChild) {
+        divTextArea.removeChild(divTextArea.firstChild);
       }
       const paragraph = document.createElement("p");
       paragraph.textContent =
         "The code below can be used to import your bookmarks on another device or web browser.";
-      textDiv.appendChild(paragraph);
+      divTextArea.appendChild(paragraph);
       const textarea = document.createElement("textarea");
       textarea.classList.add("settings-menu-textarea", "input");
       textarea.value = localStorage.getItem("Bookmarks");
-      textDiv.appendChild(textarea);
-      textDiv.appendChild(textarea);
+      divTextArea.appendChild(textarea);
+      divTextArea.appendChild(textarea);
 
       const btnDiv = document.createElement("div");
-      textDiv.appendChild(btnDiv);
+      divTextArea.appendChild(btnDiv);
 
       const btn1 = document.createElement("input");
-      btn1.classList.add("button");
+      btn1.classList.add("button", "cpybtn");
       btn1.value = "Copy Code";
       btnDiv.appendChild(btn1);
       const btn2 = document.createElement("input");
@@ -1488,195 +1816,382 @@ const importExportBookmarks = () => {
       btnDiv.appendChild(btn2);
 
       btn1.addEventListener("click", (e) => {
-        // let urlNewtab = document.querySelector(".settings-menu-form-inp");
         textarea.select();
         textarea.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(textarea.value);
       });
       btn2.addEventListener("click", (e) => {
-        while (textDiv.firstChild) {
-          textDiv.removeChild(textDiv.firstChild);
+        while (divTextArea.firstChild) {
+          divTextArea.removeChild(divTextArea.firstChild);
         }
       });
     });
   }
+  //
+
+  // change color theme
+  if (colorScheme.mode !== "custom") {
+    divColorPickers.setAttribute("data-visible", "false");
+  } else {
+    divColorPickers.setAttribute("data-visible", "true");
+    document.querySelector(".backgroundColor-input").value =
+      colorScheme.customeColors.background;
+    document.querySelector(".primaryColor-input").value =
+      colorScheme.customeColors.primary;
+    document.querySelector(".secondaryColor-input").value =
+      colorScheme.customeColors.secondary;
+    document.querySelector(".accentColor-input").value =
+      colorScheme.customeColors.accent;
+    document.querySelector(".textColor-input").value =
+      colorScheme.customeColors.text;
+    document;
+  }
+  selectTheme.value = colorScheme.mode;
+  selectTheme.addEventListener("input", () => {
+    changeTheme(selectTheme.value);
+  });
+  document
+    .querySelectorAll(".setting-menu-appearance-colorPickers input")
+    .forEach((element) => {
+      element.addEventListener("input", changeCustomePalete);
+    });
+  changeCustomePalete;
+  //
+
+  // close window
+  const closeWindow = () => {
+    document.body.removeEventListener("keyup", closeWindowKey);
+
+    document
+      .querySelector(".main-section")
+      .removeChild(document.querySelector(".settings"));
+  };
+  const closeWindowKey = (e) => {
+    if (e.key == "Escape") {
+      document
+        .querySelector(".main-section")
+        .removeChild(document.querySelector(".settings"));
+      document.body.removeEventListener("keyup", closeWindowKey);
+    }
+  };
+  document.body.addEventListener("keyup", closeWindowKey);
+  divMain.addEventListener(
+    "mouseup",
+    (e) => {
+      if (e.target.className === "settings") {
+        document.body.removeEventListener("keyup", closeWindowKey);
+
+        document
+          .querySelector(".main-section")
+          .removeChild(document.querySelector(".settings"));
+      }
+    },
+    true
+  );
+
+  //
 };
-importExportBookmarks();
+// drawSettings();
 
-document.querySelector(".settings-menu-form-inp").value = window.location.href;
+if (hideMenuIcons !== true) {
+  document.body
+    .querySelector(".main-nav-icon")
+    .setAttribute("data-visible", "true");
+} else {
+  document.body
+    .querySelector(".main-nav-icon")
+    .setAttribute("data-visible", "false");
+}
 
-const copyURLBtn = document.querySelector(".settings-menu-form-btn");
-
-copyURLBtn.addEventListener("click", () => {
-  let urlNewtab = document.querySelector(".settings-menu-form-inp");
-  urlNewtab.select();
-  urlNewtab.setSelectionRange(0, 99999);
-  navigator.clipboard.writeText(urlNewtab.value);
+document.querySelector(".settings-btn").addEventListener("click", (e) => {
+  drawSettings();
 });
 
-showSettingsUI();
+// showSettingsUI();
 collExpBookmarksFunc();
 
 //modify color theme
 
-const colorPickersContainer = document.querySelector(
-  ".setting-menu-appearance-colorPickers"
-);
-var colorsCustome = [];
-let mode;
 const changeTheme = (value) => {
-  switch (value) {
-    case "auto":
-      colorPickersContainer.setAttribute("data-visible", "false");
-      if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
-        colorScheme[0].mode = "auto";
-        colorScheme[0].colors = {
-          first: "#eae6da",
-          second: "#f5eddc",
-          third: "#fff7e9",
-          accentFirst: "#d44b4b",
-          textColor: "#19282f",
+  const colorPickersContainer = document.querySelector(
+    ".setting-menu-appearance-colorPickers"
+  );
+  let mode;
+  console.log(value);
+  if (value !== "custom") {
+    switch (value) {
+      case "auto":
+        colorPickersContainer.setAttribute("data-visible", "false");
+        if (
+          window.matchMedia("(prefers-color-scheme:light)").matches === true
+        ) {
+          colorScheme.mode = "auto";
+          colorScheme.colors = {
+            background: "#fafafa",
+            primary: "#d2d3db",
+            secondary: "#e4e5f1",
+            accent: "#9394a5",
+            text: "#162635",
+          };
+        } else {
+          colorScheme.mode = "auto";
+          colorScheme.colors = {
+            background: "#181818",
+            primary: "#3d3d3d",
+            secondary: "#212121",
+            accent: "#aaaaaa",
+            text: "#eae6da",
+          };
+        }
+        break;
+
+      case "light":
+        colorPickersContainer.setAttribute("data-visible", "false");
+        colorScheme.mode = "light";
+        colorScheme.colors = {
+          background: "#fafafa",
+          primary: "#d2d3db",
+          secondary: "#e4e5f1",
+          accent: "#9394a5",
+          text: "#162635",
         };
-        mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-        styleSheet.insertRule(mode);
-      } else {
-        colorScheme[0].mode = "auto";
-        colorScheme[0].colors = {
-          first: "#1c1b22",
-          second: "#2b2a33",
-          third: "#42414d",
-          accentFirst: "#00ddff",
-          textColor: "#f8fdff",
+        break;
+
+      case "creamy":
+        colorPickersContainer.setAttribute("data-visible", "false");
+        colorScheme.mode = "creamy";
+        colorScheme.colors = {
+          background: "#eae6da",
+          primary: "#56c2c2",
+          secondary: "#fbfdfd",
+          accent: "#005866",
+          text: "#162635",
         };
-        mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-        styleSheet.deleteRule(mode, 0);
-        styleSheet.insertRule(mode, 0);
-      }
-      break;
+        break;
 
-    case "light":
-      colorPickersContainer.setAttribute("data-visible", "false");
-      colorScheme[0].mode = "light";
-      colorScheme[0].colors = {
-        first: "#eae6da",
-        second: "#f5eddc",
-        third: "#fff7e9",
-        accentFirst: "#d44b4b",
-        textColor: "#19282f",
-      };
-      mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-      styleSheet.deleteRule(mode, 0);
-      styleSheet.insertRule(mode, 0);
-      break;
+      case "dark":
+        colorPickersContainer.setAttribute("data-visible", "false");
+        colorScheme.mode = "dark";
+        colorScheme.colors = {
+          background: "#181818",
+          primary: "#3d3d3d",
+          secondary: "#212121",
+          accent: "#aaaaaa",
+          text: "#eae6da",
+        };
+        break;
 
-    case "dark":
-      colorPickersContainer.setAttribute("data-visible", "false");
-      colorScheme[0].mode = "dark";
-      colorScheme[0].colors = {
-        first: "#1c1b22",
-        second: "#2b2a33",
-        third: "#42414d",
-        accentFirst: "#00ddff",
-        textColor: "#f8fdff",
-      };
-      mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-      styleSheet.deleteRule(mode, 0);
-      styleSheet.insertRule(mode, 0);
-      break;
+      case "firefox":
+        colorPickersContainer.setAttribute("data-visible", "false");
+        colorScheme.mode = "firefox";
+        colorScheme.colors = {
+          background: "#2b2a33",
+          primary: "#6c689c",
+          secondary: "#42414d",
+          accent: "#808080",
+          text: "#f2f1f9",
+        };
+        break;
 
-    case "moonlight":
-      colorPickersContainer.setAttribute("data-visible", "false");
-      colorScheme[0].mode = "moonlight";
-      colorScheme[0].colors = {
-        first: "#162635",
-        second: "#243D51",
-        third: "#366577",
-        accentFirst: "#e9d9ca",
-        textColor: "#FFFFFF",
-      };
-      mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-      styleSheet.deleteRule(mode, 0);
-      styleSheet.insertRule(mode, 0);
-      break;
-
-    case "forest":
-      colorPickersContainer.setAttribute("data-visible", "false");
-      colorScheme[0].mode = "forest";
-      colorScheme[0].colors = {
-        first: "#344E41",
-        second: "#3A5A40",
-        third: "#588157",
-        accentFirst: "#cbb1be",
-        textColor: "#FFFFFF",
-      };
-      mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};}`;
-      styleSheet.deleteRule(mode, 0);
-      styleSheet.insertRule(mode, 0);
-      break;
-
-    default:
-      if (colorScheme[0].customeColors !== undefined) {
-        colorScheme[0].mode = "custom";
-
-        const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-        styleSheet.deleteRule(mode, 0);
-        styleSheet.insertRule(mode, 0);
-      } else {
-        colorScheme[0].mode = "custom";
-        let newArray = colorScheme[0];
-        newArray["customeColors"] = {
-          first: colorScheme[0].colors.first,
-          second: colorScheme[0].colors.second,
-          third: colorScheme[0].colors.third,
-          accentFirst: colorScheme[0].colors.accentFirst,
-          textColor: colorScheme[0].colors.textColor,
+      case "midnight":
+        colorPickersContainer.setAttribute("data-visible", "false");
+        colorScheme.mode = "midnight";
+        colorScheme.colors = {
+          background: "#162635",
+          primary: "#1a4a9e",
+          secondary: "#243d51",
+          accent: "#00ddff",
+          text: "#eae6da",
         };
 
-        const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-        styleSheet.deleteRule(mode, 0);
-        styleSheet.insertRule(mode, 0);
-      }
-      document.querySelector(".firstColor-input").value =
-        colorScheme[0].customeColors.first;
-      document.querySelector(".secondColor-input").value =
-        colorScheme[0].customeColors.second;
-      document.querySelector(".thirdColor-input").value =
-        colorScheme[0].customeColors.third;
-      document.querySelector(".accentColor-input").value =
-        colorScheme[0].customeColors.accentFirst;
-      document.querySelector(".textColor-input").value =
-        colorScheme[0].customeColors.textColor;
+        break;
 
-      document
-        .querySelectorAll(".setting-menu-appearance-colorPickers input")
-        .forEach((element) => {
-          const nameCol = element.name;
-          const value = element.value;
+      default:
+        break;
+    }
+    colorSchemeString = JSON.stringify(colorScheme);
+    localStorage.setItem("ColorSheme", colorSchemeString);
 
-          colorsCustome[nameCol] = value;
-          element.addEventListener("input", () => {
-            const colorName = element.name;
-            const value = element.value;
-            colorScheme[0].customeColors[colorName] = value;
-            colorSchemeString = JSON.stringify(colorScheme);
-            localStorage.setItem("ColorSheme", colorSchemeString);
-            const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-            styleSheet.deleteRule(mode, 0);
-            styleSheet.insertRule(mode, 0);
-          });
-        });
-      colorPickersContainer.setAttribute("data-visible", "true");
-      break;
+    mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+    styleSheet.deleteRule(mode, 0);
+    styleSheet.insertRule(mode, 0);
+  } else {
+    colorPickersContainer.setAttribute("data-visible", "true");
+    if (colorScheme.customeColors === undefined) {
+      colorScheme.mode = "custom";
+      colorScheme.customeColors = {
+        background: colorScheme.colors.background,
+        primary: colorScheme.colors.primary,
+        secondary: colorScheme.colors.secondary,
+        accent: colorScheme.colors.accent,
+        text: colorScheme.colors.text,
+      };
+      colorSchemeString = JSON.stringify(colorScheme);
+      localStorage.setItem("ColorSheme", colorSchemeString);
+    } else {
+      colorScheme.mode = "custom";
+      colorSchemeString = JSON.stringify(colorScheme);
+      localStorage.setItem("ColorSheme", colorSchemeString);
+    }
+
+    mode = `:root { --background:${colorScheme.customeColors.background}; --primary: ${colorScheme.customeColors.primary}; --secondary: ${colorScheme.customeColors.secondary}; --accent: ${colorScheme.customeColors.accent}; --text: ${colorScheme.customeColors.text};}`;
+    styleSheet.deleteRule(mode, 0);
+    styleSheet.insertRule(mode, 0);
   }
+};
+function changeCustomePalete(e) {
+  const colorName = e.target.name;
+  console.log(colorName);
+  const value = e.target.value;
+  console.log(value);
 
+  document.querySelector(".backgroundColor-input").value =
+    colorScheme.customeColors.background;
+  document.querySelector(".primaryColor-input").value =
+    colorScheme.customeColors.primary;
+  document.querySelector(".secondaryColor-input").value =
+    colorScheme.customeColors.secondary;
+  document.querySelector(".accentColor-input").value =
+    colorScheme.customeColors.accent;
+  document.querySelector(".textColor-input").value =
+    colorScheme.customeColors.text;
+  document;
+
+  colorScheme.customeColors[colorName] = value;
+
+  mode = `:root { --background:${colorScheme.customeColors.background}; --primary: ${colorScheme.customeColors.primary}; --secondary: ${colorScheme.customeColors.secondary}; --accent: ${colorScheme.customeColors.accent}; --text: ${colorScheme.customeColors.text};}`;
+  styleSheet.deleteRule(mode, 0);
+  styleSheet.insertRule(mode, 0);
   colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
+}
+if (colorScheme.mode === "custom") {
+  mode = `:root { --background:${colorScheme.customeColors.background}; --primary: ${colorScheme.customeColors.primary}; --secondary: ${colorScheme.customeColors.secondary}; --accent: ${colorScheme.customeColors.accent}; --text: ${colorScheme.customeColors.text};}`;
+  styleSheet.deleteRule(mode, 0);
+  styleSheet.insertRule(mode, 0);
+} else if (colorScheme.mode === "auto") {
+  if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
+    colorScheme.colors = {
+      background: "#fafafa",
+      primary: "#d2d3db",
+      secondary: "#e4e5f1",
+      accent: "#9394a5",
+      text: "#162635",
+    };
+  } else {
+    colorScheme.colors = {
+      background: "#181818",
+      primary: "#3d3d3d",
+      secondary: "#212121",
+      accent: "#aaaaaa",
+      text: "#eae6da",
+    };
+  }
+  mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+  styleSheet.deleteRule(mode, 0);
+  styleSheet.insertRule(mode, 0);
+} else {
+  mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+  styleSheet.deleteRule(mode, 0);
+  styleSheet.insertRule(mode, 0);
+}
+
+//undo div
+
+const createUndoElement = (
+  type,
+  array,
+  arrayIndex,
+  arrayElem,
+  domElem,
+  domParent
+) => {
+  // edit, deletion
+  const element = document.querySelector(".undoContainer");
+  if (typeof element != "undefined" && element != null) {
+    const undoDiv = document.createElement("div");
+    document.querySelector(".undoContainer").appendChild(undoDiv);
+
+    const span = document.createElement("span");
+    span.textContent = `Undo ${type} of ${arrayElem.name}`;
+    undoDiv.appendChild(span);
+
+    const button = document.createElement("button");
+    button.classList.add("button");
+    button.setAttribute("type", "button");
+    button.textContent = "Undo";
+    undoDiv.appendChild(button);
+
+    const divProgers = document.createElement("div");
+    divProgers.classList.add("divProgers");
+
+    undoDiv.appendChild(divProgers);
+    button.addEventListener("click", (e) => {
+      if (type === "deletion") {
+        domParent.insertBefore(domElem, domParent.childNodes[arrayIndex]);
+        array.splice(arrayIndex, 0, arrayElem);
+        let bookmarksString = JSON.stringify(bookmarks);
+        localStorage.setItem("Bookmarks", bookmarksString);
+        document
+          .querySelector(".undoContainer")
+          .removeChild(e.target.parentNode);
+        if (document.querySelector(".undoContainer").childNodes.length == 0) {
+          document
+            .querySelector(".main-section")
+            .removeChild(document.querySelector(".undoContainer"));
+        }
+      } else {
+      }
+    });
+  } else {
+    const div = document.createElement("div");
+    div.classList.add("undoContainer");
+    document.querySelector(".main-section").appendChild(div);
+    const undoDiv = document.createElement("div");
+    document.querySelector(".undoContainer").appendChild(undoDiv);
+
+    const span = document.createElement("span");
+    span.textContent = `Undo ${type} of ${arrayElem.name}`;
+    undoDiv.appendChild(span);
+
+    const button = document.createElement("button");
+    button.classList.add("button");
+    button.setAttribute("type", "button");
+    button.textContent = "Undo";
+    undoDiv.appendChild(button);
+
+    const divProgers = document.createElement("div");
+    divProgers.classList.add("divProgers");
+
+    undoDiv.appendChild(divProgers);
+    button.addEventListener("click", (e) => {
+      if (type === "deletion") {
+        domParent.insertBefore(domElem, domParent.childNodes[arrayIndex]);
+        array.splice(arrayIndex, 0, arrayElem);
+        let bookmarksString = JSON.stringify(bookmarks);
+        localStorage.setItem("Bookmarks", bookmarksString);
+        document
+          .querySelector(".undoContainer")
+          .removeChild(e.target.parentNode);
+      } else {
+      }
+    });
+  }
+
+  setTimeout(() => {
+    if (document.querySelector(".undoContainer > div") != null) {
+      document
+        .querySelector(".undoContainer")
+        .removeChild(document.querySelector(".undoContainer > div"));
+    }
+    setTimeout(() => {
+      if (document.querySelector(".undoContainer").childNodes.length == 0) {
+        document
+          .querySelector(".main-section")
+          .removeChild(document.querySelector(".undoContainer"));
+      }
+    }, 5);
+  }, 5150);
 };
-const selectTheme = document.querySelector(
-  ".setting-menu-appearance-selectColorTheme"
-);
-selectTheme.value = colorScheme[0].mode;
-changeTheme(colorScheme[0].mode);
-selectTheme.addEventListener("input", () => {
-  changeTheme(selectTheme.value);
-});
+// edit, deletion
+// createUndoElement("deletion", "Reddit");
