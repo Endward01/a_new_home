@@ -735,7 +735,7 @@ input:focus {
   align-items: center;
   overflow: hidden;
   padding: 0 8px;
-  animation: deleteUndoContainer 5150ms;
+  animation: deleteUndoContainer 5150ms,slidein 250ms;
 }
 .undoContainer > div > p {
   font-size: 20px;
