@@ -2184,13 +2184,11 @@ const createUndoElement = (
         .querySelector(".undoContainer")
         .removeChild(document.querySelector(".undoContainer > div"));
     }
-    setTimeout(() => {
-      if (document.querySelector(".undoContainer").childNodes.length == 0) {
-        document
-          .querySelector(".main-section")
-          .removeChild(document.querySelector(".undoContainer"));
-      }
-    }, 5);
+    if (document.querySelector(".undoContainer").childNodes.length == 0) {
+      document
+        .querySelector(".main-section")
+        .removeChild(document.querySelector(".undoContainer"));
+    }
   }, 5150);
 };
 // edit, deletion
