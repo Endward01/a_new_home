@@ -716,15 +716,16 @@ input:focus {
   left: 50%;
   transform: translateX(-50%);
   width: 25%;
-  height: 1000px;
+  height: max-content;
   display: flex;
   flex-direction: column;
   gap:4px;
   transition: all 250ms ease-in-out;
+  /* z-index: -1; */
 }
 .undoContainer > div {
   position: relative;
-  height: 36px;
+  height: max-content;
   width: 100%;
   background-color: var(--background);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -734,25 +735,19 @@ input:focus {
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  padding: 0 8px;
+  padding: 4px 8px;
   animation: deleteUndoContainer 5150ms,slidein 250ms;
-}
-.undoContainer > div > p {
-  font-size: 20px;
-  font-weight: bold;
-  padding: 6px 0;
-  height: max-content;
+  z-index: 5;
 }
 .undoContainer > div > span {
   font-size: 16px;
+  line-height: 20px;
   font-weight: bold;
-  padding: 8px 0;
   height: max-content;
 }
 .undoContainer > div > button.button {
   font-size: 16px;
   width: 25%;
-  height: 28px;
   padding: 0 8px;
   margin: 2px 0;
 }
