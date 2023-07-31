@@ -13,6 +13,9 @@
       referrerpolicy="no-referrer" />
   </head>
   <body>
+
+
+
     <main class="main">
       <nav class="main-nav">
         <ul class="main-nav-icon" data-visible="true">
@@ -30,187 +33,19 @@
         </ul>
       </nav>
       <section class="main-section">
-        <div class="addBookmark" data-visible="false">
-          <form class="addBookmark-form" autocomplete="off">
-            <label for="name " class="addBookmark-form-label"
-              >Name
-              <input
-                class="addBookmark-form-name addBookmark-inp input addBookmark-form-input"
-                type="text" />
-            </label>
-            <label for="url" class="addBookmark-form-label"
-              >URL
-              <input
-                class="addBookmark-form-url addBookmark-inp input addBookmark-form-input"
-                type="text" />
-            </label>
-            <label
-              for="add to group"
-              class="addCreateNewGroup addBookmark-form-label"
-              data-visible="true"
-              >Add to Group
-              <select
-                class="addBookmark-form-chooseGroup addBookmark-inp input addBookmark-form-input"></select>
-            </label>
-            <label
-              for="new group"
-              class="addCreateNewGroup addBookmark-form-label"
-              data-visible="false"
-              >New Group
-              <input
-                type="text"
-                class="addBookmark-form-newGroup addBookmark-inp input addBookmark-form-input" />
-            </label>
-            <label for="add new group" class="addBookmark-form-label"
-              >Add new group
-              <input type="checkbox" class="addBookmark-form-checkbox" />
-            </label>
-            <div class="addBookmkar-form-btnContainer">
-              <button
-                type="button"
-                class="addBookmark-form-btn-add button addBookmark-form-input addBookmark-form-btn"
-                value="Add" >Add</button>
-              <button
-                type="button"
-                class="addBookmark-form-btn-cancel button addBookmark-form-input addBookmark-form-btn"
-                value="Cancel" >Cancel</button>
-            </div>
-          </form>
-        </div>
-        <div class="settings" data-visible="false">
-          <div class="settings-menu" autocomplete="off">
-            <h1>Settings</h1>
-            <div class="setting-menu-appearance">
-              <h2>Appearance</h2>
-              <div class="setting-menu-appearance-theme">
-                <select
-                  class="setting-menu-appearance-selectColorTheme input"
-                  autocomplete="off">
-                  <option value="auto">
-                    Auto (based on your system setting)
-                  </option>
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                  <option value="moonlight">Moonlight</option>
-                  <option value="forest">Green Forest</option>
-                  <option value="custom">Custom</option>
-                </select>
-                <div
-                  class="setting-menu-appearance-colorPickers"
-                  data-visible="false">
-                  <div>
-                    <input
-                      type="color"
-                      class="input firstColor-input"
-                      name="first"
-                      autocomplete="off" />
-                    <p>Main Color</p>
-                  </div>
-                  <div>
-                    <input
-                      type="color"
-                      class="input secondColor-input"
-                      name="second"
-                      autocomplete="off" />
-                    <p>Secondary Color</p>
-                  </div>
-                  <div>
-                    <input
-                      type="color"
-                      class="input thirdColor-input"
-                      name="third"
-                      autocomplete="off" />
-                    <p>Input/ Button Color</p>
-                  </div>
-                  <div>
-                    <input
-                      type="color"
-                      class="input accentColor-input"
-                      name="accentFirst"
-                      autocomplete="off" />
-                    <p>Accent Color</p>
-                  </div>
-                  <div>
-                    <input
-                      type="color"
-                      class="input textColor-input"
-                      name="textColor"
-                      autocomplete="off" />
-                    <p>Text Color</p>
-                  </div>
-                </div>
-              </div>
-              <div class="setting-menu-appearance-settings">
-                <label>
-                  Hide main button in right top corner<input
-                    type="checkbox"
-                    autocomplete="off"
-                    class="hideMenuBtnCheckBox"
-                /></label>
-                <label>
-                  Hide website icons next to links<input
-                    type="checkbox"
-                    autocomplete="off"
-                    class="hideLinkIconCheckbox"
-                /></label>
-              </div>
-            </div>
-            <form class="settings-menu-importExport">
-              <h2>Import/Export Bookmarks</h2>
-              <div class="settings-menu-importExport-content">
-                <div class="settings-menu-btnContainer">
-                  <input
-                    type="button"
-                    class="settings-menu-export settings-menu-btn button"
-                    value="Export Bookmarks" />
-                  
-                  <input
-                    type="button"
-                    class="settings-menu-import settings-menu-btn button"
-                    value="Import Bookmarks" />
-                </div>
-                <div class="settings-menu-textDiv">
-                  
-                </div>
-              </div>
-            </form>
-            <div class="settings-menu-newTab">
-              <h2>Setup your homepage URL</h2>
-              <div class="settings-menu-newTab-content">
-                <p>
-                  If you want this extension to be your homepage, set the
-                  homepage to the URL below.
-                </p>
-                <label for="URL" class="settings-menu-newTab-label"
-                  >URL
-                  <form class="settings-menu-form">
-                    <input
-                      type="text"
-                      class="input settings-menu-form-inp"
-                      placeholder="Nothing to see here. Yet!" />
-                    <input
-                      type="button"
-                      value="Copy"
-                      class="button settings-menu-form-btn" />
-                  </form>
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="settings-links">
-            <a href="https://github.com/Endward01"target="_blank">My Github</a>
-            <a href="https://github.com/Endward01/a_new_home"target="_blank">Github Page of this Project</a>
-            <a href="https://danielpretki.dev/"target="_blank">My Website</a>
-          </div>
-        </div>
         <div class="main-section-bookmarks sectionHeight">
-        </div>
-        <div class="undo"><button class="button">Undo Delete</button>
         </div>
       </section>
       <footer class="main-footer"></footer>
     </main>
 
+    <noscript>
+      <div class="noscriptmsg" style=" position:absolute; top: 0;  width:100vw; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; "> 
+        <h1 style="font-size: 64px; text-align: center; line-height: 1.5;">OHhh, NO &#128546<br>You need to Enable JavaScript<br> to use this Extansion</h1>
+      </div>
+    </noscript>
+
     <script src="main.js"></script>
+
   </body>
 </html>
