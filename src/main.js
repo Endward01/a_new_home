@@ -2107,11 +2107,11 @@ const createUndoElement = (
   domParent
 ) => {
   // edit, deletion
-  const element = document.querySelector(".undoContainer");
+  let childElem;
   if (typeof element != "undefined" && element != null) {
     const undoDiv = document.createElement("div");
     document.querySelector(".undoContainer").appendChild(undoDiv);
-
+    childElem = undoDiv;
     const span = document.createElement("span");
     span.textContent = `Undo ${type} of ${arrayElem.name}`;
     undoDiv.appendChild(span);
@@ -2135,11 +2135,6 @@ const createUndoElement = (
         document
           .querySelector(".undoContainer")
           .removeChild(e.target.parentNode);
-        if (document.querySelector(".undoContainer").childNodes.length == 0) {
-          document
-            .querySelector(".main-section")
-            .removeChild(document.querySelector(".undoContainer"));
-        }
       } else {
       }
     });
@@ -2149,7 +2144,7 @@ const createUndoElement = (
     document.querySelector(".main-section").appendChild(div);
     const undoDiv = document.createElement("div");
     document.querySelector(".undoContainer").appendChild(undoDiv);
-
+    childElem = undoDiv;
     const span = document.createElement("span");
     span.textContent = `Undo ${type} of ${arrayElem.name}`;
     undoDiv.appendChild(span);
@@ -2179,15 +2174,16 @@ const createUndoElement = (
   }
 
   setTimeout(() => {
-    if (document.querySelector(".undoContainer > div") != null) {
-      document
-        .querySelector(".undoContainer")
-        .removeChild(document.querySelector(".undoContainer > div"));
+    if (document.querySelector(".undoContainer").contains(childElem)) {
+      document.querySelector(".undoContainer").removeChild(childElem);
     }
-    if (document.querySelector(".undoContainer").childNodes.length == 0) {
-      document
-        .querySelector(".main-section")
-        .removeChild(document.querySelector(".undoContainer"));
+
+    if (document.querySelector(".undoContainer") !== null) {
+      if (document.querySelector(".undoContainer").childNodes.length === 0) {
+        document
+          .querySelector(".main-section")
+          .removeChild(document.querySelector(".undoContainer"));
+      }
     }
   }, 5150);
 };
