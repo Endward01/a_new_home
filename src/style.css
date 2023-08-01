@@ -10,12 +10,12 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   color: var(--text);
-  /* -webkit-user-select: none;
+  -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -o-user-select: none;
   -ms-user-select: none;
-  user-select: none; */
+  user-select: none;
   margin: 0;
   padding: 0;
   border: 0;
@@ -177,14 +177,14 @@ ul.main-section-bookmarks-ul.dragOverList {
   overflow: hidden;
 }
 
-.main-section-bookmarks-ul[data-collapsed="true"] {
+.main-section-bookmarks-ul[data-folded="true"] {
   max-height: 0;
-  transition: max-height 100ms ease;
+  transition: max-height 100ms ease-in-out;
 }
 
-.main-section-bookmarks-ul[data-collapsed="false"] {
+.main-section-bookmarks-ul[data-folded="false"] {
   max-height: 1000px;
-  transition: max-height 100ms ease;
+  transition: max-height 100ms ease-in-out;
 }
 .main-section-bookmarks-ul-li-link {
   display: flex;
@@ -211,7 +211,6 @@ ul.main-section-bookmarks-ul.dragOverList {
 }
 .addBookmark,
 .settings,
-.confirmDiv,
 .editDiv {
   position: absolute;
   top: 0;
@@ -221,7 +220,8 @@ ul.main-section-bookmarks-ul.dragOverList {
   justify-content: center;
   align-items: center;
   z-index: 10;
-  backdrop-filter: blur(4px);
+  /* backdrop-filter: blur(4px); */
+  background-color: var(--background);
 }
 
 input.btnIsDisabled,
@@ -274,7 +274,7 @@ input.cpybtn {
   opacity: 0.75;
 } */
 .addBookmark-form-btn-add.btnIsDisabled:hover:after {
-  content: "You must fill fields above to be able to add a bookmark";
+  content: "You must fill the fields above to be able to add a bookmark";
   bottom: 132%;
   left: 30%;
   transform: translateX(-50%);
@@ -304,42 +304,34 @@ input.cpybtn {
   z-index: 10;
 }
 .addBookmark-form {
-  position: absolute;
-  top: 20%;
+  /* position: absolute; */
+  /* top: 0; */
+  transform: translateY(-10%);
   padding: 42px;
+  padding-top: 0;
   background-color: var(--background);
   display: flex;
   width: 50%;
   flex-direction: column;
   gap: 16px;
   border-radius: 2px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
   overflow: hidden;
   animation: 200ms opacityAnimation;
 }
-.addBookmark-form > * {
-}
+
 .addBookmark-form-label {
   min-width: 100%;
   line-height: 24px;
   font-size: 20px;
 }
-.confirmDiv,
 .editDiv {
   display: flex;
-}
-.confirmDiv form {
-  gap: 28px;
-  animation: fadeIn 200ms;
-}
-.confirmDiv form h2 {
-  font-size: 24px;
 }
 .editDiv form {
   gap: 16px;
   animation: fadeIn 200ms;
 }
-.confirmDiv form,
 .editDiv form {
   position: absolute;
   top: 20%;
@@ -349,13 +341,10 @@ input.cpybtn {
   width: 50%;
   flex-direction: column;
   border-radius: 2px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
   animation: 200ms opacityAnimation;
 }
-.confirmDiv form * {
-  width: 100%;
-  text-align: center;
-}
+
 .editDiv form * {
   width: 100%;
 }
@@ -366,7 +355,6 @@ input.cpybtn {
 .editDiv form label input {
   margin-top: 4px;
 }
-.confirmDiv form div,
 .editDiv form div {
   width: 100%;
   display: flex;
@@ -448,203 +436,148 @@ input:focus {
 .settings-menu {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
-  grid-template-rows: max-content max-content max-content;
+  grid-template-rows: max-content max-content;
   height: 100%;
   width: 70%;
   padding: 32px;
   gap: 16px;
   border-radius: 2px;
-  /* margin: 0 auto;? */
   background-color: var(--background);
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  animation: fadeIn 200ms;
+  /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+  animation: opacityAnimation 200ms;
   overflow-y: scroll;
   overflow-x: hidden;
-  animation: 200ms opacityAnimation;
 }
-.settings-menu h1 {
-  grid-column: 1 / span 2;
-  font-size: 32px;
-  line-height: 40px;
-  text-align: center;
-}
-.settings-menu-importExport,
-.setting-menu-appearance,
-.settings-menu-newTab {
-  margin: 0 auto;
-  width: 100%;
+.settings-menu > div {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 22px;
+  padding: 0 8px;
+}
+.setting-menu-appearance,
+.settings-menu-newTab,
+.settings-menu-importExport,
+.setting-menu-features {
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
-.settings-menu-newTab {
-  grid-column: 2 / span 1;
-  grid-row: 2 / span 1;
+.settings h1 {
+  grid-column: 1 / span 2;
+  line-height: 1.25;
+  font-size: 42px;
+  /* text-align: center; */
 }
-.settings-menu-importExport {
-  grid-column: 2 / span 1;
-  grid-row: 3 / span 1;
-}
-.settings-menu-importExport h2,
-.settings-menu-newTab h2,
-.setting-menu-appearance h2 {
-  width: 100%;
-  padding: 0.5rem 0;
-  border-top: 1px solid var(--accent);
-  line-height: 28px;
+.settings h2 {
+  /* width: 100%; */
+  margin: 0 8px 0 8px;
+  padding-top: 0;
+  line-height: 1.25;
   font-size: 24px;
-}
-.setting-menu-appearance-theme,
-.settings-menu-newTab-content,
-.settings-menu-importExport-content,
-.setting-menu-appearance-settings {
-  width: 100%;
-  line-height: 20px;
-  padding: 0 24px;
-  display: flex;
+  font-weight: 600;
   gap: 8px;
+}
+.settings label {
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight:500;
+  display: flex;
   flex-direction: column;
+  gap: 8px;
 }
-.setting-menu-appearance-settings {
-  justify-content: flex-start;
+.settings-menu-newTab-label{}
+.settings p {
+  line-height: 1.25;
 }
+.settingInput{
+  cursor: pointer;
+}
+.settings-menu > div > div {
+  border-top: 1px solid var(--accent);
+}
+
+.setting-menu-appearance-theme *,
 .setting-menu-appearance-settings label {
+  width: 100%;
+}
+.setting-menu-appearance-settings label,
+.setting-menu-features label {
   display: flex;
   height: 32px;
   flex-direction: row-reverse;
   justify-content: flex-end;
   align-items: center;
-  /* gap: 4px; */
-}
-.setting-menu-appearance-settings label *:first-child {
-  margin: 0px 16px;
-  width: 16px;
-  aspect-ratio: 1/1;
-}
-.settings-menu-newTab-content,
-.settings-menu-importExport-content {
-  flex-direction: column;
   gap: 8px;
 }
-.settings-menu-newTab-label {
-  font-size: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.setting-menu-features p {
+  color: gray;
+}
+.settings-menu-newTab-content p {
+  padding: 8px 0;
 }
 .settings-menu-form {
   display: flex;
-  justify-content: space-between;
   gap: 8px;
 }
 .settings-menu-form-inp {
-  flex-basis: 66.66%;
-  height: 32px;
+  flex: 1;
 }
 .settings-menu-form-btn {
   flex-basis: 33.33%;
-  height: 32px;
-}
-.settings-menu-textDiv {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  height: max-content;
-  transition: height 1s linear;
-}
-.settings-menu-textDiv div {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-.settings-menu-textDiv div * {
-  flex: 1 1 0%;
-  text-align: center;
-}
-.settings-menu-textarea {
-  resize: none;
-  width: 100%;
-  height: 160px;
-}
-
-.settings-menu-textarea::placeholder {
-  text-align: center;
 }
 .settings-menu-btnContainer {
   display: flex;
-  justify-content: space-between;
   gap: 8px;
 }
-.settings-menu-btn,
-.setting-menu-appearance-selectColorTheme {
+.settings-menu-btnContainer * {
   flex: 1;
-}
-.setting-menu-appearance-colorPickers {
-  /* display: flex;? */
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 8px;
 }
 
-.setting-menu-appearance-colorPickers div {
-  position: relative;
-  flex: 1;
+.settings-menu-textDiv {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  /* animation: expandAnimation 250ms; */
+  height: max-content;
+  transition: height 250ms ease-in-out;
 }
-.setting-menu-appearance-colorPickers p {
-  display: none;
-  position: absolute;
-  text-align: center;
-  top: -100%;
-  width: max-content;
-  padding: 4px;
-  background-color: var(--primary);
-  border-radius: 2px;
-  box-shadow: rgba(0, 0, 0, 0.25) 0 54px 55px, rgba(0, 0, 0, 0.12) 0 -12px 30px,
-    rgba(0, 0, 0, 0.12) 0 4px 6px, rgba(0, 0, 0, 0.17) 0 12px 13px,
-    rgba(0, 0, 0, 0.09) 0 -3px 5px;
-}
-.setting-menu-appearance-colorPickers input {
-  width: 100%;
-}
-.setting-menu-appearance-colorPickers input:hover {
-  border-color: var(--accent);
-  cursor: pointer;
-}
-.setting-menu-appearance-colorPickers input:hover ~ p {
-  display: block;
-}
-.setting-menu-appearance-theme label {
+
+.settings-menu-textDiv > div {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
   gap: 8px;
 }
-.setting-menu-appearance-theme label input {
+.settings-menu-textDiv > div > * {
+  flex: 1;
+  text-align: center;
+}
+.settings-menu-textarea {
+  width: 100%;
+  height: 160px;
+  resize: none;
+}
+.hideMenuBtnCheckBox,
+.hideLinkIconCheckbox {
   width: 16px;
   aspect-ratio: 1/1;
 }
+
 .settings-links {
+  margin: auto 0;
   position: absolute;
-  top: 101%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50%;
+  bottom: -2%;
+  /* left:0; */
+  width: 70%;
+  z-index: 5;
   display: flex;
   justify-content: space-around;
-  animation: fadeIn 200ms;
-  z-index: 12;
-  animation: 200ms opacityAnimation;
+  align-items: center;
 }
 .settings-links a {
   text-decoration: none;
-  color: rgba(128, 128, 128, 0.5);
+  color: gray;
   font-size: 12px;
-  text-align: center;
 }
 .settings-links a:hover {
   color: var(--accent);
@@ -719,7 +652,7 @@ input:focus {
   height: max-content;
   display: flex;
   flex-direction: column;
-  gap:4px;
+  gap: 4px;
   transition: all 250ms ease-in-out;
   /* z-index: -1; */
 }
@@ -736,7 +669,7 @@ input:focus {
   align-items: center;
   overflow: hidden;
   padding: 4px 8px;
-  animation: deleteUndoContainer 5150ms,slidein 250ms;
+  animation: deleteUndoContainer 5150ms, slidein 250ms;
   z-index: 5;
 }
 .undoContainer > div > span {
@@ -813,7 +746,7 @@ input:focus {
 }
 @keyframes expandAnimation {
   from {
-    max-height: 100px;
+    max-height: 0;
   }
   to {
     max-height: 1000px;

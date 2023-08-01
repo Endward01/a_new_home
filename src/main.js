@@ -1,9 +1,9 @@
 // set/get info from localstorage
 if (localStorage.getItem("Bookmarks") !== null) {
-  var bookmarksString = localStorage.getItem("Bookmarks");
+  const bookmarksString = localStorage.getItem("Bookmarks");
   var bookmarks = JSON.parse(bookmarksString);
 } else {
-  var bookmarks = [
+  const bookmarks = [
     {
       groups: [],
     },
@@ -17,54 +17,58 @@ if (localStorage.getItem("Bookmarks") !== null) {
       groups: [],
     },
   ];
-  let bookmarksString = JSON.stringify(bookmarks);
+  const bookmarksString = JSON.stringify(bookmarks);
   localStorage.setItem("Bookmarks", bookmarksString);
 }
 if (localStorage.getItem("ColorSheme") !== null) {
-  let colorSchemeString = localStorage.getItem("ColorSheme");
+  const colorSchemeString = localStorage.getItem("ColorSheme");
   var colorScheme = JSON.parse(colorSchemeString);
 } else {
-  var colorScheme = {
+  const colorScheme = {
     mode: "auto",
   };
-  let colorSchemeString = JSON.stringify(colorScheme);
+  const colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
 }
 
 if (localStorage.getItem("Setting") !== null) {
-  var settingString = localStorage.getItem("Setting");
+  const settingString = localStorage.getItem("Setting");
   var setting = JSON.parse(settingString);
 
-  var hideMenuIconsString = localStorage.getItem("hideMenuIcons");
+  const hideMenuIconsString = localStorage.getItem("hideMenuIcons");
   var hideMenuIcons = JSON.parse(hideMenuIconsString);
 
-  var hideLinkIconsString = localStorage.getItem("hideLinkIcons");
+  const hideLinkIconsString = localStorage.getItem("hideLinkIcons");
   var hideLinkIcons = JSON.parse(hideLinkIconsString);
+
+  const groupFoldingString = localStorage.getItem("groupFolding");
+  var groupFolding = JSON.parse(groupFoldingString);
 } else {
-  let setting = true;
-  let settingString = JSON.stringify(setting);
+  const setting = true;
+  const settingString = JSON.stringify(setting);
   localStorage.setItem("Setting", settingString);
 
-  let hideMenuIcons = false;
-  let hideMenuIconsString = JSON.stringify(hideMenuIcons);
+  const hideMenuIcons = false;
+  const hideMenuIconsString = JSON.stringify(hideMenuIcons);
   localStorage.setItem("hideMenuIcons", hideMenuIconsString);
 
-  let hideLinkIcons = false;
-  let hideLinkIconsString = JSON.stringify(hideLinkIcons);
+  const hideLinkIcons = false;
+  const hideLinkIconsString = JSON.stringify(hideLinkIcons);
   localStorage.setItem("hideLinkIcons", hideLinkIconsString);
+
+  const groupFolding = false;
+  const groupFoldingString = JSON.stringify(groupFolding);
+  localStorage.setItem("groupFolding", groupFoldingString);
 }
 
-const styleSheet = document.styleSheets[1];
+const styleSheet = document.styleSheets[0];
 
 //on fully load website
 
 onload = () => {
   const windowHeight = document.body.clientHeight;
   const sectionHeight = (windowHeight * 87) / 100;
-  document
-    .querySelector(".main-section-bookmarks")
-    .setAttribute("style", `height:${sectionHeight}px;`);
-
+  document.styleSheets[0].cssRules[26].style.height = `${sectionHeight}px`;
   appendIcons();
 };
 //on resize window
@@ -72,9 +76,7 @@ onload = () => {
 onresize = () => {
   const windowHeight = document.body.clientHeight;
   const sectionHeight = (windowHeight * 88) / 100;
-  document
-    .querySelector(".main-section-bookmarks")
-    .setAttribute("style", `height:${sectionHeight}px;`);
+  document.styleSheets[0].cssRules[26].style.height = `${sectionHeight}px`;
 };
 
 var dragLink = false;
@@ -656,7 +658,7 @@ window.addEventListener("storage", function (e) {
     bookmarks = JSON.parse(bookmarksString);
     createBookmarkGroup(bookmarks);
     appendIcons();
-    collExpBookmarksFunc();
+    // collExpBookmarksFunc();
   }
 });
 //press escepe to quickly quit manu functions
@@ -731,7 +733,7 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
         // element.forEach((element) => {
         const divFirst = document.createElement("div");
         divFirst.classList.add("main-section-bookmarks-group");
-        divFirst.setAttribute("data-collapsed", "false");
+        // divFirst.setAttribute("data-collapsed", "false");
         // divFirst.setAttribute("draggable", "true");
         divColumn.appendChild(divFirst);
         const divSecond = document.createElement("div");
@@ -744,7 +746,7 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
 
         const ul = document.createElement("ul");
         ul.classList.add("main-section-bookmarks-ul");
-        ul.setAttribute("data-collapsed", element.collapsed);
+        ul.setAttribute("data-folded", element.folded);
         divFirst.appendChild(ul);
         createBookmarkLink(element, ul);
       });
@@ -753,7 +755,7 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
     const sectionCollumn = document.querySelectorAll(".main-section-column");
     const divFirst = document.createElement("div");
     divFirst.classList.add("main-section-bookmarks-group");
-    divFirst.setAttribute("data-collapsed", "false");
+    // divFirst.setAttribute("data-collapsed", "false");
     sectionCollumn[0].appendChild(divFirst);
     const divSecond = document.createElement("div");
     divFirst.append(divSecond);
@@ -764,7 +766,7 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
     divSecond.classList.add("main-section-bookmarks-group-div");
     const ul = document.createElement("ul");
     ul.classList.add("main-section-bookmarks-ul");
-    ul.setAttribute("data-collapsed", "false");
+    ul.setAttribute("data-folded", "false");
     divFirst.appendChild(ul);
     createBookmarkLink(null, ul, name, url);
   }
@@ -823,67 +825,62 @@ const dataVisibleSwitcher = (elem, position) => {
 
 // SELECT NODES
 
-// collapse expand bookmark group logic
+//groups folding finction
 
-const collExpBookmarksFunc = () => {
-  const groupNameBtn = document.querySelectorAll(
-    ".main-section-bookmarks-group"
-  );
-  groupNameBtn.forEach((element) => {
-    const btn = element.querySelectorAll("div:first-child");
-    btn.forEach((element) => {
-      const h2 = element.querySelectorAll(
-        ".main-section-bookmarks-group-title"
-      );
-      h2.forEach((element) => {
-        if (element.getAttribute("listener") !== "true") {
-          element.setAttribute("listener", "true");
-
-          element.addEventListener("click", function () {
-            const sectionMain =
-              this.parentNode.parentNode.parentNode.parentNode.childNodes;
-            const sectionColumn = this.parentNode.parentNode.parentNode;
-
-            const indexOfColumn =
-              Array.from(sectionMain).indexOf(sectionColumn);
-
-            if (
-              this.parentNode.parentNode.childNodes[1].attributes[1]
-                .nodeValue !== "true"
-            ) {
-              this.parentNode.parentNode.childNodes[1].setAttribute(
-                "data-collapsed",
-                "true"
-              );
-              const positionInArry = getPositionGroupName(
-                this.parentNode.parentNode.childNodes[0].childNodes[0]
-                  .textContent,
-                bookmarks[indexOfColumn].groups
-              );
-              bookmarks[indexOfColumn].groups[positionInArry].collapsed =
-                "true";
-            } else {
-              this.parentNode.parentNode.childNodes[1].setAttribute(
-                "data-collapsed",
-                "false"
-              );
-              const positionInArry = getPositionGroupName(
-                this.parentNode.parentNode.childNodes[0].childNodes[0]
-                  .textContent,
-                bookmarks[indexOfColumn].groups
-              );
-              bookmarks[indexOfColumn].groups[positionInArry].collapsed =
-                "false";
-            }
-
-            let bookmarksString = JSON.stringify(bookmarks);
-            localStorage.setItem("Bookmarks", bookmarksString);
-          });
+function foldUnfoldFunction(e) {
+  const groupToFold = e.target.parentNode.parentNode.childNodes[1];
+  if (groupToFold.getAttribute("data-folded") !== "true") {
+    groupToFold.setAttribute("data-folded", "true");
+    const nameOfGroupToFold = e.target.parentNode.childNodes[0].textContent;
+    bookmarks.forEach((column) => {
+      column.groups.forEach((group) => {
+        if (group.groupName === nameOfGroupToFold) {
+          group.folded = true;
+          let bookmarksString = JSON.stringify(bookmarks);
+          localStorage.setItem("Bookmarks", bookmarksString);
         }
       });
     });
-  });
-};
+  } else {
+    groupToFold.setAttribute("data-folded", "false");
+    const nameOfGroupToUnfold = e.target.parentNode.childNodes[0].textContent;
+    bookmarks.forEach((column) => {
+      column.groups.forEach((group) => {
+        if (group.groupName === nameOfGroupToUnfold) {
+          group.folded = false;
+          let bookmarksString = JSON.stringify(bookmarks);
+          localStorage.setItem("Bookmarks", bookmarksString);
+        }
+      });
+    });
+  }
+}
+function groupFoldingFunc() {
+  const groupElem = document.querySelectorAll(
+    ".main-section-bookmarks-group-div"
+  );
+  if (groupFolding) {
+    groupElem.forEach((group) => {
+      if (group.getAttribute("listener") !== "true") {
+        group.setAttribute("listener", "true");
+        group.addEventListener("click", foldUnfoldFunction);
+      }
+    });
+    // document.styleSheets[0].cssRules[27].style.cursor = "pointer";
+    document.styleSheets[0].cssRules[28].style.display = "block";
+  } else {
+    groupElem.forEach((group) => {
+      if (group.getAttribute("listener") === "true") {
+        group.removeAttribute("listener");
+        group.removeEventListener("click", foldUnfoldFunction);
+      }
+    });
+
+    // document.styleSheets[0].cssRules[27].style.cursor = "auto";
+    document.styleSheets[0].cssRules[28].style.display = "none";
+  }
+}
+groupFoldingFunc();
 
 //
 /// addBookmark Container logic
@@ -1058,19 +1055,19 @@ const drawAddBookmark = () => {
   };
   cancelBtn.addEventListener("click", closeWindow);
   document.body.addEventListener("keyup", closeWindowKey);
-  div.addEventListener(
-    "mouseup",
-    (e) => {
-      if (e.target.className === "addBookmark") {
-        document.body.removeEventListener("keyup", closeWindowKey);
+  // div.addEventListener(
+  //   "mouseup",
+  //   (e) => {
+  //     if (e.target.className === "addBookmark") {
+  //       document.body.removeEventListener("keyup", closeWindowKey);
 
-        document
-          .querySelector(".main-section")
-          .removeChild(document.querySelector(".addBookmark"));
-      }
-    },
-    true
-  );
+  //       document
+  //         .querySelector(".main-section")
+  //         .removeChild(document.querySelector(".addBookmark"));
+  //     }
+  //   },
+  //   true
+  // );
   //
 
   //checkbox logic
@@ -1115,6 +1112,7 @@ const drawAddBookmark = () => {
     } else {
       const newBookmark = {
         groupName: newGroupName,
+        folded: false,
         bookmark: [
           {
             name: name,
@@ -1129,7 +1127,7 @@ const drawAddBookmark = () => {
       localStorage.setItem("Bookmarks", bookmarksString);
       createBookmarkGroup(null, name, url, newGroupName);
       appendIcons();
-      collExpBookmarksFunc();
+      // collExpBookmarksFunc();
     }
     closeWindow();
   });
@@ -1182,7 +1180,6 @@ const deleteBtnLogic = (domElement) => {
                 group.bookmark.splice(index, 1);
               }
               createUndoElement(
-                "deletion",
                 group.bookmark,
                 index,
                 bookamrk,
@@ -1199,81 +1196,35 @@ const deleteBtnLogic = (domElement) => {
     } else {
       // delete group
 
-      const div1 = document.createElement("div");
-      document.querySelector(".main-section").appendChild(div1);
-      div1.classList.add("confirmDiv");
-      const form = document.createElement("form");
-      div1.appendChild(form);
-      const h2 = document.createElement("h2");
-      h2.textContent = "Are you sure you want to delete the whole group?";
-      form.appendChild(h2);
-      const div2 = document.createElement("div");
-      form.appendChild(div2);
-      const inputYes = document.createElement("input");
-      inputYes.setAttribute("value", "Confirm");
-      inputYes.setAttribute("type", "button");
-      inputYes.classList.add("button", "confirmBtn");
-      const inputNo = document.createElement("input");
-      inputNo.setAttribute("value", "Cancel");
-      inputNo.setAttribute("type", "button");
-      inputNo.classList.add("button", "cancelBtn");
-      div2.appendChild(inputYes);
-      div2.appendChild(inputNo);
+      const domParent = element.parentNode.parentNode.parentNode;
+      const domElement = element.parentNode.parentNode;
 
-      document.querySelector(".confirmBtn").addEventListener("click", () => {
-        console.info("Group has been deleted");
-        if (element.parentNode.parentNode.parentNode) {
-          element.parentNode.parentNode.parentNode.removeChild(
-            element.parentNode.parentNode
-          );
-        }
-        const name = element.textContent;
-        bookmarks.forEach((column) => {
-          column.groups.forEach((group) => {
-            if (group.groupName === name) {
-              const index = column.groups.indexOf(group);
-              if (index > -1) {
-                column.groups.splice(index, 1);
-              }
-              let bookmarksString = JSON.stringify(bookmarks);
-              localStorage.setItem("Bookmarks", bookmarksString);
+      if (domParent) {
+        domParent.removeChild(domElement);
+      }
+      const name = element.textContent;
+      const array = bookmarks;
+
+      bookmarks.forEach((column) => {
+        column.groups.forEach((group) => {
+          if (group.groupName === name) {
+            const index = column.groups.indexOf(group);
+            if (index > -1) {
+              column.groups.splice(index, 1);
             }
-          });
-        });
+            createUndoElement(
+              column.groups,
+              index,
+              group,
+              domElement,
+              domParent
+            );
 
-        if (document.querySelector(".confirmDiv").parentNode) {
-          document
-            .querySelector(".confirmDiv")
-            .parentNode.removeChild(document.querySelector(".confirmDiv"));
-        }
-      });
-
-      document.querySelector(".cancelBtn").addEventListener("click", () => {
-        if (document.querySelector(".confirmDiv").parentNode) {
-          document
-            .querySelector(".confirmDiv")
-            .parentNode.removeChild(document.querySelector(".confirmDiv"));
-        }
-      });
-      //close window on "escape" and "mouse click"
-      const closeWindowKey = (e) => {
-        if (e.key == "Escape") {
-          document.querySelector(".main-section").removeChild(div1);
-          document.body.removeEventListener("keyup", closeWindowKey);
-        }
-      };
-      document.body.addEventListener("keyup", closeWindowKey);
-      div1.addEventListener(
-        "mouseup",
-        (e) => {
-          if (e.target.className === "confirmDiv") {
-            document.body.removeEventListener("keyup", closeWindowKey);
-
-            document.querySelector(".main-section").removeChild(div1);
+            let bookmarksString = JSON.stringify(bookmarks);
+            localStorage.setItem("Bookmarks", bookmarksString);
           }
-        },
-        true
-      );
+        });
+      });
     }
     if (document.querySelector(".rmb-popup").parentNode) {
       document
@@ -1376,19 +1327,19 @@ const editBtnLogic = (domElement) => {
         }
       };
       document.body.addEventListener("keyup", closeWindowKey);
-      document.querySelector(".editDiv").addEventListener(
-        "mouseup",
-        (e) => {
-          if (e.target.className === "editDiv") {
-            document.body.removeEventListener("keyup", closeWindowKey);
+      // document.querySelector(".editDiv").addEventListener(
+      //   "mouseup",
+      //   (e) => {
+      //     if (e.target.className === "editDiv") {
+      //       document.body.removeEventListener("keyup", closeWindowKey);
 
-            document
-              .querySelector(".main-section")
-              .removeChild(document.querySelector(".editDiv"));
-          }
-        },
-        true
-      );
+      //       document
+      //         .querySelector(".main-section")
+      //         .removeChild(document.querySelector(".editDiv"));
+      //     }
+      //   },
+      //   true
+      // );
     } else {
       //edit group
       const name = element.textContent;
@@ -1430,19 +1381,7 @@ const editBtnLogic = (domElement) => {
         }
       };
       document.body.addEventListener("keyup", closeWindowKey);
-      document.querySelector(".editDiv").addEventListener(
-        "mouseup",
-        (e) => {
-          if (e.target.className === "editDiv") {
-            document.body.removeEventListener("keyup", closeWindowKey);
-
-            document
-              .querySelector(".main-section")
-              .removeChild(document.querySelector(".editDiv"));
-          }
-        },
-        true
-      );
+  
     }
     if (document.querySelector(".rmb-popup").parentNode) {
       document
@@ -1471,194 +1410,442 @@ const drawSettings = () => {
   h1.textContent = "Settings";
   divMenu.appendChild(h1);
 
-  //apperance
-  const divAppe = document.createElement("div");
-  divAppe.classList.add("setting-menu-appearance");
-  divMenu.appendChild(divAppe);
-  const h2Appe = document.createElement("h2");
-  h2Appe.textContent = "Apperance";
-  divAppe.appendChild(h2Appe);
-  const divTheme = document.createElement("div");
-  divTheme.classList.add("setting-menu-appearance-theme");
-  divAppe.appendChild(divTheme);
-  const selectTheme = document.createElement("select");
-  selectTheme.classList.add("etting-menu-appearance-selectColorTheme", "input");
-  selectTheme.setAttribute("autocomplete", "off");
-  divTheme.appendChild(selectTheme);
-  const listOfOptions = [
-    {
-      value: "auto",
-      name: "Auto (based on your system setting)",
-    },
-    {
-      value: "light",
-      name: "Light Mode",
-    },
-    {
-      value: "dark",
-      name: "Dark Mode",
-    },
-    {
-      value: "creamy",
-      name: "Creamy (Light)",
-    },
-    {
-      value: "firefox",
-      name: "Firefox Inspired (Dark)",
-    },
-    {
-      value: "midnight",
-      name: "Midnight (Dark)",
-    },
-    {
-      value: "jetblack",
-      name: "JetBlack (Dark)",
-    },
-    {
-      value: "custom",
-      name: "Custom",
-    },
-  ];
-  listOfOptions.forEach((element) => {
-    const option = document.createElement("option");
-    option.setAttribute("value", element.value);
-    option.textContent = element.name;
-    selectTheme.appendChild(option);
-  });
-  const divColorPickers = document.createElement("div");
-  divColorPickers.classList.add("setting-menu-appearance-colorPickers");
-  divColorPickers.setAttribute("data-visible", "false");
-  divTheme.appendChild(divColorPickers);
-  const listOfColors = [
-    {
-      value: "background",
-      name: "Background",
-    },
-    {
-      value: "primary",
-      name: "Primary",
-    },
-    {
-      value: "secondary",
-      name: "Secondary",
-    },
-    {
-      value: "accent",
-      name: "Accent",
-    },
-    {
-      value: "text",
-      name: "Text",
-    },
-  ];
-  listOfColors.forEach((element) => {
-    const div = document.createElement("div");
-    divColorPickers.appendChild(div);
-    const input = document.createElement("input");
-    input.setAttribute("type", "color");
-    input.setAttribute("name", element.value);
-    input.setAttribute("autocomplete", "off");
-    input.classList.add("input", `${element.value}Color-input`);
-    div.appendChild(input);
-    const p = document.createElement("p");
-    p.classList.add("colorPickerName");
-    p.textContent = element.name;
-    div.appendChild(p);
-  });
-  const divAppeSett = document.createElement("div");
-  divAppeSett.classList.add("setting-menu-appearance-settings");
-  divAppe.appendChild(divAppeSett);
-  const labelMenuIco = document.createElement("label");
-  labelMenuIco.textContent = "Hide main button in right top corner";
-  divAppeSett.appendChild(labelMenuIco);
-  const inputMenuIco = document.createElement("input");
-  inputMenuIco.setAttribute("type", "checkbox");
-  inputMenuIco.setAttribute("autocomplete", "off");
-  inputMenuIco.classList.add(".hideMenuBtnCheckBox");
-  labelMenuIco.appendChild(inputMenuIco);
+  const leftColumn = () => {
+    const leftDiv = document.createElement("div");
+    leftDiv.classList.add("leftSettings");
+    divMenu.appendChild(leftDiv);
 
-  const labelLinkIco = document.createElement("label");
-  labelLinkIco.textContent = "Hide website icons next to links";
-  divAppeSett.appendChild(labelLinkIco);
-  const inputLinkIco = document.createElement("input");
-  inputLinkIco.setAttribute("type", "checkbox");
-  inputLinkIco.setAttribute("autocomplete", "off");
-  inputLinkIco.classList.add(".hideLinkIconCheckbox");
-  labelLinkIco.appendChild(inputLinkIco);
+    //apperance
+    const divAppe = document.createElement("div");
+    divAppe.classList.add("setting-menu-appearance");
+    leftDiv.appendChild(divAppe);
+    const h2Appe = document.createElement("h2");
+    h2Appe.textContent = "Apperance";
+    divAppe.appendChild(h2Appe);
+    const colorLabel = document.createElement("label");
+    colorLabel.textContent = "Color Theme";
+    divAppe.appendChild(colorLabel);
 
-  //Import Export
+    const divTheme = document.createElement("div");
+    divTheme.classList.add("setting-menu-appearance-theme");
+    colorLabel.appendChild(divTheme);
+    const selectTheme = document.createElement("select");
+    selectTheme.classList.add(
+      "etting-menu-appearance-selectColorTheme",
+      "input"
+    );
+    selectTheme.setAttribute("autocomplete", "off");
+    divTheme.appendChild(selectTheme);
+    const listOfOptions = [
+      {
+        value: "auto",
+        name: "Auto (based on your system setting)",
+      },
+      {
+        value: "light",
+        name: "Light Mode",
+      },
+      {
+        value: "dark",
+        name: "Dark Mode",
+      },
+      {
+        value: "creamy",
+        name: "Creamy (Light)",
+      },
+      {
+        value: "firefox",
+        name: "Firefox Inspired (Dark)",
+      },
+      {
+        value: "midnight",
+        name: "Midnight (Dark)",
+      },
+      {
+        value: "jetblack",
+        name: "JetBlack (Dark)",
+      },
+      {
+        value: "custom",
+        name: "Custom",
+      },
+    ];
+    listOfOptions.forEach((element) => {
+      const option = document.createElement("option");
+      option.setAttribute("value", element.value);
+      option.textContent = element.name;
+      selectTheme.appendChild(option);
+    });
+    const divColorPickers = document.createElement("div");
+    divColorPickers.classList.add("setting-menu-appearance-colorPickers");
+    divColorPickers.setAttribute("data-visible", "false");
+    divTheme.appendChild(divColorPickers);
+    const listOfColors = [
+      {
+        value: "background",
+        name: "Background",
+      },
+      {
+        value: "primary",
+        name: "Primary",
+      },
+      {
+        value: "secondary",
+        name: "Secondary",
+      },
+      {
+        value: "accent",
+        name: "Accent",
+      },
+      {
+        value: "text",
+        name: "Text",
+      },
+    ];
+    listOfColors.forEach((element) => {
+      const div = document.createElement("div");
+      divColorPickers.appendChild(div);
+      const input = document.createElement("input");
+      input.setAttribute("type", "color");
+      input.setAttribute("name", element.value);
+      input.setAttribute("autocomplete", "off");
+      input.classList.add("input", `${element.value}Color-input`);
+      div.appendChild(input);
+      const p = document.createElement("p");
+      p.classList.add("colorPickerName");
+      p.textContent = element.name;
+      div.appendChild(p);
+    });
+    const divAppeSett = document.createElement("div");
+    divAppeSett.classList.add("setting-menu-appearance-settings");
+    divAppe.appendChild(divAppeSett);
+    const labelMenuIco = document.createElement("label");
+    labelMenuIco.textContent = "Hide action buttons in navbar";
+    divAppeSett.appendChild(labelMenuIco);
+    const inputMenuIco = document.createElement("input");
+    inputMenuIco.setAttribute("type", "checkbox");
+    inputMenuIco.setAttribute("autocomplete", "off");
+    inputMenuIco.classList.add("hideMenuBtnCheckBox","settingInput");
+    labelMenuIco.appendChild(inputMenuIco);
 
-  const divImpExp = document.createElement("div");
-  divImpExp.classList.add("settings-menu-importExport");
+    const labelLinkIco = document.createElement("label");
+    labelLinkIco.textContent = "Hide website icons";
+    divAppeSett.appendChild(labelLinkIco);
+    const inputLinkIco = document.createElement("input");
+    inputLinkIco.setAttribute("type", "checkbox");
+    inputLinkIco.setAttribute("autocomplete", "off");
+    inputLinkIco.classList.add("hideLinkIconCheckbox","settingInput");
+    labelLinkIco.appendChild(inputLinkIco);
 
-  divMenu.appendChild(divImpExp);
-  const h2ImpExp = document.createElement("h2");
-  h2ImpExp.textContent = "Import/Export Bookmarks";
-  divImpExp.appendChild(h2ImpExp);
-  const divImpExpCont = document.createElement("div");
-  divImpExpCont.classList.add("settings-menu-importExport-content");
-  divImpExp.appendChild(divImpExpCont);
-  const divImpExpBtnCon = document.createElement("div");
-  divImpExpBtnCon.classList.add("settings-menu-btnContainer");
-  divImpExpCont.appendChild(divImpExpBtnCon);
-  const exportBtn = document.createElement("button");
-  exportBtn.setAttribute("type", "button");
-  exportBtn.classList.add(
-    "settings-menu-export",
-    "settings-menu-btn",
-    "button"
-  );
-  exportBtn.textContent = "Export Bookmarks";
-  divImpExpBtnCon.appendChild(exportBtn);
+    //apperance settings
+    if (hideMenuIcons === true) {
+      inputMenuIco.click();
+    }
+    inputMenuIco.addEventListener("input", (e) => {
+      hideMenuIcons = e.target.checked;
+      if (e.target.checked !== true) {
+        document
+          .querySelector(".main-nav-icon")
+          .setAttribute("data-visible", "true");
+      } else {
+        document
+          .querySelector(".main-nav-icon")
+          .setAttribute("data-visible", "false");
+      }
+      let hideMenuIconsString = JSON.stringify(hideMenuIcons);
+      localStorage.setItem("hideMenuIcons", hideMenuIconsString);
+    });
+    if (hideLinkIcons === true) {
+      inputLinkIco.click();
+    }
+    inputLinkIco.addEventListener("input", (e) => {
+      hideLinkIcons = e.target.checked;
 
-  const importBtn = document.createElement("button");
-  importBtn.setAttribute("type", "button");
-  importBtn.classList.add(
-    "settings-menu-import",
-    "settings-menu-btn",
-    "button"
-  );
-  importBtn.textContent = "Import Bookmarks";
-  divImpExpBtnCon.appendChild(importBtn);
-  const divTextArea = document.createElement("div");
-  divTextArea.classList.add("settings-menu-textDiv");
-  divImpExpCont.appendChild(divTextArea);
+      let hideLinkIconsString = JSON.stringify(hideLinkIcons);
+      localStorage.setItem("hideLinkIcons", hideLinkIconsString);
+      while (document.querySelector(".main-section-bookmarks").firstChild) {
+        document
+          .querySelector(".main-section-bookmarks")
+          .removeChild(
+            document.querySelector(".main-section-bookmarks").firstChild
+          );
+      }
+      createBookmarkGroup(bookmarks);
+      appendIcons();
+    });
+    //
 
-  // Homepage Url
-  const divTab = document.createElement("div");
-  divTab.classList.add("settings-menu-newTab");
-  divMenu.appendChild(divTab);
+    // change color theme
+    if (colorScheme.mode !== "custom") {
+      divColorPickers.setAttribute("data-visible", "false");
+    } else {
+      divColorPickers.setAttribute("data-visible", "true");
+      document.querySelector(".backgroundColor-input").value =
+        colorScheme.customeColors.background;
+      document.querySelector(".primaryColor-input").value =
+        colorScheme.customeColors.primary;
+      document.querySelector(".secondaryColor-input").value =
+        colorScheme.customeColors.secondary;
+      document.querySelector(".accentColor-input").value =
+        colorScheme.customeColors.accent;
+      document.querySelector(".textColor-input").value =
+        colorScheme.customeColors.text;
+      document;
+    }
+    selectTheme.value = colorScheme.mode;
+    selectTheme.addEventListener("input", () => {
+      changeTheme(selectTheme.value);
+    });
+    document
+      .querySelectorAll(".setting-menu-appearance-colorPickers input")
+      .forEach((element) => {
+        element.addEventListener("input", changeCustomePalete);
+      });
+    changeCustomePalete;
+    //
 
-  const h2Tab = document.createElement("h2");
-  h2Tab.textContent = "Setup your homepage URL";
-  divTab.appendChild(h2Tab);
+    //features
+    const divFeatures = document.createElement("div");
+    divFeatures.classList.add("setting-menu-features");
+    leftDiv.appendChild(divFeatures);
+    const h2divFeatures = document.createElement("h2");
+    h2divFeatures.textContent = "Features";
+    divFeatures.appendChild(h2divFeatures);
 
-  const divTabCont = document.createElement("div");
-  divTabCont.classList.add("settings-menu-newTab-content");
-  divTab.appendChild(divTabCont);
-  const pTabCont = document.createElement("div");
-  pTabCont.textContent =
-    "If you want this extension to be your homepage, set the homepage to the URL below.";
-  divTabCont.appendChild(pTabCont);
-  const labelTabCont = document.createElement("label");
-  labelTabCont.classList.add("settings-menu-newTab-label");
-  labelTabCont.textContent = "URL";
-  divTabCont.appendChild(labelTabCont);
-  const formTabCont = document.createElement("form");
-  formTabCont.classList.add("settings-menu-form");
-  formTabCont.setAttribute("for", "URL");
-  labelTabCont.appendChild(formTabCont);
+    const divFold = document.createElement("div");
+    divFeatures.appendChild(divFold);
 
-  const inputTabCont = document.createElement("input");
-  inputTabCont.setAttribute("type", "text");
-  inputTabCont.classList.add("input", "settings-menu-form-inp");
-  inputTabCont.value = window.location.href;
-  formTabCont.appendChild(inputTabCont);
-  const btnTabCont = document.createElement("button");
-  btnTabCont.setAttribute("type", "button");
-  btnTabCont.classList.add("button", "settings-menu-form-btn");
-  btnTabCont.textContent = "Copy";
-  formTabCont.appendChild(btnTabCont);
+    const labelFold = document.createElement("label");
+    labelFold.textContent = "Group folding";
+    divFold.appendChild(labelFold);
+    const inputFold = document.createElement("input");
+    inputFold.setAttribute("type", "checkbox");
+    inputFold.setAttribute("autocomplete", "off");
+    inputFold.classList.add("toggleGroupFolding","settingInput");
+    labelFold.appendChild(inputFold);
+    const pFold = document.createElement("p");
+    pFold.textContent =
+      "Clicking on a group header will hide/show the links in that group.";
+    divFold.appendChild(pFold);
+
+    //toggle group folding function
+    if (groupFolding === true) {
+      inputFold.click();
+    }
+    inputFold.addEventListener("input", (e) => {
+      if (e.target.checked === true) {
+        groupFolding = true;
+      } else {
+        groupFolding = false;
+      }
+      let groupFoldingString = JSON.stringify(groupFolding);
+      localStorage.setItem("groupFolding", groupFoldingString);
+      groupFoldingFunc();
+    });
+  };
+  const rightColumn = () => {
+    const rightDiv = document.createElement("div");
+    rightDiv.classList.add("rightSettings");
+
+    divMenu.appendChild(rightDiv);
+
+    // Homepage Url
+    const divTab = document.createElement("div");
+    divTab.classList.add("settings-menu-newTab");
+    rightDiv.appendChild(divTab);
+
+    const h2Tab = document.createElement("h2");
+    h2Tab.textContent = "Setup your homepage URL";
+    divTab.appendChild(h2Tab);
+
+    const divTabCont = document.createElement("div");
+    divTabCont.classList.add("settings-menu-newTab-content");
+    divTab.appendChild(divTabCont);
+    const pTabCont = document.createElement("p");
+    pTabCont.textContent =
+      "If you want this extension to be your homepage, set the homepage to the URL below.";
+    divTabCont.appendChild(pTabCont);
+    const labelTabCont = document.createElement("label");
+    labelTabCont.classList.add("settings-menu-newTab-label");
+    labelTabCont.textContent = "URL";
+    divTabCont.appendChild(labelTabCont);
+    const formTabCont = document.createElement("form");
+    formTabCont.classList.add("settings-menu-form");
+    formTabCont.setAttribute("for", "URL");
+    labelTabCont.appendChild(formTabCont);
+
+    const inputTabCont = document.createElement("input");
+    inputTabCont.setAttribute("type", "text");
+    inputTabCont.classList.add("input", "settings-menu-form-inp");
+    inputTabCont.value = window.location.href;
+    formTabCont.appendChild(inputTabCont);
+    const btnTabCont = document.createElement("button");
+    btnTabCont.setAttribute("type", "button");
+    btnTabCont.classList.add("button", "settings-menu-form-btn");
+    btnTabCont.textContent = "Copy";
+    formTabCont.appendChild(btnTabCont);
+    btnTabCont.addEventListener("click", (e) => {
+      inputTabCont.select();
+      inputTabCont.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(inputTabCont.value);
+    });
+
+    //Import Export
+
+    const divImpExp = document.createElement("div");
+    divImpExp.classList.add("settings-menu-importExport");
+
+    rightDiv.appendChild(divImpExp);
+    const h2ImpExp = document.createElement("h2");
+    h2ImpExp.textContent = "Import/Export Bookmarks";
+    divImpExp.appendChild(h2ImpExp);
+    const divImpExpCont = document.createElement("div");
+    divImpExpCont.classList.add("settings-menu-importExport-content");
+    divImpExp.appendChild(divImpExpCont);
+    const divImpExpBtnCon = document.createElement("div");
+    divImpExpBtnCon.classList.add("settings-menu-btnContainer");
+    divImpExpCont.appendChild(divImpExpBtnCon);
+    const exportBtn = document.createElement("button");
+    exportBtn.setAttribute("type", "button");
+    exportBtn.classList.add(
+      "settings-menu-export",
+      "settings-menu-btn",
+      "button"
+    );
+    exportBtn.textContent = "Export Bookmarks";
+    divImpExpBtnCon.appendChild(exportBtn);
+
+    const importBtn = document.createElement("button");
+    importBtn.setAttribute("type", "button");
+    importBtn.classList.add(
+      "settings-menu-import",
+      "settings-menu-btn",
+      "button"
+    );
+    importBtn.textContent = "Import Bookmarks";
+    divImpExpBtnCon.appendChild(importBtn);
+    const divTextArea = document.createElement("div");
+    divTextArea.classList.add("settings-menu-textDiv");
+    divImpExpCont.appendChild(divTextArea);
+
+    //import export bookmarks logic
+    if (importBtn.getAttribute("listener") !== "true") {
+      importBtn.setAttribute("listener", "true");
+      importBtn.addEventListener("click", () => {
+        while (divTextArea.firstChild) {
+          divTextArea.removeChild(divTextArea.firstChild);
+        }
+        const paragraph = document.createElement("p");
+        paragraph.textContent =
+          "If you have export code from another device or browser, you can paste it in the box below and click Import to load the new bookmarks. Warning: This will replace the current bookmarks. ";
+        divTextArea.appendChild(paragraph);
+        const textarea = document.createElement("textarea");
+        textarea.classList.add("settings-menu-textarea", "input");
+        divTextArea.appendChild(textarea);
+
+        const btnDiv = document.createElement("div");
+        divTextArea.appendChild(btnDiv);
+
+        const btn1 = document.createElement("button");
+        btn1.classList.add("button");
+        btn1.setAttribute("type", "button");
+        btn1.classList.add("importBtn", "btnIsDisabled", "importbtn");
+
+        btn1.textContent = "Import";
+        btnDiv.appendChild(btn1);
+        const btn2 = document.createElement("button");
+        btn2.classList.add("button");
+        btn2.setAttribute("type", "button");
+
+        btn2.textContent = "Close Import";
+        btnDiv.appendChild(btn2);
+        let regex =
+          /^\[\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\}\]$/i;
+
+        textarea.addEventListener("input", (e) => {
+          if (
+            regex.test(textarea.value) ||
+            (textarea.value == "" && textarea.value == " ")
+          ) {
+            btn1.classList.remove("importBtn", "btnIsDisabled");
+          } else {
+            btn1.classList.add("importBtn", "btnIsDisabled");
+          }
+        });
+
+        btn1.addEventListener("click", (e) => {
+          if (regex.test(textarea.value)) {
+            localStorage.setItem("Bookmarks", textarea.value);
+            while (
+              document.querySelector(".main-section-bookmarks").firstChild
+            ) {
+              document
+                .querySelector(".main-section-bookmarks")
+                .removeChild(
+                  document.querySelector(".main-section-bookmarks").firstChild
+                );
+            }
+            bookmarksString = localStorage.getItem("Bookmarks");
+            bookmarks = JSON.parse(bookmarksString);
+
+            createBookmarkGroup(bookmarks);
+            // collExpBookmarksFunc();
+            appendIcons();
+          } else {
+            return;
+          }
+        });
+        btn2.addEventListener("click", (e) => {
+          while (divTextArea.firstChild) {
+            divTextArea.removeChild(divTextArea.firstChild);
+          }
+        });
+      });
+    }
+    if (exportBtn.getAttribute("listener") !== "true") {
+      exportBtn.setAttribute("listener", "true");
+      exportBtn.addEventListener("click", () => {
+        while (divTextArea.firstChild) {
+          divTextArea.removeChild(divTextArea.firstChild);
+        }
+        const paragraph = document.createElement("p");
+        paragraph.textContent =
+          "The code below can be used to import your bookmarks on another device or web browser.";
+        divTextArea.appendChild(paragraph);
+        const textarea = document.createElement("textarea");
+        textarea.classList.add("settings-menu-textarea", "input");
+        textarea.value = localStorage.getItem("Bookmarks");
+        divTextArea.appendChild(textarea);
+        divTextArea.appendChild(textarea);
+
+        const btnDiv = document.createElement("div");
+        divTextArea.appendChild(btnDiv);
+
+        const btn1 = document.createElement("input");
+        btn1.classList.add("button", "cpybtn");
+        btn1.value = "Copy Code";
+        btnDiv.appendChild(btn1);
+        const btn2 = document.createElement("input");
+        btn2.classList.add("button");
+        btn2.value = "Close Export";
+        btnDiv.appendChild(btn2);
+
+        btn1.addEventListener("click", (e) => {
+          textarea.select();
+          textarea.setSelectionRange(0, 99999);
+          navigator.clipboard.writeText(textarea.value);
+        });
+        btn2.addEventListener("click", (e) => {
+          while (divTextArea.firstChild) {
+            divTextArea.removeChild(divTextArea.firstChild);
+          }
+        });
+      });
+    }
+    //
+  };
+  leftColumn();
+  rightColumn();
 
   //bottom links
 
@@ -1680,187 +1867,6 @@ const drawSettings = () => {
   a3.setAttribute("target", "_blank");
   a3.textContent = "My Website";
   divLinks.appendChild(a3);
-
-  //apperance settings
-  if (hideMenuIcons === true) {
-    inputMenuIco.click();
-  }
-  inputMenuIco.addEventListener("input", (e) => {
-    hideMenuIcons = e.target.checked;
-    if (e.target.checked !== true) {
-      document
-        .querySelector(".main-nav-icon")
-        .setAttribute("data-visible", "true");
-    } else {
-      document
-        .querySelector(".main-nav-icon")
-        .setAttribute("data-visible", "false");
-    }
-    let hideMenuIconsString = JSON.stringify(hideMenuIcons);
-    localStorage.setItem("hideMenuIcons", hideMenuIconsString);
-  });
-  if (hideLinkIcons === true) {
-    inputLinkIco.click();
-  }
-  inputLinkIco.addEventListener("input", (e) => {
-    hideLinkIcons = e.target.checked;
-
-    let hideLinkIconsString = JSON.stringify(hideLinkIcons);
-    localStorage.setItem("hideLinkIcons", hideLinkIconsString);
-    while (document.querySelector(".main-section-bookmarks").firstChild) {
-      document
-        .querySelector(".main-section-bookmarks")
-        .removeChild(
-          document.querySelector(".main-section-bookmarks").firstChild
-        );
-    }
-    createBookmarkGroup(bookmarks);
-    appendIcons();
-  });
-  //
-
-  //import export bookmarks logic
-  if (importBtn.getAttribute("listener") !== "true") {
-    importBtn.setAttribute("listener", "true");
-    importBtn.addEventListener("click", () => {
-      while (divTextArea.firstChild) {
-        divTextArea.removeChild(divTextArea.firstChild);
-      }
-      const paragraph = document.createElement("p");
-      paragraph.textContent =
-        "If you have export code from another device or browser, you can paste it in the box below and click Import to load the new bookmarks. Warning: This will replace the current bookmarks. ";
-      divTextArea.appendChild(paragraph);
-      const textarea = document.createElement("textarea");
-      textarea.classList.add("settings-menu-textarea", "input");
-      divTextArea.appendChild(textarea);
-
-      const btnDiv = document.createElement("div");
-      divTextArea.appendChild(btnDiv);
-
-      const btn1 = document.createElement("button");
-      btn1.classList.add("button");
-      btn1.setAttribute("type", "button");
-      btn1.classList.add("importBtn", "btnIsDisabled", "importbtn");
-
-      btn1.textContent = "Import";
-      btnDiv.appendChild(btn1);
-      const btn2 = document.createElement("button");
-      btn2.classList.add("button");
-      btn2.setAttribute("type", "button");
-
-      btn2.textContent = "Close Import";
-      btnDiv.appendChild(btn2);
-      let regex =
-        /^\[\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\},\{"[A-Za-z]+":\[[\s\S]*]\}\]$/i;
-
-      textarea.addEventListener("input", (e) => {
-        if (
-          regex.test(textarea.value) ||
-          (textarea.value == "" && textarea.value == " ")
-        ) {
-          btn1.classList.remove("importBtn", "btnIsDisabled");
-        } else {
-          btn1.classList.add("importBtn", "btnIsDisabled");
-        }
-      });
-
-      btn1.addEventListener("click", (e) => {
-        if (regex.test(textarea.value)) {
-          localStorage.setItem("Bookmarks", textarea.value);
-          while (document.querySelector(".main-section-bookmarks").firstChild) {
-            document
-              .querySelector(".main-section-bookmarks")
-              .removeChild(
-                document.querySelector(".main-section-bookmarks").firstChild
-              );
-          }
-          bookmarksString = localStorage.getItem("Bookmarks");
-          bookmarks = JSON.parse(bookmarksString);
-
-          createBookmarkGroup(bookmarks);
-          collExpBookmarksFunc();
-          appendIcons();
-        } else {
-          return;
-        }
-      });
-      btn2.addEventListener("click", (e) => {
-        while (divTextArea.firstChild) {
-          divTextArea.removeChild(divTextArea.firstChild);
-        }
-      });
-    });
-  }
-  if (exportBtn.getAttribute("listener") !== "true") {
-    exportBtn.setAttribute("listener", "true");
-    exportBtn.addEventListener("click", () => {
-      while (divTextArea.firstChild) {
-        divTextArea.removeChild(divTextArea.firstChild);
-      }
-      const paragraph = document.createElement("p");
-      paragraph.textContent =
-        "The code below can be used to import your bookmarks on another device or web browser.";
-      divTextArea.appendChild(paragraph);
-      const textarea = document.createElement("textarea");
-      textarea.classList.add("settings-menu-textarea", "input");
-      textarea.value = localStorage.getItem("Bookmarks");
-      divTextArea.appendChild(textarea);
-      divTextArea.appendChild(textarea);
-
-      const btnDiv = document.createElement("div");
-      divTextArea.appendChild(btnDiv);
-
-      const btn1 = document.createElement("input");
-      btn1.classList.add("button", "cpybtn");
-      btn1.value = "Copy Code";
-      btnDiv.appendChild(btn1);
-      const btn2 = document.createElement("input");
-      btn2.classList.add("button");
-      btn2.value = "Close Export";
-      btnDiv.appendChild(btn2);
-
-      btn1.addEventListener("click", (e) => {
-        textarea.select();
-        textarea.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(textarea.value);
-      });
-      btn2.addEventListener("click", (e) => {
-        while (divTextArea.firstChild) {
-          divTextArea.removeChild(divTextArea.firstChild);
-        }
-      });
-    });
-  }
-  //
-
-  // change color theme
-  if (colorScheme.mode !== "custom") {
-    divColorPickers.setAttribute("data-visible", "false");
-  } else {
-    divColorPickers.setAttribute("data-visible", "true");
-    document.querySelector(".backgroundColor-input").value =
-      colorScheme.customeColors.background;
-    document.querySelector(".primaryColor-input").value =
-      colorScheme.customeColors.primary;
-    document.querySelector(".secondaryColor-input").value =
-      colorScheme.customeColors.secondary;
-    document.querySelector(".accentColor-input").value =
-      colorScheme.customeColors.accent;
-    document.querySelector(".textColor-input").value =
-      colorScheme.customeColors.text;
-    document;
-  }
-  selectTheme.value = colorScheme.mode;
-  selectTheme.addEventListener("input", () => {
-    changeTheme(selectTheme.value);
-  });
-  document
-    .querySelectorAll(".setting-menu-appearance-colorPickers input")
-    .forEach((element) => {
-      element.addEventListener("input", changeCustomePalete);
-    });
-  changeCustomePalete;
-  //
 
   // close window
   const closeWindow = () => {
@@ -1912,7 +1918,6 @@ document.querySelector(".settings-btn").addEventListener("click", (e) => {
 });
 
 // showSettingsUI();
-collExpBookmarksFunc();
 
 //modify color theme
 
@@ -1921,7 +1926,6 @@ const changeTheme = (value) => {
     ".setting-menu-appearance-colorPickers"
   );
   let mode;
-  console.log(value);
   if (value !== "custom") {
     switch (value) {
       case "auto":
@@ -2055,9 +2059,7 @@ const changeTheme = (value) => {
 };
 function changeCustomePalete(e) {
   const colorName = e.target.name;
-  console.log(colorName);
   const value = e.target.value;
-  console.log(value);
 
   document.querySelector(".backgroundColor-input").value =
     colorScheme.customeColors.background;
@@ -2113,7 +2115,6 @@ if (colorScheme.mode === "custom") {
 //undo div
 
 const createUndoElement = (
-  type,
   array,
   arrayIndex,
   arrayElem,
@@ -2122,12 +2123,18 @@ const createUndoElement = (
 ) => {
   // edit, deletion
   let childElem;
+  let nameElem;
+  if (arrayElem.name !== undefined) {
+    nameElem = arrayElem.name;
+  } else {
+    nameElem = arrayElem.groupName;
+  }
   if (typeof element != "undefined" && element != null) {
     const undoDiv = document.createElement("div");
     document.querySelector(".undoContainer").appendChild(undoDiv);
     childElem = undoDiv;
     const span = document.createElement("span");
-    span.textContent = `Undo ${type} of ${arrayElem.name}`;
+    span.textContent = `${nameElem} has been deleted`;
     undoDiv.appendChild(span);
 
     const button = document.createElement("button");
@@ -2141,16 +2148,11 @@ const createUndoElement = (
 
     undoDiv.appendChild(divProgers);
     button.addEventListener("click", (e) => {
-      if (type === "deletion") {
-        domParent.insertBefore(domElem, domParent.childNodes[arrayIndex]);
-        array.splice(arrayIndex, 0, arrayElem);
-        let bookmarksString = JSON.stringify(bookmarks);
-        localStorage.setItem("Bookmarks", bookmarksString);
-        document
-          .querySelector(".undoContainer")
-          .removeChild(e.target.parentNode);
-      } else {
-      }
+      domParent.insertBefore(domElem, domParent.childNodes[arrayIndex]);
+      array.splice(arrayIndex, 0, arrayElem);
+      let bookmarksString = JSON.stringify(bookmarks);
+      localStorage.setItem("Bookmarks", bookmarksString);
+      document.querySelector(".undoContainer").removeChild(e.target.parentNode);
     });
   } else {
     const div = document.createElement("div");
@@ -2160,7 +2162,7 @@ const createUndoElement = (
     document.querySelector(".undoContainer").appendChild(undoDiv);
     childElem = undoDiv;
     const span = document.createElement("span");
-    span.textContent = `Undo ${type} of ${arrayElem.name}`;
+    span.textContent = `${nameElem} has been deleted`;
     undoDiv.appendChild(span);
 
     const button = document.createElement("button");
@@ -2174,16 +2176,11 @@ const createUndoElement = (
 
     undoDiv.appendChild(divProgers);
     button.addEventListener("click", (e) => {
-      if (type === "deletion") {
-        domParent.insertBefore(domElem, domParent.childNodes[arrayIndex]);
-        array.splice(arrayIndex, 0, arrayElem);
-        let bookmarksString = JSON.stringify(bookmarks);
-        localStorage.setItem("Bookmarks", bookmarksString);
-        document
-          .querySelector(".undoContainer")
-          .removeChild(e.target.parentNode);
-      } else {
-      }
+      domParent.insertBefore(domElem, domParent.childNodes[arrayIndex]);
+      array.splice(arrayIndex, 0, arrayElem);
+      let bookmarksString = JSON.stringify(bookmarks);
+      localStorage.setItem("Bookmarks", bookmarksString);
+      document.querySelector(".undoContainer").removeChild(e.target.parentNode);
     });
   }
 
@@ -2201,5 +2198,3 @@ const createUndoElement = (
     }
   }, 5150);
 };
-// edit, deletion
-// createUndoElement("deletion", "Reddit");
