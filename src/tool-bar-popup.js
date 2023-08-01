@@ -142,6 +142,7 @@ const addBookmark = () => {
       } else {
         const newBookmark = {
           groupName: newGroup,
+          folded: false,
           bookmark: [
             {
               name: name,
