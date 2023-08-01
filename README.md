@@ -1,6 +1,7 @@
 ###### Browser Extansion
 
 <h1 align="center">
+<img src="assets/logos/logo-22.png"></img>
  A New HOMEpage
 </h1> 
 
