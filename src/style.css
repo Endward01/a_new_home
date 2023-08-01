@@ -449,7 +449,7 @@ input:focus {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
   grid-template-rows: max-content max-content max-content;
-  height: 75%;
+  height: 100%;
   width: 70%;
   padding: 32px;
   gap: 16px;

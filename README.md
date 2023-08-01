@@ -1,24 +1,38 @@
-###### Browser Extansion 
+###### Browser Extansion
+
 # A New HOME*page*
 
 <p align="center">
- An extension for firefox and chromium browsers that adds a homepage and new tab page for your minimalistic needs.
+ An extension for firefox and chromium that adds a homepage and a new tab page for your minimalist needs.
+</p>
+
+---
+
+<h3 align="center">
+ Get it for the browser of your choice! :D
+<br></br>
+ <p align="center">
+  <a href="https://chrome.google.com/webstore/detail/a-new-homepage/koccgpapcmnpikpnelhoiopakandghpc?" target="_blank"> <img src="assets/logos/GOOGLE CHROME.svg"/></a>
+  <a href="https://microsoftedge.microsoft.com/addons/detail/a-new-homepage/abdclhnogpcefdiginfhfcbjbklepoka" target="_blank"> <img src="assets/logos/MICROSOFT EDGE.svg"/></a>
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/a-new-home/" target="_blank"> <img src="assets/logos/FIREFOX BROWSER.svg"/></a>
+
+ </p>
+</h3>
+
+---
+
+<p align="center">
+  <img src="assets/screenshots/1.png" />
 </p>
 
 ---
 
 <p align="center">
-  <img src="images/1.png" />
-</p>
-
----
-
-<p align="center">
-  <img src="images/2.png" width="30%" />
-  <img src="images/3.png" width="30%" />
-  <img src="images/4.png" width="30%" />
-  <img src="images/5.png" width="30%" />
-  <img src="images/6.png" width="30%" />
+  <img src="assets/screenshots/2.png" width="30%" />
+  <img src="assets/screenshots/3.png" width="30%" />
+  <img src="assets/screenshots/4.png" width="30%" />
+  <img src="assets/screenshots/5.png" width="30%" />
+  <img src="assets/screenshots/6.png" width="30%" />
 </p>
 
 ---

@@ -24,15 +24,35 @@ groupSelect();
 
 const changeStyle = () => {
   const styleSheet = document.styleSheets[0];
-  if (colorScheme[0].mode !== "custom") {
-    const mode = `:root { --first:${colorScheme[0].colors.first}; --second: ${colorScheme[0].colors.second}; --third: ${colorScheme[0].colors.third}; --accent-first: ${colorScheme[0].colors.accentFirst}; --text-color: ${colorScheme[0].colors.textColor};  }`;
-    styleSheet.deleteRule(mode);
-    styleSheet.insertRule(mode);
+  // if (colorScheme.mode !== "custom") {
+  //   const mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+  //   styleSheet.deleteRule(mode);
+  //   styleSheet.insertRule(mode);
+  // } else {
+  //   const mode = `:root { --background:${colorScheme.customeColors.background}; --primary: ${colorScheme.customeColors.primary}; --secondary: ${colorScheme.customeColors.secondary}; --accent: ${colorScheme.customeColors.accent}; --text: ${colorScheme.customeColors.text};}`;
+  //   styleSheet.deleteRule(mode);
+  //   styleSheet.insertRule(mode);
+  // }
+  if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
+    colorScheme.colors = {
+      background: "#fafafa",
+      primary: "#d2d3db",
+      secondary: "#e4e5f1",
+      accent: "#9394a5",
+      text: "#162635",
+    };
   } else {
-    const mode = `:root { --first:${colorScheme[0].customeColors.first}; --second: ${colorScheme[0].customeColors.second}; --third: ${colorScheme[0].customeColors.third}; --accent-first: ${colorScheme[0].customeColors.accentFirst}; --text-color: ${colorScheme[0].customeColors.textColor}; }`;
-    styleSheet.deleteRule(mode);
-    styleSheet.insertRule(mode);
+    colorScheme.colors = {
+      background: "#202225",
+      primary: "#292b2f",
+      secondary: "#2f3136",
+      accent: "#40444b",
+      text: "#eae6da",
+    };
   }
+  mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+  styleSheet.deleteRule(mode);
+  styleSheet.insertRule(mode);
 };
 changeStyle();
 
@@ -65,7 +85,7 @@ const setValueOfActiveWebpageToInput = () => {
     },
     function (array_of_Tabs) {
       const tab = array_of_Tabs[0];
-      console.log(tab)
+      console.log(tab);
       document.querySelector(".addBookmark-form-name").value = tab.title;
       document.querySelector(".addBookmark-form-url").value = tab.url;
     }

@@ -1511,6 +1511,10 @@ const drawSettings = () => {
       name: "Midnight (Dark)",
     },
     {
+      value: "jetblack",
+      name: "JetBlack (Dark)",
+    },
+    {
       value: "custom",
       name: "Custom",
     },
@@ -1936,10 +1940,10 @@ const changeTheme = (value) => {
         } else {
           colorScheme.mode = "auto";
           colorScheme.colors = {
-            background: "#181818",
-            primary: "#3d3d3d",
-            secondary: "#212121",
-            accent: "#aaaaaa",
+            background: "#202225",
+            primary: "#292b2f",
+            secondary: "#2f3136",
+            accent: "#40444b",
             text: "#eae6da",
           };
         }
@@ -1973,10 +1977,10 @@ const changeTheme = (value) => {
         colorPickersContainer.setAttribute("data-visible", "false");
         colorScheme.mode = "dark";
         colorScheme.colors = {
-          background: "#181818",
-          primary: "#3d3d3d",
-          secondary: "#212121",
-          accent: "#aaaaaa",
+          background: "#202225",
+          primary: "#292b2f",
+          secondary: "#2f3136",
+          accent: "#40444b",
           text: "#eae6da",
         };
         break;
@@ -2003,9 +2007,19 @@ const changeTheme = (value) => {
           accent: "#00ddff",
           text: "#eae6da",
         };
-
         break;
 
+      case "jetblack":
+        colorPickersContainer.setAttribute("data-visible", "false");
+        colorScheme.mode = "midnight";
+        colorScheme.colors = {
+          background: "#181818",
+          primary: "#3d3d3d",
+          secondary: "#212121",
+          accent: "#aaaaaa",
+          text: "#eae6da",
+        };
+        break;
       default:
         break;
     }
