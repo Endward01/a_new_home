@@ -1,6 +1,8 @@
 ###### Browser Extansion
 
-# A New HOME*page*
+<h1 align="center">
+ A New HOMEpage
+</h1> 
 
 <p align="center">
  An extension for firefox and chromium that adds a homepage and a new tab page for your minimalist needs.
@@ -9,7 +11,7 @@
 ---
 
 <h3 align="center">
- Get it for the browser of your choice! :D
+ Get it for the browser of your choice!
 <br></br>
  <p align="center">
   <a href="https://chrome.google.com/webstore/detail/a-new-homepage/koccgpapcmnpikpnelhoiopakandghpc?" target="_blank"> <img src="assets/logos/GOOGLE CHROME.svg"/></a>
