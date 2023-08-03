@@ -65,12 +65,12 @@ const styleSheet = document.styleSheets[0];
 
 //on fully load website
 
-onload = () => {
-  const windowHeight = document.body.clientHeight;
-  const sectionHeight = (windowHeight * 87) / 100;
-  document.styleSheets[0].cssRules[26].style.height = `${sectionHeight}px`;
-  appendIcons();
-};
+// onload = () => {
+//   const windowHeight = document.body.clientHeight;
+//   const sectionHeight = (windowHeight * 87) / 100;
+//   document.styleSheets[0].cssRules[26].style.height = `${sectionHeight}px`;
+//   appendIcons();
+// };
 //on resize window
 
 onresize = () => {
@@ -109,9 +109,8 @@ if (
     false
   );
 }
-
 document
-  .querySelector(".main-section-bookmarks")
+  .querySelector(".main-section")
   .addEventListener("contextmenu", (element) => {
     element.preventDefault();
     if (document.querySelector(".rmb-popup") !== null) {
@@ -124,9 +123,10 @@ document
     const popUp = document.createElement("div");
     document.querySelector(".main").appendChild(popUp);
     popUp.classList.add("rmb-popup");
-    popUp.style = `top:${element.pageY}px;left:${element.pageX}px`;
+    popUp.style = `top:${element.pageY}px;left:${element.pageX + 10}px`;
 
     const text = document.elementFromPoint(element.pageX, element.pageY);
+    console.log(text);
     const topBtnDiv = document.createElement("div");
     topBtnDiv.classList.add("contextTopBtnDiv");
     popUp.appendChild(topBtnDiv);
@@ -867,7 +867,7 @@ function groupFoldingFunc() {
       }
     });
     // document.styleSheets[0].cssRules[27].style.cursor = "pointer";
-    document.styleSheets[0].cssRules[28].style.display = "block";
+    // document.styleSheets[0].cssRules[28].style.display = "block";
   } else {
     groupElem.forEach((group) => {
       if (group.getAttribute("listener") === "true") {
@@ -877,7 +877,7 @@ function groupFoldingFunc() {
     });
 
     // document.styleSheets[0].cssRules[27].style.cursor = "auto";
-    document.styleSheets[0].cssRules[28].style.display = "none";
+    // document.styleSheets[0].cssRules[28].style.display = "none";
   }
 }
 groupFoldingFunc();
@@ -1381,7 +1381,6 @@ const editBtnLogic = (domElement) => {
         }
       };
       document.body.addEventListener("keyup", closeWindowKey);
-  
     }
     if (document.querySelector(".rmb-popup").parentNode) {
       document
@@ -1465,10 +1464,10 @@ const drawSettings = () => {
         value: "jetblack",
         name: "JetBlack (Dark)",
       },
-      {
-        value: "custom",
-        name: "Custom",
-      },
+      // {
+      //   value: "custom",
+      //   name: "Custom",
+      // },
     ];
     listOfOptions.forEach((element) => {
       const option = document.createElement("option");
@@ -1525,7 +1524,7 @@ const drawSettings = () => {
     const inputMenuIco = document.createElement("input");
     inputMenuIco.setAttribute("type", "checkbox");
     inputMenuIco.setAttribute("autocomplete", "off");
-    inputMenuIco.classList.add("hideMenuBtnCheckBox","settingInput");
+    inputMenuIco.classList.add("hideMenuBtnCheckBox", "settingInput");
     labelMenuIco.appendChild(inputMenuIco);
 
     const labelLinkIco = document.createElement("label");
@@ -1534,7 +1533,7 @@ const drawSettings = () => {
     const inputLinkIco = document.createElement("input");
     inputLinkIco.setAttribute("type", "checkbox");
     inputLinkIco.setAttribute("autocomplete", "off");
-    inputLinkIco.classList.add("hideLinkIconCheckbox","settingInput");
+    inputLinkIco.classList.add("hideLinkIconCheckbox", "settingInput");
     labelLinkIco.appendChild(inputLinkIco);
 
     //apperance settings
@@ -1621,7 +1620,7 @@ const drawSettings = () => {
     const inputFold = document.createElement("input");
     inputFold.setAttribute("type", "checkbox");
     inputFold.setAttribute("autocomplete", "off");
-    inputFold.classList.add("toggleGroupFolding","settingInput");
+    inputFold.classList.add("toggleGroupFolding", "settingInput");
     labelFold.appendChild(inputFold);
     const pFold = document.createElement("p");
     pFold.textContent =

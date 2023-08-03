@@ -77,6 +77,9 @@ ul.main-section-bookmarks-ul.dragOverList {
   height: 100%;
   max-height: 100%;
 }
+.main-section-column{
+  height: max-content;
+}
 .move {
   cursor: move;
 }
@@ -139,7 +142,7 @@ ul.main-section-bookmarks-ul.dragOverList {
   height: 100%;
 }
 .main-section-bookmarks {
-  display: grid;
+  display: grid ;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   overflow-y: scroll;
@@ -764,4 +767,14 @@ input:focus {
   .main {
     width: 1440px;
   }
+}
+
+
+.todoList{
+  position: absolute;
+  top: 0;
+  left: 10px;
+}
+.todoList ul li {
+  margin-bottom: 4px;
 }
