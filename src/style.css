@@ -253,7 +253,7 @@ ul.main-section-bookmarks-ul.dragOverList {
   z-index: 10;
   /* backdrop-filter: blur(4px); */
   background-color: var(--background);
-  box-shadow: var(--accent) 0px 0px 0px 1px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 input.btnIsDisabled,
@@ -394,13 +394,13 @@ input.cpybtn {
   left: 50%;
   transform: translateX(-50%);
   padding: 4px 8px;
-  box-shadow: var(--accent) 0px 0px 0px 1px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .undo button {
   padding: 0 8px;
 }
 input:focus {
-  /* background-color: var(--second); */
+  /* background-color: var(--secondary); */
   transition: background 250ms ease;
 }
 .input {
@@ -623,7 +623,7 @@ input:focus {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: var(--accent) 0px 0px 0px 1px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
   /* box-shadow: var(--accent) 0px 4px 8px -2px, var(--accent) 0px 0px 0px 1px; */
   animation: 750ms expandAnimation;
 }
@@ -702,7 +702,7 @@ font-size: 16px;
   /* height: 32px; */
   width: 100%;
   background-color: var(--background);
-  box-shadow: var(--accent) 0px 0px 0px 1px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 4px;
   animation: slidein 1s;
   display: flex;
