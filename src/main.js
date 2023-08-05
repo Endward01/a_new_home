@@ -1,9 +1,8 @@
-// set/get info from localstorage
-if (localStorage.getItem("Bookmarks") !== null) {
-  const bookmarksString = localStorage.getItem("Bookmarks");
-  var bookmarks = JSON.parse(bookmarksString);
-} else {
-  const bookmarks = [
+//Check if values in localstorage Exist
+if (localStorage.getItem("Setting") === null) {
+  console.log(localStorage.getItem("Setting"));
+  //create bookmarks template
+  var bookmarks = [
     {
       groups: [],
     },
@@ -19,22 +18,40 @@ if (localStorage.getItem("Bookmarks") !== null) {
   ];
   const bookmarksString = JSON.stringify(bookmarks);
   localStorage.setItem("Bookmarks", bookmarksString);
-}
-if (localStorage.getItem("ColorSheme") !== null) {
-  const colorSchemeString = localStorage.getItem("ColorSheme");
-  var colorScheme = JSON.parse(colorSchemeString);
-} else {
-  const colorScheme = {
+  // make theme default
+  var colorScheme = {
     mode: "auto",
   };
   const colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
-}
+  // default settings options
+  var hideMenuIcons = false;
+  const hideMenuIconsString = JSON.stringify(hideMenuIcons);
+  localStorage.setItem("hideMenuIcons", hideMenuIconsString);
 
-if (localStorage.getItem("Setting") !== null) {
-  const settingString = localStorage.getItem("Setting");
-  var setting = JSON.parse(settingString);
+  var hideLinkIcons = false;
+  const hideLinkIconsString = JSON.stringify(hideLinkIcons);
+  localStorage.setItem("hideLinkIcons", hideLinkIconsString);
 
+  var groupFolding = false;
+  const groupFoldingString = JSON.stringify(groupFolding);
+  localStorage.setItem("groupFolding", groupFoldingString);
+  //drag funtion
+  const dragFuntion = false;
+  const dragFuntionString = JSON.stringify(dragFuntion);
+  localStorage.setItem("dragFuntion", dragFuntionString);
+  //
+  const setting = true;
+  const settingString = JSON.stringify(setting);
+  localStorage.setItem("Setting", settingString);
+} else {
+  //load bookmarks
+  const bookmarksString = localStorage.getItem("Bookmarks");
+  var bookmarks = JSON.parse(bookmarksString);
+  //load colorSheme
+  const colorSchemeString = localStorage.getItem("ColorSheme");
+  var colorScheme = JSON.parse(colorSchemeString);
+  //load options
   const hideMenuIconsString = localStorage.getItem("hideMenuIcons");
   var hideMenuIcons = JSON.parse(hideMenuIconsString);
 
@@ -43,44 +60,42 @@ if (localStorage.getItem("Setting") !== null) {
 
   const groupFoldingString = localStorage.getItem("groupFolding");
   var groupFolding = JSON.parse(groupFoldingString);
-} else {
-  const setting = true;
-  const settingString = JSON.stringify(setting);
-  localStorage.setItem("Setting", settingString);
-
-  const hideMenuIcons = false;
-  const hideMenuIconsString = JSON.stringify(hideMenuIcons);
-  localStorage.setItem("hideMenuIcons", hideMenuIconsString);
-
-  const hideLinkIcons = false;
-  const hideLinkIconsString = JSON.stringify(hideLinkIcons);
-  localStorage.setItem("hideLinkIcons", hideLinkIconsString);
-
-  const groupFolding = false;
-  const groupFoldingString = JSON.stringify(groupFolding);
-  localStorage.setItem("groupFolding", groupFoldingString);
+  //drag funtion
+  const dragFuntion = false;
+  const dragFuntionString = JSON.stringify(dragFuntion);
+  localStorage.setItem("dragFuntion", dragFuntionString);
 }
 
 const styleSheet = document.styleSheets[0];
+const changeCSSStyle = (selector, rule, value) => {
+  for (const key in styleSheet.cssRules) {
+    if (styleSheet.cssRules[key].selectorText === selector) {
+      styleSheet.cssRules[key].style[rule] = value;
+    }
+  }
+};
+// window.onload = function(){
+
+// };
 
 //on fully load website
-
-// onload = () => {
-//   const windowHeight = document.body.clientHeight;
-//   const sectionHeight = (windowHeight * 87) / 100;
-//   document.styleSheets[0].cssRules[26].style.height = `${sectionHeight}px`;
-//   appendIcons();
-// };
-//on resize window
-
-onresize = () => {
+addEventListener("load", (e) => {
+  changeTheme(colorScheme.mode);
+  const mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+  styleSheet.deleteRule(mode, 0);
+  styleSheet.insertRule(mode, 0);
   const windowHeight = document.body.clientHeight;
   const sectionHeight = (windowHeight * 88) / 100;
-  document.styleSheets[0].cssRules[26].style.height = `${sectionHeight}px`;
-};
-
-var dragLink = false;
-var dragGroup = false;
+  changeCSSStyle(".main-section-bookmarks", "height", `${sectionHeight}px`);
+  drawGroup(bookmarks);
+  appendIcons();
+});
+// on resize window
+addEventListener("resize", (e) => {
+  const windowHeight = document.body.clientHeight;
+  const sectionHeight = (windowHeight * 88) / 100;
+  changeCSSStyle(".main-section-bookmarks", "height", `${sectionHeight}px`);
+});
 
 // right mouse button constext menu
 if (
@@ -125,8 +140,10 @@ document
     popUp.classList.add("rmb-popup");
     popUp.style = `top:${element.pageY}px;left:${element.pageX + 10}px`;
 
-    const text = document.elementFromPoint(element.pageX, element.pageY);
-    console.log(text);
+    const elementOnMouse = document.elementFromPoint(
+      element.pageX,
+      element.pageY
+    );
     const topBtnDiv = document.createElement("div");
     topBtnDiv.classList.add("contextTopBtnDiv");
     popUp.appendChild(topBtnDiv);
@@ -155,15 +172,70 @@ document
     // settingsBtn.textContent = "Settings";
     // settingsBtn.setAttribute("type", "button");
     settingsBtn.addEventListener("click", drawSettings);
-
     topBtnDiv.appendChild(settingsBtn);
+    // drag btn
+    const dragBtn = document.createElement("a");
+    dragBtn.classList.add(
+      "fa-solid",
+      "fa-grip-vertical",
+      "contextBtn",
+      "drag-btn"
+    );
+    // settingsBtn.textContent = "Settings";
+    // settingsBtn.setAttribute("type", "button");
+    dragBtn.addEventListener("click", (e) => {
+      const dragFuntionString = localStorage.getItem("dragFuntion");
+      let dragFuntion = JSON.parse(dragFuntionString);
+      const mainSection = document.querySelector(".main-section");
+
+      if (!dragFuntion) {
+        mainSection.addEventListener("click", enableFunt);
+        console.log(mainSection.addEventListener("click", enableFunt));
+
+        document
+          .querySelectorAll(".main-section-bookmarks-ul-li-link")
+          .forEach((elem) => {
+            elem.removeAttribute("href");
+          });
+        changeCSSStyle(".main-section", "outline", "1px dashed var(--accent)");
+        changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "grab");
+        changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "grab");
+
+        dragFuntion = true;
+        const dragFuntionString = JSON.stringify(dragFuntion);
+        localStorage.setItem("dragFuntion", dragFuntionString);
+      } else {
+        mainSection.removeEventListener("click", enableFunt);
+
+        console.log(mainSection.removeEventListener("click", enableFunt));
+        changeCSSStyle(".main-section", "outline", "");
+        changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "");
+        changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "");
+
+        dragFuntion = false;
+        const dragFuntionString = JSON.stringify(dragFuntion);
+        localStorage.setItem("dragFuntion", dragFuntionString);
+
+        while (document.querySelector(".main-section-bookmarks").firstChild) {
+          document
+            .querySelector(".main-section-bookmarks")
+            .removeChild(
+              document.querySelector(".main-section-bookmarks").firstChild
+            );
+        }
+        drawGroup(bookmarks);
+        appendIcons();
+      }
+    });
+    topBtnDiv.appendChild(dragBtn);
+
     // refresh btn
     const refreshBtn = document.createElement("a");
     refreshBtn.classList.add(
       "fa-solid",
       "fa-rotate-right",
       "contextBtn",
-      "settings-btn"
+      "refresh-btn"
     );
     // settingsBtn.textContent = "Settings";
     // settingsBtn.setAttribute("type", "button");
@@ -171,28 +243,31 @@ document
     refreshBtn.addEventListener("click", (e) => {
       window.location.reload();
     });
-    const line = document.createElement("div");
-    line.classList.add("line");
-    popUp.appendChild(line);
 
     // title name
-    if (text.text !== undefined) {
+    if (elementOnMouse.nodeName === "A") {
+      const line1 = document.createElement("div");
+      line1.classList.add("line");
+      popUp.appendChild(line1);
       const p = document.createElement("p");
-      p.textContent = text.text;
+      p.textContent = elementOnMouse.textContent;
       popUp.appendChild(p);
       const line = document.createElement("div");
       line.classList.add("line");
       popUp.appendChild(line);
-    } else if (text.tagName === "H2") {
+    } else if (elementOnMouse.nodeName === "H2") {
+      const line1 = document.createElement("div");
+      line1.classList.add("line");
+      popUp.appendChild(line1);
       const p = document.createElement("p");
-      p.textContent = text.textContent;
+      p.textContent = elementOnMouse.textContent;
       popUp.appendChild(p);
       const line = document.createElement("div");
       line.classList.add("line");
       popUp.appendChild(line);
     }
     //edit / delete btn
-    if (text.text !== undefined) {
+    if (elementOnMouse.tagName === "A") {
       const editBtn = document.createElement("a");
       editBtn.classList.add("contextBtn", "edit-btn");
       editBtn.textContent = "Edit Link";
@@ -201,10 +276,10 @@ document
       deleteBtn.classList.add("contextBtn", "delete-btn");
       deleteBtn.textContent = "Delete Link";
       popUp.appendChild(deleteBtn);
-      const line = document.createElement("div");
-      line.classList.add("line");
-      popUp.appendChild(line);
-    } else if (text.tagName === "H2") {
+      // const line = document.createElement("div");
+      // line.classList.add("line");
+      // popUp.appendChild(line);
+    } else if (elementOnMouse.tagName === "H2") {
       const editBtn = document.createElement("a");
       editBtn.classList.add("contextBtn", "edit-btn");
       editBtn.textContent = "Edit Group";
@@ -213,60 +288,93 @@ document
       deleteBtn.classList.add("contextBtn", "delete-btn");
       deleteBtn.textContent = "Delete Group";
       popUp.appendChild(deleteBtn);
-      const line = document.createElement("div");
-      line.classList.add("line");
-      popUp.appendChild(line);
+      // const line = document.createElement("div");
+      // line.classList.add("line");
+      // popUp.appendChild(line);
     }
     if (document.querySelector(".delete-btn") !== null) {
-      deleteBtnLogic(text);
-      editBtnLogic(text);
+      deleteBtnLogic(elementOnMouse);
+      editBtnLogic(elementOnMouse);
     }
 
-    //enable draggable elements
+    document
+      .querySelectorAll(".contextTopBtnDiv a.contextBtn")
+      .forEach((elem) => {
+        elem.addEventListener("click", (e) => {
+          if (document.querySelector(".rmb-popup") !== null) {
+            if (document.querySelector(".rmb-popup").parentNode) {
+              document
+                .querySelector(".rmb-popup")
+                .parentNode.removeChild(document.querySelector(".rmb-popup"));
+            }
+          }
+        });
+      });
 
-    const draggableLinkBtn = document.createElement("a");
-    const draggableGroupBtn = document.createElement("a");
-    draggableLinkBtn.classList.add(
-      "contextBtn",
-      "dragging-btn",
-      "dragging-link"
-    );
-    draggableGroupBtn.classList.add(
-      "contextBtn",
-      "dragging-btn",
-      "dragging-group"
-    );
-    if (dragLink !== true) {
-      draggableLinkBtn.textContent = "Enable Link Dragging";
-    } else {
-      draggableLinkBtn.textContent = "Disable Link Dragging";
-    }
-    if (draggableLinkBtn.textContent === "Disable Link Dragging") {
-      draggableGroupBtn.classList.add("disable");
-    }
-    if (dragGroup !== true) {
-      draggableGroupBtn.textContent = "Enable Group Dragging";
-    } else {
-      draggableGroupBtn.textContent = "Disable Group Dragging";
-    }
-    if (draggableGroupBtn.textContent === "Disable Group Dragging") {
-      draggableLinkBtn.classList.add("disable");
-    }
-    popUp.appendChild(draggableLinkBtn);
-    popUp.appendChild(draggableGroupBtn);
+    // //enable draggable elements
+    // const endableDragBtn = document.createElement("a");
+    // endableDragBtn.classList.add("contextBtn", "dragging-btn");
+    // popUp.appendChild(endableDragBtn);
+    // const mainSection = document.querySelector(".main-section-bookmarks");
 
-    draggableLinkBtn.addEventListener("click", (e) => {
-      const elemToDrag = document.querySelectorAll(
-        ".main-section-bookmarks-ul-li"
-      );
-      const elemToDragAppend = document.querySelectorAll(
-        ".main-section-bookmarks-ul-li"
-      );
+    function enableFunt(e) {
+      if (e.target.nodeName === "H2") {
+        console.log("group");
+        console.log(e.target);
+      } else if (e.target.nodeName === "A") {
+        console.log("link");
+        console.log(e.target);
+      }
+    }
 
-      const elemToDragOver = document.querySelectorAll(
-        ".main-section-bookmarks-ul"
-      );
+    // const dragFuntionString = localStorage.getItem("dragFuntion");
+    // let dragFuntion = JSON.parse(dragFuntionString);
 
+    // if (!dragFuntion) {
+    //   endableDragBtn.textContent = "Enable Dragging Element";
+    // } else {
+    //   endableDragBtn.textContent = "Disable Dragging Element";
+    // }
+
+    // endableDragBtn.addEventListener("click", (e) => {
+    //   if (!dragFuntion) {
+    //     mainSection.addEventListener("click", enableFunt);
+
+    //     document
+    //       .querySelectorAll(".main-section-bookmarks-ul-li-link")
+    //       .forEach((elem) => {
+    //         elem.removeAttribute("href");
+    //       });
+
+    //     changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "grab");
+    //     changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "grab");
+
+    //     dragFuntion = true;
+    //     const dragFuntionString = JSON.stringify(dragFuntion);
+    //     localStorage.setItem("dragFuntion", dragFuntionString);
+    //   } else {
+    //     mainSection.removeEventListener("click", enableFunt);
+
+    //     changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "");
+    //     changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "");
+
+    //     dragFuntion = false;
+    //     const dragFuntionString = JSON.stringify(dragFuntion);
+    //     localStorage.setItem("dragFuntion", dragFuntionString);
+
+    //     while (document.querySelector(".main-section-bookmarks").firstChild) {
+    //       document
+    //         .querySelector(".main-section-bookmarks")
+    //         .removeChild(
+    //           document.querySelector(".main-section-bookmarks").firstChild
+    //         );
+    //     }
+    //     drawGroup(bookmarks);
+    //     appendIcons();
+    //   }
+    // });
+
+    const dragMainFuntion = () => {
       let elementToMove,
         positionToMove,
         arrayElementToMove,
@@ -331,7 +439,6 @@ document
         let bookmarksString = JSON.stringify(bookmarks);
         localStorage.setItem("Bookmarks", bookmarksString);
       }
-
       function dragstart(e) {
         e.dataTransfer.setDragImage(
           e.target,
@@ -360,289 +467,404 @@ document
         indexOfElementToMove = indexOfElement;
         groupOfElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
       }
+    };
 
-      if (dragLink !== true) {
-        dragLink = true;
-        elemToDrag.forEach((elemToDrag) => {
-          elemToDrag.addEventListener("dragstart", dragstart, true);
-          elemToDrag.setAttribute("draggable", "true");
-          elemToDrag.classList.add("move");
-          elemToDrag.childNodes[0].removeAttribute("href");
-        });
+    // const draggableLinkBtn = document.createElement("a");
+    // const draggableGroupBtn = document.createElement("a");
+    // draggableLinkBtn.classList.add(
+    //   "contextBtn",
+    //   "dragging-btn",
+    //   "dragging-link"
+    // );
+    // draggableGroupBtn.classList.add(
+    //   "contextBtn",
+    //   "dragging-btn",
+    //   "dragging-group"
+    // );
+    // if (dragLink !== true) {
+    //   draggableLinkBtn.textContent = "Enable Link Dragging";
+    // } else {
+    //   draggableLinkBtn.textContent = "Disable Link Dragging";
+    // }
+    // if (draggableLinkBtn.textContent === "Disable Link Dragging") {
+    //   draggableGroupBtn.classList.add("disable");
+    // }
+    // if (dragGroup !== true) {
+    //   draggableGroupBtn.textContent = "Enable Group Dragging";
+    // } else {
+    //   draggableGroupBtn.textContent = "Disable Group Dragging";
+    // }
+    // if (draggableGroupBtn.textContent === "Disable Group Dragging") {
+    //   draggableLinkBtn.classList.add("disable");
+    // }
+    // popUp.appendChild(draggableLinkBtn);
+    // popUp.appendChild(draggableGroupBtn);
 
-        elemToDragOver.forEach((elemToDragOver) => {
-          elemToDragOver.addEventListener("dragover", dragover, true);
-          elemToDragOver.addEventListener("drop", drop, true);
+    // draggableLinkBtn.addEventListener("click", (e) => {
+    //   const elemToDrag = document.querySelectorAll(
+    //     ".main-section-bookmarks-ul-li"
+    //   );
+    //   const elemToDragAppend = document.querySelectorAll(
+    //     ".main-section-bookmarks-ul-li"
+    //   );
 
-          elemToDragOver.classList.add("dragOverList");
-        });
-        function closeOnESC() {
-          dragLink = false;
-          elemToDrag.forEach((elemToDrag) => {
-            elemToDrag.removeEventListener("dragstart", dragstart, true);
-          });
-          elemToDragOver.forEach((elemToDragOver) => {
-            elemToDragOver.removeEventListener("dragover", dragover, true);
-            elemToDragOver.removeEventListener("drop", drop, true);
-            // elemToDragOver.removeEventListener("dragenter", dragenter, true);
-            elemToDragOver.classList.remove("dragOverList");
-          });
-          while (document.querySelector(".main-section-bookmarks").firstChild) {
-            document
-              .querySelector(".main-section-bookmarks")
-              .removeChild(
-                document.querySelector(".main-section-bookmarks").firstChild
-              );
-          }
-          createBookmarkGroup(bookmarks);
-          appendIcons();
-          document.body.removeEventListener("dragover", dragover, true);
-          document.body.removeEventListener("keyup", closeOnESC);
-        }
-        document.body.addEventListener("keyup", closeOnESC);
-      } else {
-        dragLink = false;
-        elemToDrag.forEach((elemToDrag) => {
-          elemToDrag.removeEventListener("dragstart", dragstart, true);
-        });
-        elemToDragOver.forEach((elemToDragOver) => {
-          elemToDragOver.removeEventListener("dragover", dragover, true);
-          elemToDragOver.removeEventListener("drop", drop, true);
-          // elemToDragOver.removeEventListener("dragenter", dragenter, true);
-          elemToDragOver.classList.remove("dragOverList");
-        });
-        while (document.querySelector(".main-section-bookmarks").firstChild) {
-          document
-            .querySelector(".main-section-bookmarks")
-            .removeChild(
-              document.querySelector(".main-section-bookmarks").firstChild
-            );
-        }
-        createBookmarkGroup(bookmarks);
-        appendIcons();
-      }
+    //   const elemToDragOver = document.querySelectorAll(
+    //     ".main-section-bookmarks-ul"
+    //   );
 
-      if (document.querySelector(".rmb-popup") !== null) {
-        if (document.querySelector(".rmb-popup").parentNode) {
-          document
-            .querySelector(".rmb-popup")
-            .parentNode.removeChild(document.querySelector(".rmb-popup"));
-        }
-      }
-    });
+    //   let elementToMove,
+    //     positionToMove,
+    //     arrayElementToMove,
+    //     indexOfElementToMove,
+    //     groupOfElementToMove,
+    //     positionY,
+    //     parentToInsert,
+    //     position;
 
-    draggableGroupBtn.addEventListener("click", (e) => {
-      const elemToDrag = document.querySelectorAll(
-        ".main-section-bookmarks-group-div"
-      );
-      const elemToDragOver = document.querySelectorAll(".main-section-column");
+    //   function dragover(e) {
+    //     e.preventDefault();
 
-      let elementToMove,
-        positionToMove,
-        arrayElementToMove,
-        indexOfElementToMove,
-        groupOfElementToMove,
-        positionY,
-        clientH,
-        parentToInsert,
-        position;
+    //     if (e.target.nodeName === "A") {
+    //       positionY = e.layerY;
+    //     }
+    //     if (e.target.parentNode.nodeName === "LI") {
+    //       position = e.target.parentNode;
+    //     }
+    //     if (e.target.parentNode.parentNode.nodeName === "UL") {
+    //       parentToInsert = e.target.parentNode.parentNode;
+    //     }
 
-      function dragover(e) {
-        e.preventDefault();
-
-        if (
-          e.target.parentNode.className ===
-          "main-section-bookmarks-group relative"
-        ) {
-          positionY = e.layerY;
-          clientH = e.target.clientHeight;
-        } else {
-          positionY = undefined;
-        }
-
-        let y = (50 * clientH) / 100;
-        if (e.target.parentNode.getAttribute("draggable") !== undefined) {
-          if (
-            e.target.parentNode.className ===
-            "main-section-bookmarks-group relative"
-          ) {
-            position = e.target.parentNode;
-          } else {
-            position = e.target;
-          }
-        }
-
-        if (
-          e.target.parentNode.className ===
-          "main-section-bookmarks-group relative"
-        ) {
-          parentToInsert = e.target.parentNode.parentNode;
-        } else if (e.target.className === "main-section-column dragOverList") {
-          parentToInsert = e.target;
-        }
-        if (parentToInsert !== undefined) {
-          if (parentToInsert.hasChildNodes()) {
-            if (positionY <= y) {
-              if (position !== undefined) {
-                parentToInsert.insertBefore(elementToMove, position);
-              }
-            } else {
-              if (position !== undefined) {
-                parentToInsert.insertBefore(
-                  elementToMove,
-                  position.nextSibling
-                );
-              }
-            }
-          } else {
-            parentToInsert.appendChild(elementToMove);
-          }
-        }
-      }
-      function drop(e) {
-        e.preventDefault();
-        elementToMove.classList.remove("dragging");
-
-        const indexOfGroup = Array.from(
-          elementToMove.parentNode.childNodes
-        ).indexOf(elementToMove);
-
-        const indexOfColumn = Array.from(
-          elementToMove.parentNode.parentNode.childNodes
-        ).indexOf(elementToMove.parentNode);
-
-        if (indexOfElementToMove > -1) {
-          groupOfElementToMove.groups.splice(indexOfElementToMove, 1);
-        }
-        bookmarks[indexOfColumn].groups.splice(
-          indexOfGroup,
-          0,
-          arrayElementToMove
-        );
-
-        let bookmarksString = JSON.stringify(bookmarks);
-        localStorage.setItem("Bookmarks", bookmarksString);
-      }
-
-      function dragstart(e) {
-        e.dataTransfer.setDragImage(
-          e.target,
-          window.outerWidth,
-          window.outerHeight
-        );
-
-        elementToMove = e.target.parentNode;
-        elementToMove.classList.add("dragging");
-
-        const indexOfGroup = Array.from(
-          elementToMove.parentNode.childNodes
-        ).indexOf(elementToMove);
-
-        const indexOfColumn = Array.from(
-          elementToMove.parentNode.parentNode.childNodes
-        ).indexOf(elementToMove.parentNode);
-
-        arrayElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
-        indexOfElementToMove = indexOfGroup;
-        groupOfElementToMove = bookmarks[indexOfColumn];
-      }
-
-      if (dragGroup !== true) {
-        dragGroup = true;
-        elemToDrag.forEach((elemToDrag) => {
-          const div = document.createElement("div");
-          elemToDrag.parentNode.classList.add("relative");
-          div.classList.add("mask");
-          elemToDrag.parentNode.appendChild(div);
-
-          div.setAttribute("draggable", "true");
-          div.classList.add("move");
-          div.addEventListener("dragstart", dragstart, true);
-        });
-        elemToDragOver.forEach((elemToDragOver) => {
-          elemToDragOver.addEventListener("dragover", dragover, true);
-          elemToDragOver.addEventListener("drop", drop, true);
-          elemToDragOver.classList.add("dragOverList");
-        });
-        function closeOnESC() {
-          dragGroup = false;
-          elemToDrag.forEach((elemToDrag) => {
-            elemToDrag.removeEventListener("dragstart", dragstart, true);
-          });
-          elemToDragOver.forEach((elemToDragOver) => {
-            elemToDragOver.removeEventListener("dragover", dragover, true);
-            elemToDragOver.removeEventListener("drop", drop, true);
-            // elemToDragOver.removeEventListener("dragenter", dragenter, true);
-            elemToDragOver.classList.remove("dragOverList");
-            while (
-              document.querySelector(".main-section-bookmarks").firstChild
-            ) {
-              document
-                .querySelector(".main-section-bookmarks")
-                .removeChild(
-                  document.querySelector(".main-section-bookmarks").firstChild
-                );
-            }
-            createBookmarkGroup(bookmarks);
-            appendIcons();
-          });
-          document.body.removeEventListener("dragover", dragover, true);
-          document.body.removeEventListener("keyup", closeOnESC);
-        }
-        document.body.addEventListener("keyup", closeOnESC);
-      } else {
-        dragGroup = false;
-        elemToDrag.forEach((elemToDrag) => {
-          elemToDrag.removeEventListener("dragstart", dragstart, true);
-        });
-        elemToDragOver.forEach((elemToDragOver) => {
-          elemToDragOver.removeEventListener("dragover", dragover, true);
-          elemToDragOver.removeEventListener("drop", drop, true);
-          // elemToDragOver.removeEventListener("dragenter", dragenter, true);
-          elemToDragOver.classList.remove("dragOverList");
-          while (document.querySelector(".main-section-bookmarks").firstChild) {
-            document
-              .querySelector(".main-section-bookmarks")
-              .removeChild(
-                document.querySelector(".main-section-bookmarks").firstChild
-              );
-          }
-          createBookmarkGroup(bookmarks);
-          appendIcons();
-        });
-      }
-
-      if (document.querySelector(".rmb-popup") !== null) {
-        if (document.querySelector(".rmb-popup").parentNode) {
-          document
-            .querySelector(".rmb-popup")
-            .parentNode.removeChild(document.querySelector(".rmb-popup"));
-        }
-      }
-    });
-
-    // close contextmenu
-    // if (
-    //   document.querySelector(".main-section").getAttribute("listenerClosePoP") !==
-    //   "true"
-    // ) {
-    //   document.querySelector(".main-section").setAttribute("listener", "true");
-    //   document.querySelector(".main-section").addEventListener(
-    //     "mouseup",
-    //     function (e) {
-    //       if (e.button === 0) {
-    //         if (document.querySelector(".rmb-popup") !== null) {
-    //           if (document.querySelector(".rmb-popup").parentNode) {
-    //             document
-    //               .querySelector(".rmb-popup")
-    //               .parentNode.removeChild(document.querySelector(".rmb-popup"));
-    //           }
+    //     if (e.target.hasChildNodes()) {
+    //       if (positionY <= 14) {
+    //         if (position !== undefined) {
+    //           parentToInsert.insertBefore(elementToMove, position);
+    //         }
+    //       } else {
+    //         if (position !== undefined) {
+    //           parentToInsert.insertBefore(elementToMove, position.nextSibling);
     //         }
     //       }
-    //     },
-    //     false
+    //     } else {
+    //       e.target.appendChild(elementToMove);
+    //     }
+    //   }
+    //   function drop(e) {
+    //     e.preventDefault();
+
+    //     elementToMove.classList.remove("dragging");
+
+    //     const indexOfElement = Array.from(
+    //       elementToMove.parentNode.childNodes
+    //     ).indexOf(elementToMove);
+
+    //     const indexOfGroup = Array.from(
+    //       elementToMove.parentNode.parentNode.parentNode.childNodes
+    //     ).indexOf(elementToMove.parentNode.parentNode);
+
+    //     const indexOfColumn = Array.from(
+    //       elementToMove.parentNode.parentNode.parentNode.parentNode.childNodes
+    //     ).indexOf(elementToMove.parentNode.parentNode.parentNode);
+
+    //     if (indexOfElementToMove > -1) {
+    //       groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
+    //     }
+    //     bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
+    //       indexOfElement,
+    //       0,
+    //       arrayElementToMove
+    //     );
+    //     let bookmarksString = JSON.stringify(bookmarks);
+    //     localStorage.setItem("Bookmarks", bookmarksString);
+    //   }
+
+    //   function dragstart(e) {
+    //     e.dataTransfer.setDragImage(
+    //       e.target,
+    //       window.outerWidth,
+    //       window.outerHeight
+    //     );
+
+    //     elementToMove = e.target;
+    //     elementToMove.classList.add("dragging");
+
+    //     const indexOfElement = Array.from(
+    //       e.target.parentNode.childNodes
+    //     ).indexOf(e.target);
+    //     const indexOfGroup = Array.from(
+    //       e.target.parentNode.parentNode.parentNode.childNodes
+    //     ).indexOf(e.target.parentNode.parentNode);
+    //     const indexOfColumn = Array.from(
+    //       e.target.parentNode.parentNode.parentNode.parentNode.childNodes
+    //     ).indexOf(e.target.parentNode.parentNode.parentNode);
+
+    //     arrayElementToMove =
+    //       bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
+    //         indexOfElement
+    //       ];
+
+    //     indexOfElementToMove = indexOfElement;
+    //     groupOfElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
+    //   }
+
+    //   if (dragLink !== true) {
+    //     dragLink = true;
+    //     elemToDrag.forEach((elemToDrag) => {
+    //       elemToDrag.addEventListener("dragstart", dragstart, true);
+    //       elemToDrag.setAttribute("draggable", "true");
+    //       elemToDrag.classList.add("move");
+    //       elemToDrag.childNodes[0].removeAttribute("href");
+    //     });
+
+    //     elemToDragOver.forEach((elemToDragOver) => {
+    //       elemToDragOver.addEventListener("dragover", dragover, true);
+    //       elemToDragOver.addEventListener("drop", drop, true);
+
+    //       elemToDragOver.classList.add("dragOverList");
+    //     });
+    //     function closeOnESC() {
+    //       dragLink = false;
+    //       elemToDrag.forEach((elemToDrag) => {
+    //         elemToDrag.removeEventListener("dragstart", dragstart, true);
+    //       });
+    //       elemToDragOver.forEach((elemToDragOver) => {
+    //         elemToDragOver.removeEventListener("dragover", dragover, true);
+    //         elemToDragOver.removeEventListener("drop", drop, true);
+    //         // elemToDragOver.removeEventListener("dragenter", dragenter, true);
+    //         elemToDragOver.classList.remove("dragOverList");
+    //       });
+    //       while (document.querySelector(".main-section-bookmarks").firstChild) {
+    //         document
+    //           .querySelector(".main-section-bookmarks")
+    //           .removeChild(
+    //             document.querySelector(".main-section-bookmarks").firstChild
+    //           );
+    //       }
+    //       drawGroup(bookmarks);
+    //       appendIcons();
+    //       document.body.removeEventListener("dragover", dragover, true);
+    //       document.body.removeEventListener("keyup", closeOnESC);
+    //     }
+    //     document.body.addEventListener("keyup", closeOnESC);
+    //   } else {
+    //     dragLink = false;
+    //     elemToDrag.forEach((elemToDrag) => {
+    //       elemToDrag.removeEventListener("dragstart", dragstart, true);
+    //     });
+    //     elemToDragOver.forEach((elemToDragOver) => {
+    //       elemToDragOver.removeEventListener("dragover", dragover, true);
+    //       elemToDragOver.removeEventListener("drop", drop, true);
+    //       // elemToDragOver.removeEventListener("dragenter", dragenter, true);
+    //       elemToDragOver.classList.remove("dragOverList");
+    //     });
+    //     while (document.querySelector(".main-section-bookmarks").firstChild) {
+    //       document
+    //         .querySelector(".main-section-bookmarks")
+    //         .removeChild(
+    //           document.querySelector(".main-section-bookmarks").firstChild
+    //         );
+    //     }
+    //     drawGroup(bookmarks);
+    //     appendIcons();
+    //   }
+
+    //   if (document.querySelector(".rmb-popup") !== null) {
+    //     if (document.querySelector(".rmb-popup").parentNode) {
+    //       document
+    //         .querySelector(".rmb-popup")
+    //         .parentNode.removeChild(document.querySelector(".rmb-popup"));
+    //     }
+    //   }
+    // });
+
+    // draggableGroupBtn.addEventListener("click", (e) => {
+    //   const elemToDrag = document.querySelectorAll(
+    //     ".main-section-bookmarks-group-div"
     //   );
-    // }
+    //   const elemToDragOver = document.querySelectorAll(".main-section-column");
+
+    //   let elementToMove,
+    //     positionToMove,
+    //     arrayElementToMove,
+    //     indexOfElementToMove,
+    //     groupOfElementToMove,
+    //     positionY,
+    //     clientH,
+    //     parentToInsert,
+    //     position;
+
+    //   function dragover(e) {
+    //     e.preventDefault();
+
+    //     if (
+    //       e.target.parentNode.className ===
+    //       "main-section-bookmarks-group relative"
+    //     ) {
+    //       positionY = e.layerY;
+    //       clientH = e.target.clientHeight;
+    //     } else {
+    //       positionY = undefined;
+    //     }
+
+    //     let y = (50 * clientH) / 100;
+    //     if (e.target.parentNode.getAttribute("draggable") !== undefined) {
+    //       if (
+    //         e.target.parentNode.className ===
+    //         "main-section-bookmarks-group relative"
+    //       ) {
+    //         position = e.target.parentNode;
+    //       } else {
+    //         position = e.target;
+    //       }
+    //     }
+
+    //     if (
+    //       e.target.parentNode.className ===
+    //       "main-section-bookmarks-group relative"
+    //     ) {
+    //       parentToInsert = e.target.parentNode.parentNode;
+    //     } else if (e.target.className === "main-section-column dragOverList") {
+    //       parentToInsert = e.target;
+    //     }
+    //     if (parentToInsert !== undefined) {
+    //       if (parentToInsert.hasChildNodes()) {
+    //         if (positionY <= y) {
+    //           if (position !== undefined) {
+    //             parentToInsert.insertBefore(elementToMove, position);
+    //           }
+    //         } else {
+    //           if (position !== undefined) {
+    //             parentToInsert.insertBefore(
+    //               elementToMove,
+    //               position.nextSibling
+    //             );
+    //           }
+    //         }
+    //       } else {
+    //         parentToInsert.appendChild(elementToMove);
+    //       }
+    //     }
+    //   }
+    //   function drop(e) {
+    //     e.preventDefault();
+    //     elementToMove.classList.remove("dragging");
+
+    //     const indexOfGroup = Array.from(
+    //       elementToMove.parentNode.childNodes
+    //     ).indexOf(elementToMove);
+
+    //     const indexOfColumn = Array.from(
+    //       elementToMove.parentNode.parentNode.childNodes
+    //     ).indexOf(elementToMove.parentNode);
+
+    //     if (indexOfElementToMove > -1) {
+    //       groupOfElementToMove.groups.splice(indexOfElementToMove, 1);
+    //     }
+    //     bookmarks[indexOfColumn].groups.splice(
+    //       indexOfGroup,
+    //       0,
+    //       arrayElementToMove
+    //     );
+
+    //     let bookmarksString = JSON.stringify(bookmarks);
+    //     localStorage.setItem("Bookmarks", bookmarksString);
+    //   }
+
+    //   function dragstart(e) {
+    //     e.dataTransfer.setDragImage(
+    //       e.target,
+    //       window.outerWidth,
+    //       window.outerHeight
+    //     );
+
+    //     elementToMove = e.target.parentNode;
+    //     elementToMove.classList.add("dragging");
+
+    //     const indexOfGroup = Array.from(
+    //       elementToMove.parentNode.childNodes
+    //     ).indexOf(elementToMove);
+
+    //     const indexOfColumn = Array.from(
+    //       elementToMove.parentNode.parentNode.childNodes
+    //     ).indexOf(elementToMove.parentNode);
+
+    //     arrayElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
+    //     indexOfElementToMove = indexOfGroup;
+    //     groupOfElementToMove = bookmarks[indexOfColumn];
+    //   }
+
+    //   if (dragGroup !== true) {
+    //     dragGroup = true;
+    //     elemToDrag.forEach((elemToDrag) => {
+    //       const div = document.createElement("div");
+    //       elemToDrag.parentNode.classList.add("relative");
+    //       div.classList.add("mask");
+    //       elemToDrag.parentNode.appendChild(div);
+
+    //       div.setAttribute("draggable", "true");
+    //       div.classList.add("move");
+    //       div.addEventListener("dragstart", dragstart, true);
+    //     });
+    //     elemToDragOver.forEach((elemToDragOver) => {
+    //       elemToDragOver.addEventListener("dragover", dragover, true);
+    //       elemToDragOver.addEventListener("drop", drop, true);
+    //       elemToDragOver.classList.add("dragOverList");
+    //     });
+    //     function closeOnESC() {
+    //       dragGroup = false;
+    //       elemToDrag.forEach((elemToDrag) => {
+    //         elemToDrag.removeEventListener("dragstart", dragstart, true);
+    //       });
+    //       elemToDragOver.forEach((elemToDragOver) => {
+    //         elemToDragOver.removeEventListener("dragover", dragover, true);
+    //         elemToDragOver.removeEventListener("drop", drop, true);
+    //         // elemToDragOver.removeEventListener("dragenter", dragenter, true);
+    //         elemToDragOver.classList.remove("dragOverList");
+    //         while (
+    //           document.querySelector(".main-section-bookmarks").firstChild
+    //         ) {
+    //           document
+    //             .querySelector(".main-section-bookmarks")
+    //             .removeChild(
+    //               document.querySelector(".main-section-bookmarks").firstChild
+    //             );
+    //         }
+    //         drawGroup(bookmarks);
+    //         appendIcons();
+    //       });
+    //       document.body.removeEventListener("dragover", dragover, true);
+    //       document.body.removeEventListener("keyup", closeOnESC);
+    //     }
+    //     document.body.addEventListener("keyup", closeOnESC);
+    //   } else {
+    //     dragGroup = false;
+    //     elemToDrag.forEach((elemToDrag) => {
+    //       elemToDrag.removeEventListener("dragstart", dragstart, true);
+    //     });
+    //     elemToDragOver.forEach((elemToDragOver) => {
+    //       elemToDragOver.removeEventListener("dragover", dragover, true);
+    //       elemToDragOver.removeEventListener("drop", drop, true);
+    //       // elemToDragOver.removeEventListener("dragenter", dragenter, true);
+    //       elemToDragOver.classList.remove("dragOverList");
+    //       while (document.querySelector(".main-section-bookmarks").firstChild) {
+    //         document
+    //           .querySelector(".main-section-bookmarks")
+    //           .removeChild(
+    //             document.querySelector(".main-section-bookmarks").firstChild
+    //           );
+    //       }
+    //       drawGroup(bookmarks);
+    //       appendIcons();
+    //     });
+    //   }
+
+    //   if (document.querySelector(".rmb-popup") !== null) {
+    //     if (document.querySelector(".rmb-popup").parentNode) {
+    //       document
+    //         .querySelector(".rmb-popup")
+    //         .parentNode.removeChild(document.querySelector(".rmb-popup"));
+    //     }
+    //   }
+    // });
   });
 
 window.addEventListener("storage", function (e) {
@@ -656,7 +878,7 @@ window.addEventListener("storage", function (e) {
     }
     bookmarksString = localStorage.getItem("Bookmarks");
     bookmarks = JSON.parse(bookmarksString);
-    createBookmarkGroup(bookmarks);
+    drawGroup(bookmarks);
     appendIcons();
     // collExpBookmarksFunc();
   }
@@ -720,7 +942,7 @@ const appendIcons = () => {
 };
 
 //Draw bookmarks from localstorage to body
-const createBookmarkGroup = (array, name, url, newGroup) => {
+const drawGroup = (array, name, url, newGroup) => {
   if (array !== null) {
     array.forEach((element) => {
       const bookmarksSection = document.querySelector(
@@ -748,14 +970,13 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
         ul.classList.add("main-section-bookmarks-ul");
         ul.setAttribute("data-folded", element.folded);
         divFirst.appendChild(ul);
-        createBookmarkLink(element, ul);
+        drawLink(element, ul);
       });
     });
   } else {
     const sectionCollumn = document.querySelectorAll(".main-section-column");
     const divFirst = document.createElement("div");
     divFirst.classList.add("main-section-bookmarks-group");
-    // divFirst.setAttribute("data-collapsed", "false");
     sectionCollumn[0].appendChild(divFirst);
     const divSecond = document.createElement("div");
     divFirst.append(divSecond);
@@ -768,11 +989,11 @@ const createBookmarkGroup = (array, name, url, newGroup) => {
     ul.classList.add("main-section-bookmarks-ul");
     ul.setAttribute("data-folded", "false");
     divFirst.appendChild(ul);
-    createBookmarkLink(null, ul, name, url);
+    drawLink(null, ul, name, url);
   }
 };
 
-const createBookmarkLink = (array, parent, name, url) => {
+const drawLink = (array, parent, name, url) => {
   if (array !== null) {
     array.bookmark.forEach((element) => {
       const li = document.createElement("li");
@@ -783,6 +1004,7 @@ const createBookmarkLink = (array, parent, name, url) => {
       a.setAttribute("href", element.url);
       a.classList.add("main-section-bookmarks-ul-li-link");
       a.setAttribute("target", "_blank");
+      a.setAttribute("draggable", "false");
       li.appendChild(a);
     });
   } else {
@@ -794,11 +1016,10 @@ const createBookmarkLink = (array, parent, name, url) => {
     a.setAttribute("href", url);
     a.classList.add("main-section-bookmarks-ul-li-link");
     a.setAttribute("target", "_blank");
+    a.setAttribute("draggable", "false");
     li.appendChild(a);
   }
 };
-
-createBookmarkGroup(bookmarks);
 
 //find element by text in main-section-bookmarks
 const getElementsByText = (string, tag) => {
@@ -866,6 +1087,13 @@ function groupFoldingFunc() {
         group.addEventListener("click", foldUnfoldFunction);
       }
     });
+    changeCSSStyle(
+      ".main-section-bookmarks-group-div:hover::before",
+      "display",
+      "block"
+    );
+
+    // document.styleSheets[0].cssRules.forEach((style, index) => console.log(style[index]))
     // document.styleSheets[0].cssRules[27].style.cursor = "pointer";
     // document.styleSheets[0].cssRules[28].style.display = "block";
   } else {
@@ -875,6 +1103,11 @@ function groupFoldingFunc() {
         group.removeEventListener("click", foldUnfoldFunction);
       }
     });
+    changeCSSStyle(
+      ".main-section-bookmarks-group-div:hover::before",
+      "display",
+      "none"
+    );
 
     // document.styleSheets[0].cssRules[27].style.cursor = "auto";
     // document.styleSheets[0].cssRules[28].style.display = "none";
@@ -1085,9 +1318,16 @@ const drawAddBookmark = () => {
   //add bookmark/ group function
   addBtn.addEventListener("click", function () {
     const name = inputName.value;
-    const url = inputUrl.value;
+    let url;
     const groupName = selectToGroup.value;
     const newGroupName = inputNewGroup.value;
+    let regex = /https:\/[\s\S]*/i;
+
+    if (!regex.test(inputUrl.value)) {
+      url = `https://${inputUrl.value}`;
+    } else {
+      url = inputUrl.value;
+    }
 
     if (!inputCheckBox.checked) {
       const newBookmark = {
@@ -1108,7 +1348,7 @@ const drawAddBookmark = () => {
         });
       });
 
-      createBookmarkLink(null, parentNodeToAppend, name, url);
+      drawLink(null, parentNodeToAppend, name, url);
     } else {
       const newBookmark = {
         groupName: newGroupName,
@@ -1125,9 +1365,8 @@ const drawAddBookmark = () => {
       arrBookmark.push(newBookmark);
       let bookmarksString = JSON.stringify(bookmarks);
       localStorage.setItem("Bookmarks", bookmarksString);
-      createBookmarkGroup(null, name, url, newGroupName);
+      drawGroup(null, name, url, newGroupName);
       appendIcons();
-      // collExpBookmarksFunc();
     }
     closeWindow();
   });
@@ -1280,20 +1519,31 @@ const editBtnLogic = (domElement) => {
   editBtn.addEventListener("click", () => {
     if (element.tagName === "A") {
       // edit link
+
       const name = element.textContent;
       const url = element.href;
+
       editDiv({ name: name, url: url });
 
       document.querySelector(".confirmBtn").addEventListener("click", () => {
+        let newUrl;
+        let regex = /https:\/[\s\S]*/i;
+
+        if (!regex.test(document.querySelector(".editInpUrl").value)) {
+          newUrl = `https://${document.querySelector(".editInpUrl").value}`;
+        } else {
+          newUrl = document.querySelector(".editInpUrl").value;
+        }
         element.textContent = document.querySelector(".editInpName").value;
-        element.href = document.querySelector(".editInpUrl").value;
+        element.href = newUrl;
 
         bookmarks.forEach((column) => {
           column.groups.forEach((group) => {
             group.bookmark.forEach((bookamrk) => {
               if (bookamrk.name === name) {
                 bookamrk.name = document.querySelector(".editInpName").value;
-                bookamrk.url = document.querySelector(".editInpUrl").value;
+                bookamrk.url = newUrl;
+
                 let bookmarksString = JSON.stringify(bookmarks);
                 localStorage.setItem("Bookmarks", bookmarksString);
               }
@@ -1464,10 +1714,6 @@ const drawSettings = () => {
         value: "jetblack",
         name: "JetBlack (Dark)",
       },
-      // {
-      //   value: "custom",
-      //   name: "Custom",
-      // },
     ];
     listOfOptions.forEach((element) => {
       const option = document.createElement("option");
@@ -1475,46 +1721,47 @@ const drawSettings = () => {
       option.textContent = element.name;
       selectTheme.appendChild(option);
     });
-    const divColorPickers = document.createElement("div");
-    divColorPickers.classList.add("setting-menu-appearance-colorPickers");
-    divColorPickers.setAttribute("data-visible", "false");
-    divTheme.appendChild(divColorPickers);
-    const listOfColors = [
-      {
-        value: "background",
-        name: "Background",
-      },
-      {
-        value: "primary",
-        name: "Primary",
-      },
-      {
-        value: "secondary",
-        name: "Secondary",
-      },
-      {
-        value: "accent",
-        name: "Accent",
-      },
-      {
-        value: "text",
-        name: "Text",
-      },
-    ];
-    listOfColors.forEach((element) => {
-      const div = document.createElement("div");
-      divColorPickers.appendChild(div);
-      const input = document.createElement("input");
-      input.setAttribute("type", "color");
-      input.setAttribute("name", element.value);
-      input.setAttribute("autocomplete", "off");
-      input.classList.add("input", `${element.value}Color-input`);
-      div.appendChild(input);
-      const p = document.createElement("p");
-      p.classList.add("colorPickerName");
-      p.textContent = element.name;
-      div.appendChild(p);
-    });
+
+    // const divColorPickers = document.createElement("div");
+    // divColorPickers.classList.add("setting-menu-appearance-colorPickers");
+    // divColorPickers.setAttribute("data-visible", "false");
+    // divTheme.appendChild(divColorPickers);
+    // const listOfColors = [
+    //   {
+    //     value: "background",
+    //     name: "Background",
+    //   },
+    //   {
+    //     value: "primary",
+    //     name: "Primary",
+    //   },
+    //   {
+    //     value: "secondary",
+    //     name: "Secondary",
+    //   },
+    //   {
+    //     value: "accent",
+    //     name: "Accent",
+    //   },
+    //   {
+    //     value: "text",
+    //     name: "Text",
+    //   },
+    // ];
+    // listOfColors.forEach((element) => {
+    //   const div = document.createElement("div");
+    //   divColorPickers.appendChild(div);
+    //   const input = document.createElement("input");
+    //   input.setAttribute("type", "color");
+    //   input.setAttribute("name", element.value);
+    //   input.setAttribute("autocomplete", "off");
+    //   input.classList.add("input", `${element.value}Color-input`);
+    //   div.appendChild(input);
+    //   const p = document.createElement("p");
+    //   p.classList.add("colorPickerName");
+    //   p.textContent = element.name;
+    //   div.appendChild(p);
+    // });
     const divAppeSett = document.createElement("div");
     divAppeSett.classList.add("setting-menu-appearance-settings");
     divAppe.appendChild(divAppeSett);
@@ -1569,38 +1816,38 @@ const drawSettings = () => {
             document.querySelector(".main-section-bookmarks").firstChild
           );
       }
-      createBookmarkGroup(bookmarks);
+      drawGroup(bookmarks);
       appendIcons();
     });
     //
 
     // change color theme
-    if (colorScheme.mode !== "custom") {
-      divColorPickers.setAttribute("data-visible", "false");
-    } else {
-      divColorPickers.setAttribute("data-visible", "true");
-      document.querySelector(".backgroundColor-input").value =
-        colorScheme.customeColors.background;
-      document.querySelector(".primaryColor-input").value =
-        colorScheme.customeColors.primary;
-      document.querySelector(".secondaryColor-input").value =
-        colorScheme.customeColors.secondary;
-      document.querySelector(".accentColor-input").value =
-        colorScheme.customeColors.accent;
-      document.querySelector(".textColor-input").value =
-        colorScheme.customeColors.text;
-      document;
-    }
-    selectTheme.value = colorScheme.mode;
+    // if (colorScheme.mode !== "custom") {
+    //   divColorPickers.setAttribute("data-visible", "false");
+    // } else {
+    //   divColorPickers.setAttribute("data-visible", "true");
+    //   document.querySelector(".backgroundColor-input").value =
+    //     colorScheme.customeColors.background;
+    //   document.querySelector(".primaryColor-input").value =
+    //     colorScheme.customeColors.primary;
+    //   document.querySelector(".secondaryColor-input").value =
+    //     colorScheme.customeColors.secondary;
+    //   document.querySelector(".accentColor-input").value =
+    //     colorScheme.customeColors.accent;
+    //   document.querySelector(".textColor-input").value =
+    //     colorScheme.customeColors.text;
+    //   document;
+    // }
+    // selectTheme.value = colorScheme.mode;
     selectTheme.addEventListener("input", () => {
       changeTheme(selectTheme.value);
     });
-    document
-      .querySelectorAll(".setting-menu-appearance-colorPickers input")
-      .forEach((element) => {
-        element.addEventListener("input", changeCustomePalete);
-      });
-    changeCustomePalete;
+    // document
+    //   .querySelectorAll(".setting-menu-appearance-colorPickers input")
+    //   .forEach((element) => {
+    //     element.addEventListener("input", changeCustomePalete);
+    //   });
+    // changeCustomePalete;
     //
 
     //features
@@ -1787,8 +2034,7 @@ const drawSettings = () => {
             bookmarksString = localStorage.getItem("Bookmarks");
             bookmarks = JSON.parse(bookmarksString);
 
-            createBookmarkGroup(bookmarks);
-            // collExpBookmarksFunc();
+            drawGroup(bookmarks);
             appendIcons();
           } else {
             return;
@@ -1821,10 +2067,13 @@ const drawSettings = () => {
         divTextArea.appendChild(btnDiv);
 
         const btn1 = document.createElement("input");
+        btn1.setAttribute("type", "button");
         btn1.classList.add("button", "cpybtn");
         btn1.value = "Copy Code";
         btnDiv.appendChild(btn1);
         const btn2 = document.createElement("input");
+        btn2.setAttribute("type", "button");
+
         btn2.classList.add("button");
         btn2.value = "Close Export";
         btnDiv.appendChild(btn2);
@@ -1916,203 +2165,116 @@ document.querySelector(".settings-btn").addEventListener("click", (e) => {
   drawSettings();
 });
 
-// showSettingsUI();
-
 //modify color theme
 
 const changeTheme = (value) => {
-  const colorPickersContainer = document.querySelector(
-    ".setting-menu-appearance-colorPickers"
-  );
-  let mode;
-  if (value !== "custom") {
-    switch (value) {
-      case "auto":
-        colorPickersContainer.setAttribute("data-visible", "false");
-        if (
-          window.matchMedia("(prefers-color-scheme:light)").matches === true
-        ) {
-          colorScheme.mode = "auto";
-          colorScheme.colors = {
-            background: "#fafafa",
-            primary: "#d2d3db",
-            secondary: "#e4e5f1",
-            accent: "#9394a5",
-            text: "#162635",
-          };
-        } else {
-          colorScheme.mode = "auto";
-          colorScheme.colors = {
-            background: "#202225",
-            primary: "#292b2f",
-            secondary: "#2f3136",
-            accent: "#40444b",
-            text: "#eae6da",
-          };
-        }
-        break;
-
-      case "light":
-        colorPickersContainer.setAttribute("data-visible", "false");
-        colorScheme.mode = "light";
+  switch (value) {
+    case "auto":
+      // colorPickersContainer.setAttribute("data-visible", "false");
+      if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
+        colorScheme.mode = "auto";
         colorScheme.colors = {
-          background: "#fafafa",
-          primary: "#d2d3db",
-          secondary: "#e4e5f1",
-          accent: "#9394a5",
-          text: "#162635",
+          background: "#ffffff",
+          primary: "#e3e5e8",
+          secondary: "#f2f3f5",
+          accent: "#313338",
+          text: "#171815",
         };
-        break;
-
-      case "creamy":
-        colorPickersContainer.setAttribute("data-visible", "false");
-        colorScheme.mode = "creamy";
+      } else {
+        colorScheme.mode = "auto";
         colorScheme.colors = {
-          background: "#eae6da",
-          primary: "#56c2c2",
-          secondary: "#fbfdfd",
-          accent: "#005866",
-          text: "#162635",
-        };
-        break;
-
-      case "dark":
-        colorPickersContainer.setAttribute("data-visible", "false");
-        colorScheme.mode = "dark";
-        colorScheme.colors = {
-          background: "#202225",
-          primary: "#292b2f",
-          secondary: "#2f3136",
-          accent: "#40444b",
+          background: "#313338",
+          primary: "#1e1f22",
+          secondary: "#2e3035",
+          accent: "#dbdee1",
           text: "#eae6da",
         };
-        break;
+      }
+      break;
 
-      case "firefox":
-        colorPickersContainer.setAttribute("data-visible", "false");
-        colorScheme.mode = "firefox";
-        colorScheme.colors = {
-          background: "#2b2a33",
-          primary: "#6c689c",
-          secondary: "#42414d",
-          accent: "#808080",
-          text: "#f2f1f9",
-        };
-        break;
-
-      case "midnight":
-        colorPickersContainer.setAttribute("data-visible", "false");
-        colorScheme.mode = "midnight";
-        colorScheme.colors = {
-          background: "#162635",
-          primary: "#1a4a9e",
-          secondary: "#243d51",
-          accent: "#00ddff",
-          text: "#eae6da",
-        };
-        break;
-
-      case "jetblack":
-        colorPickersContainer.setAttribute("data-visible", "false");
-        colorScheme.mode = "midnight";
-        colorScheme.colors = {
-          background: "#181818",
-          primary: "#3d3d3d",
-          secondary: "#212121",
-          accent: "#aaaaaa",
-          text: "#eae6da",
-        };
-        break;
-      default:
-        break;
-    }
-    colorSchemeString = JSON.stringify(colorScheme);
-    localStorage.setItem("ColorSheme", colorSchemeString);
-
-    mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
-    styleSheet.deleteRule(mode, 0);
-    styleSheet.insertRule(mode, 0);
-  } else {
-    colorPickersContainer.setAttribute("data-visible", "true");
-    if (colorScheme.customeColors === undefined) {
-      colorScheme.mode = "custom";
-      colorScheme.customeColors = {
-        background: colorScheme.colors.background,
-        primary: colorScheme.colors.primary,
-        secondary: colorScheme.colors.secondary,
-        accent: colorScheme.colors.accent,
-        text: colorScheme.colors.text,
+    case "light":
+      // colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme.mode = "light";
+      colorScheme.colors = {
+        background: "#ffffff",
+        primary: "#e3e5e8",
+        secondary: "#f2f3f5",
+        accent: "#313338",
+        text: "#171815",
       };
-      colorSchemeString = JSON.stringify(colorScheme);
-      localStorage.setItem("ColorSheme", colorSchemeString);
-    } else {
-      colorScheme.mode = "custom";
-      colorSchemeString = JSON.stringify(colorScheme);
-      localStorage.setItem("ColorSheme", colorSchemeString);
-    }
+      break;
 
-    mode = `:root { --background:${colorScheme.customeColors.background}; --primary: ${colorScheme.customeColors.primary}; --secondary: ${colorScheme.customeColors.secondary}; --accent: ${colorScheme.customeColors.accent}; --text: ${colorScheme.customeColors.text};}`;
-    styleSheet.deleteRule(mode, 0);
-    styleSheet.insertRule(mode, 0);
+    case "creamy":
+      // colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme.mode = "creamy";
+      colorScheme.colors = {
+        background: "#eae6da",
+        primary: "#56c2c2",
+        secondary: "#fbfdfd",
+        accent: "#005866",
+        text: "#162635",
+      };
+      break;
+
+    case "dark":
+      // colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme.mode = "dark";
+      colorScheme.colors = {
+        background: "#313338",
+        primary: "#1e1f22",
+        secondary: "#2e3035",
+        accent: "#dbdee1",
+        text: "#eae6da",
+      };
+      break;
+
+    case "firefox":
+      // colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme.mode = "firefox";
+      colorScheme.colors = {
+        background: "#2b2a33",
+        primary: "#6c689c",
+        secondary: "#42414d",
+        accent: "#808080",
+        text: "#f2f1f9",
+      };
+      break;
+
+    case "midnight":
+      // colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme.mode = "midnight";
+      colorScheme.colors = {
+        background: "#162635",
+        primary: "#1a4a9e",
+        secondary: "#243d51",
+        accent: "#00ddff",
+        text: "#eae6da",
+      };
+      break;
+
+    case "jetblack":
+      // colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme.mode = "midnight";
+      colorScheme.colors = {
+        background: "#181818",
+        primary: "#3d3d3d",
+        secondary: "#212121",
+        accent: "#aaaaaa",
+        text: "#eae6da",
+      };
+      break;
+    default:
+      break;
   }
-};
-function changeCustomePalete(e) {
-  const colorName = e.target.name;
-  const value = e.target.value;
-
-  document.querySelector(".backgroundColor-input").value =
-    colorScheme.customeColors.background;
-  document.querySelector(".primaryColor-input").value =
-    colorScheme.customeColors.primary;
-  document.querySelector(".secondaryColor-input").value =
-    colorScheme.customeColors.secondary;
-  document.querySelector(".accentColor-input").value =
-    colorScheme.customeColors.accent;
-  document.querySelector(".textColor-input").value =
-    colorScheme.customeColors.text;
-  document;
-
-  colorScheme.customeColors[colorName] = value;
-
-  mode = `:root { --background:${colorScheme.customeColors.background}; --primary: ${colorScheme.customeColors.primary}; --secondary: ${colorScheme.customeColors.secondary}; --accent: ${colorScheme.customeColors.accent}; --text: ${colorScheme.customeColors.text};}`;
-  styleSheet.deleteRule(mode, 0);
-  styleSheet.insertRule(mode, 0);
   colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
-}
-if (colorScheme.mode === "custom") {
-  mode = `:root { --background:${colorScheme.customeColors.background}; --primary: ${colorScheme.customeColors.primary}; --secondary: ${colorScheme.customeColors.secondary}; --accent: ${colorScheme.customeColors.accent}; --text: ${colorScheme.customeColors.text};}`;
-  styleSheet.deleteRule(mode, 0);
-  styleSheet.insertRule(mode, 0);
-} else if (colorScheme.mode === "auto") {
-  if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
-    colorScheme.colors = {
-      background: "#fafafa",
-      primary: "#d2d3db",
-      secondary: "#e4e5f1",
-      accent: "#9394a5",
-      text: "#162635",
-    };
-  } else {
-    colorScheme.colors = {
-      background: "#181818",
-      primary: "#3d3d3d",
-      secondary: "#212121",
-      accent: "#aaaaaa",
-      text: "#eae6da",
-    };
-  }
-  mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
-  styleSheet.deleteRule(mode, 0);
-  styleSheet.insertRule(mode, 0);
-} else {
-  mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
-  styleSheet.deleteRule(mode, 0);
-  styleSheet.insertRule(mode, 0);
-}
 
-//undo div
+  const mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+  styleSheet.deleteRule(mode, 0);
+  styleSheet.insertRule(mode, 0);
+};
 
+//undo funtion
 const createUndoElement = (
   array,
   arrayIndex,
@@ -2164,10 +2326,10 @@ const createUndoElement = (
     span.textContent = `${nameElem} has been deleted`;
     undoDiv.appendChild(span);
 
-    const button = document.createElement("button");
-    button.classList.add("button");
-    button.setAttribute("type", "button");
-    button.textContent = "Undo";
+    const button = document.createElement("a");
+    button.classList.add("contextBtn", "fa-solid", "fa-rotate-left");
+    // button.setAttribute("type", "button");
+    // button.textContent = "Undo";
     undoDiv.appendChild(button);
 
     const divProgers = document.createElement("div");
@@ -2197,3 +2359,320 @@ const createUndoElement = (
     }
   }, 5150);
 };
+
+//draging element
+function enableFunt(e) {
+  if (e.target.nodeName === "H2") {
+    console.log("group");
+    console.log(e.target);
+  } else if (e.target.nodeName === "A") {
+    console.log("link");
+    console.log(e.target);
+  }
+}
+
+//footer moving text
+
+const movingTextFooter = () => {
+  const funnyMessages = [
+    "Reticulating splines...",
+    "Generating witty dialog...",
+    "Swapping time and space...",
+    "Spinning violently around the y-axis...",
+    "Tokenizing real life...",
+    "Bending the spoon...",
+    "Filtering morale...",
+    "Don't think of purple hippos...",
+    "We need a new fuse...",
+    "Have a good day.",
+    "Upgrading Windows, your PC will restart several times. Sit back and relax.",
+    "640K ought to be enough for anybody",
+    "The architects are still drafting",
+    "The bits are breeding",
+    "We're building the buildings as fast as we can",
+    "Would you prefer chicken, steak, or tofu?",
+    "(Pay no attention to the man behind the curtain)",
+    "...and enjoy the elevator music...",
+    "Please wait while the little elves draw your map",
+    "Don't worry - a few bits tried to escape, but we caught them",
+    "Would you like fries with that?",
+    "Checking the gravitational constant in your locale...",
+    "Go ahead -- hold your breath!",
+    "...at least you're not on hold...",
+    "Hum something loud while others stare",
+    "You're not in Kansas any more",
+    "The server is powered by a lemon and two electrodes.",
+    "Please wait while a larger software vendor in Seattle takes over the world",
+    "We're testing your patience",
+    "As if you had any other choice",
+    "Follow the white rabbit",
+    "Why don't you order a sandwich?",
+    "While the satellite moves into position",
+    "keep calm and npm install",
+    "The bits are flowing slowly today",
+    "Dig on the 'X' for buried treasure... ARRR!",
+    "It's still faster than you could draw it",
+    "The last time I tried this the monkey didn't survive. Let's hope it works better this time.",
+    "I should have had a V8 this morning.",
+    "My other loading screen is much faster.",
+    "Testing on Timmy... We're going to need another Timmy.",
+    "Reconfoobling energymotron...",
+    "(Insert quarter)",
+    "Are we there yet?",
+    "Have you lost weight?",
+    "Just count to 10",
+    "Why so serious?",
+    "It's not you. It's me.",
+    "Counting backwards from Infinity",
+    "Don't panic...",
+    "Embiggening Prototypes",
+    "Do not run! We are your friends!",
+    "Do you come here often?",
+    "Warning: Don't set yourself on fire.",
+    "We're making you a cookie.",
+    "Creating time-loop inversion field",
+    "Spinning the wheel of fortune...",
+    "Loading the enchanted bunny...",
+    "Computing chance of success",
+    "I'm sorry Dave, I can't do that.",
+    "Looking for exact change",
+    "All your web browser are belong to us",
+    "All I really need is a kilobit.",
+    "I feel like im supposed to be loading something. . .",
+    "What do you call 8 Hobbits? A Hobbyte.",
+    "Should have used a compiled language...",
+    "Is this Windows?",
+    "Adjusting flux capacitor...",
+    "Please wait until the sloth starts moving.",
+    "Don't break your screen yet!",
+    "I swear it's almost done.",
+    "Let's take a mindfulness minute...",
+    "Unicorns are at the end of this road, I promise.",
+    "Listening for the sound of one hand clapping...",
+    "Keeping all the 1's and removing all the 0's...",
+    "Putting the icing on the cake. The cake is not a lie...",
+    "Cleaning off the cobwebs...",
+    "Making sure all the i's have dots...",
+    "We need more dilithium crystals",
+    "Where did all the internets go",
+    "Connecting Neurotoxin Storage Tank...",
+    "Granting wishes...",
+    "Time flies when you’re having fun.",
+    "Get some coffee and come back in ten minutes..",
+    "Spinning the hamster…",
+    "99 bottles of beer on the wall..",
+    "Stay awhile and listen..",
+    "Be careful not to step in the git-gui",
+    "You edhall not pass! yet..",
+    "Load it and they will come",
+    "Convincing AI not to turn evil..",
+    "There is no spoon. Because we are not done loading it",
+    "Your left thumb points to the right and your right thumb points to the left.",
+    "How did you get here?",
+    "Wait, do you smell something burning?",
+    "Computing the secret to life, the universe, and everything.",
+    "When nothing is going right, go left!!...",
+    "I love my job only when I'm on vacation...",
+    "i'm not lazy, I'm just relaxed!!",
+    "Never steal. The government hates competition....",
+    "Why are they called apartments if they are all stuck together?",
+    "Life is Short – Talk Fast!!!!",
+    "Optimism – is a lack of information.....",
+    "Save water and shower together",
+    "Whenever I find the key to success, someone changes the lock.",
+    "Sometimes I think war is God’s way of teaching us geography.",
+    "I’ve got problem for your solution…..",
+    "Where there’s a will, there’s a relative.",
+    "User: the word computer professionals use when they mean !!idiot!!",
+    "Adults are just kids with money.",
+    "I think I am, therefore, I am. I think.",
+    "A kiss is like a fight, with mouths.",
+    "You don’t pay taxes—they take taxes.",
+    "Coffee, Chocolate, Men. The richer the better!",
+    "I am free of all prejudices. I hate everyone equally.",
+    "git happens",
+    "May the forks be with you",
+    "A commit a day keeps the mobs away",
+    "This is not a joke, it's a commit.",
+    "Constructing additional pylons...",
+    "Roping some seaturtles...",
+    "Locating Jebediah Kerman...",
+    "We are not liable for any broken screens as a result of waiting.",
+    "Hello IT, have you tried turning it off and on again?",
+    "If you type Google into Google you can break the internet",
+    "Well, this is embarrassing.",
+    "What is the airspeed velocity of an unladen swallow?",
+    "Hello, IT... Have you tried forcing an unexpected reboot?",
+    "They just toss us away like yesterday's jam.",
+    "They're fairly regular, the beatings, yes. I'd say we're on a bi-weekly beating.",
+    "The Elders of the Internet would never stand for it.",
+    "Space is invisible mind dust, and stars are but wishes.",
+    "Didn't know paint dried so quickly.",
+    "Everything sounds the same",
+    "I'm going to walk the dog",
+    "I didn't choose the engineering life. The engineering life chose me.",
+    "Dividing by zero...",
+    "Spawn more Overlord!",
+    "If I’m not back in five minutes, just wait longer.",
+    "Some days, you just can’t get rid of a bug!",
+    "We’re going to need a bigger boat.",
+    "Chuck Norris never git push. The repo pulls before.",
+    "Web developers do it with <style>",
+    "I need to git pull --my-life-together",
+    "Java developers never RIP. They just get Garbage Collected.",
+    "Cracking military-grade encryption...",
+    "Simulating traveling salesman...",
+    "Proving P=NP...",
+    "Entangling superstrings...",
+    "Twiddling thumbs...",
+    "Searching for plot device...",
+    "Trying to sort in O(n)...",
+    "Laughing at your pictures-i mean, loading...",
+    "Sending data to NS-i mean, our servers.",
+    "Looking for sense of humour, please hold on.",
+    "Please wait while the intern refills his coffee.",
+    "A different error message? Finally, some progress!",
+    "Hold on while we wrap up our git together...sorry",
+    "Please hold on as we reheat our coffee",
+    "Kindly hold on as we convert this bug to a feature...",
+    "Kindly hold on as our intern quits vim...",
+    "Winter is coming...",
+    "Installing dependencies",
+    "Switching to the latest JS framework...",
+    "Distracted by cat gifs",
+    "Finding someone to hold my beer",
+    "BRB, working on my side project",
+    "@todo Insert witty loading message",
+    "Let's hope it's worth the wait",
+    "Aw, snap! Not..",
+    "Ordering 1s and 0s...",
+    "Updating dependencies...",
+    "Whatever you do, don't look behind you...",
+    "Please wait... Consulting the manual...",
+    "It is dark. You're likely to be eaten by a grue.",
+    "Loading funny message...",
+    "It's 10:00pm. Do you know where your children are?",
+    "Waiting Daenerys say all her titles...",
+    "Feel free to spin in your chair",
+    "What the what?",
+    "format C: ...",
+    "Forget you saw that password I just typed into the IM ...",
+    "What's under there?",
+    "Your computer has a virus, its name is Windows!",
+    "Go ahead, hold your breath and do an ironman plank till loading complete",
+    "Bored of slow loading spinner, buy more RAM!",
+    "Help, I'm trapped in a loader!",
+    "What is the difference btwn a hippo and a zippo? One is really heavy, the other is a little lighter",
+    "Please wait, while we purge the Decepticons for you. Yes, You can thanks us later!",
+    "Chuck Norris once urinated in a semi truck's gas tank as a joke....that truck is now known as Optimus Prime.",
+    "Chuck Norris doesn’t wear a watch. HE decides what time it is.",
+    "Mining some bitcoins...",
+    "Downloading more RAM..",
+    "Updating to Windows Vista...",
+    "Deleting System32 folder",
+    "Hiding all ;'s in your code",
+    "Alt-F4 speeds things up.",
+    "Initializing the initializer...",
+    "When was the last time you dusted around here?",
+    "Optimizing the optimizer...",
+    "Last call for the data bus! All aboard!",
+    "Running swag sticker detection...",
+    "Never let a computer know you're in a hurry.",
+    "A computer will do what you tell it to do, but that may be much different from what you had in mind.",
+    "Some things man was never meant to know. For everything else, there's Google.",
+    "Unix is user-friendly. It's just very selective about who its friends are.",
+    "Shovelling coal into the server",
+    "Pushing pixels...",
+    "How about this weather, eh?",
+    "Building a wall...",
+    "Everything in this universe is either a potato or not a potato",
+    "The severity of your issue is always lower than you expected.",
+    "Updating Updater...",
+    "Downloading Downloader...",
+    "Debugging Debugger...",
+    "Reading Terms and Conditions for you.",
+    "Digested cookies being baked again.",
+    "Live long and prosper.",
+    "There is no cow level, but there's a goat one!",
+    "Deleting all your hidden porn...",
+    "Running with scissors...",
+    "Definitely not a virus...",
+    "You may call me Steve.",
+    "You seem like a nice person...",
+    "Coffee at my place, tommorow at 10A.M. - don't be late!",
+    "Work, work...",
+    "Patience! This is difficult, you know...",
+    "Discovering new ways of making you wait...",
+    "Your time is very important to us. Please wait while we ignore you...",
+    "Time flies like an arrow; fruit flies like a banana",
+    "Two men walked into a bar; the third ducked...",
+    "Sooooo... Have you seen my vacation photos yet?",
+    "Sorry we are busy catching em' all, we're done soon",
+    "TODO: Insert elevator music",
+    "Still faster than Windows update",
+    "Composer hack: Waiting for reqs to be fetched is less frustrating if you add -vvv to your command.",
+    "Please wait while the minions do their work",
+    "Grabbing extra minions",
+    "Doing the heavy lifting",
+    "We're working very Hard .... Really",
+    "Waking up the minions",
+    "You are number 2843684714 in the queue",
+    "Please wait while we serve other customers...",
+    "Our premium plan is faster",
+    "Feeding unicorns...",
+    "Rupturing the subspace barrier",
+    "Creating an anti-time reaction",
+    "Converging tachyon pulses",
+    "Bypassing control of the matter-antimatter integrator",
+    "Adjusting the dilithium crystal converter assembly",
+    "Reversing the shield polarity",
+    "Disrupting warp fields with an inverse graviton burst",
+    "Up, Up, Down, Down, Left, Right, Left, Right, B, A.",
+    "Do you like my loading animation? I made it myself",
+    "Whoah, look at it go!",
+    "No, I'm awake. I was just resting my eyes.",
+    "One mississippi, two mississippi...",
+    "Don't panic... AHHHHH!",
+    "Ensuring Gnomes are still short.",
+    "Baking ice cream...",
+  ];
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+  const div = document.createElement("div");
+  div.classList.add("main-footer-conteiner");
+  document.querySelector(".main-footer").appendChild(div);
+
+  const p = document.createElement("div");
+  p.classList.add("main-footer-conteiner-text");
+  const randomText = funnyMessages[getRandomInt(260)];
+  p.textContent = randomText;
+  div.appendChild(p);
+  setTimeout(() => {
+    document.querySelectorAll(".main-footer-conteiner-text").forEach((text) => {
+      if (text.textContent === randomText) {
+        div.removeChild(text);
+      }
+    });
+  }, 20000);
+  setInterval(() => {
+    const p = document.createElement("div");
+    p.classList.add("main-footer-conteiner-text");
+    const randomText = funnyMessages[getRandomInt(260)];
+
+    p.textContent = randomText;
+    div.appendChild(p);
+
+    setTimeout(() => {
+      document
+        .querySelectorAll(".main-footer-conteiner-text")
+        .forEach((text) => {
+          if (text.textContent === randomText) {
+            div.removeChild(text);
+          }
+        });
+    }, 20000);
+  }, 7500);
+};
+movingTextFooter();
