@@ -1699,20 +1699,24 @@ const drawSettings = () => {
         name: "Dark Mode",
       },
       {
-        value: "creamy",
-        name: "Creamy (Light)",
+        value: "chocolate",
+        name: "White Chocolate",
+      },
+      {
+        value: "flamingo",
+        name: "Rosy Flamingo",
       },
       {
         value: "firefox",
-        name: "Firefox Inspired (Dark)",
+        name: "Firefox Inspired",
       },
       {
         value: "midnight",
-        name: "Midnight (Dark)",
+        name: "Midnight",
       },
       {
         value: "jetblack",
-        name: "JetBlack (Dark)",
+        name: "JetBlack",
       },
     ];
     listOfOptions.forEach((element) => {
@@ -2172,22 +2176,24 @@ const changeTheme = (value) => {
     case "auto":
       // colorPickersContainer.setAttribute("data-visible", "false");
       if (window.matchMedia("(prefers-color-scheme:light)").matches === true) {
+        //light
         colorScheme.mode = "auto";
         colorScheme.colors = {
           background: "#ffffff",
-          primary: "#e3e5e8",
-          secondary: "#f2f3f5",
-          accent: "#313338",
-          text: "#171815",
+          primary: "#d6d6d7",
+          secondary: "#e3e5e8",
+          accent: "#6f7071",
+          text: "#0f0f0f",
         };
       } else {
+        //dark
         colorScheme.mode = "auto";
         colorScheme.colors = {
           background: "#313338",
           primary: "#1e1f22",
-          secondary: "#2e3035",
-          accent: "#dbdee1",
-          text: "#eae6da",
+          secondary: "#3b3b44",
+          accent: "#82858c",
+          text: "#f7f7f8",
         };
       }
       break;
@@ -2197,22 +2203,34 @@ const changeTheme = (value) => {
       colorScheme.mode = "light";
       colorScheme.colors = {
         background: "#ffffff",
-        primary: "#e3e5e8",
-        secondary: "#f2f3f5",
-        accent: "#313338",
-        text: "#171815",
+        primary: "#d6d6d7",
+        secondary: "#e3e5e8",
+        accent: "#6f7071",
+        text: "#0f0f0f",
       };
       break;
 
-    case "creamy":
+    case "chocolate":
       // colorPickersContainer.setAttribute("data-visible", "false");
-      colorScheme.mode = "creamy";
+      colorScheme.mode = "chocolate";
       colorScheme.colors = {
         background: "#eae6da",
-        primary: "#56c2c2",
-        secondary: "#fbfdfd",
-        accent: "#005866",
-        text: "#162635",
+        primary: "#dfd0a5",
+        secondary: "#f0ead6",
+        accent: "#b89a42",
+        text: "#131007",
+      };
+      break;
+
+    case "flamingo":
+      // colorPickersContainer.setAttribute("data-visible", "false");
+      colorScheme.mode = "flamingo";
+      colorScheme.colors = {
+        background: "#eed6d3",
+        primary: "#c9786e",
+        secondary: "#e5bdb8",
+        accent: "#df8181",
+        text: "#0b0504",
       };
       break;
 
@@ -2222,9 +2240,9 @@ const changeTheme = (value) => {
       colorScheme.colors = {
         background: "#313338",
         primary: "#1e1f22",
-        secondary: "#2e3035",
-        accent: "#dbdee1",
-        text: "#eae6da",
+        secondary: "#3b3b44",
+        accent: "#82858c",
+        text: "#f7f7f8",
       };
       break;
 
