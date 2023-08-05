@@ -77,7 +77,7 @@ ul.main-section-bookmarks-ul.dragOverList {
   height: 100%;
   max-height: 100%;
 }
-.main-section-column{
+.main-section-column {
   height: max-content;
 }
 .move {
@@ -140,9 +140,12 @@ ul.main-section-bookmarks-ul.dragOverList {
   flex-grow: 1;
   position: relative;
   height: 100%;
+  border-radius: 4px;
+  outline-offset: 1px;
+  transition: outline 250ms ease-in-out;
 }
 .main-section-bookmarks {
-  display: grid ;
+  display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   overflow-y: scroll;
@@ -209,6 +212,31 @@ ul.main-section-bookmarks-ul.dragOverList {
 .main-footer {
   height: 3%;
 }
+.main-footer-conteiner {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  display: flex;
+  overflow-x: hidden;
+}
+.main-footer-conteiner-text {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  animation: moveText 20s linear;
+  /* left: 0; */
+  transform: translateX(100%);
+  text-align: center;
+  width: 100%;
+}
+@keyframes moveText {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
 .addBookmark {
   display: flex;
 }
@@ -225,6 +253,7 @@ ul.main-section-bookmarks-ul.dragOverList {
   z-index: 10;
   /* backdrop-filter: blur(4px); */
   background-color: var(--background);
+  box-shadow: var(--accent) 0px 0px 0px 1px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 input.btnIsDisabled,
@@ -270,12 +299,6 @@ input.cpybtn {
   left: 20%;
   border-top: 5px solid var(--secondary);
 }
-/* .addBookmark-form-btn-add.btnIsDisabled:hover:before {
-  top: 110%;
-  left: 20%;
-  border-bottom: 5px solid var(--secondary);
-  opacity: 0.75;
-} */
 .addBookmark-form-btn-add.btnIsDisabled:hover:after {
   content: "You must fill the fields above to be able to add a bookmark";
   bottom: 132%;
@@ -283,6 +306,7 @@ input.cpybtn {
   transform: translateX(-50%);
   /* opacity: 0.75; */
 }
+
 .addBookmark-form-btn-add.btnIsDisabled:hover:before,
 .importBtn.btnIsDisabled:hover:before {
   content: "";
@@ -370,7 +394,7 @@ input.cpybtn {
   left: 50%;
   transform: translateX(-50%);
   padding: 4px 8px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: var(--accent) 0px 0px 0px 1px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .undo button {
   padding: 0 8px;
@@ -484,16 +508,17 @@ input:focus {
   width: 100%;
   font-size: 16px;
   line-height: 1.25;
-  font-weight:500;
+  font-weight: 500;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-.settings-menu-newTab-label{}
+.settings-menu-newTab-label {
+}
 .settings p {
   line-height: 1.25;
 }
-.settingInput{
+.settingInput {
   cursor: pointer;
 }
 .settings-menu > div > div {
@@ -592,11 +617,14 @@ input:focus {
   padding: 8px;
   border-radius: 2px;
   height: max-content;
+  /* width: 12%; */
+  width: 240px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: var(--accent) 0px 0px 0px 1px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  /* box-shadow: var(--accent) 0px 4px 8px -2px, var(--accent) 0px 0px 0px 1px; */
   animation: 750ms expandAnimation;
 }
 
@@ -625,11 +653,20 @@ input:focus {
   width: 100%;
   display: flex;
   flex-direction: row;
+  gap: 16px;
   justify-content: space-around;
   align-items: center;
 }
-.contextTopBtnDiv a {
-  width: max-content;
+/* .contextTopBtnDiv .contextBtn::before  {
+font-size: 16px;
+} */
+.contextTopBtnDiv .contextBtn {
+  padding: 8px 0;
+  /* width: 32px; */
+  /* aspect-ratio: 1.25/1; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .line {
   border-top: 1px solid var(--accent);
@@ -656,15 +693,16 @@ input:focus {
   display: flex;
   flex-direction: column;
   gap: 4px;
+
   transition: all 250ms ease-in-out;
   /* z-index: -1; */
 }
 .undoContainer > div {
   position: relative;
-  height: max-content;
+  /* height: 32px; */
   width: 100%;
   background-color: var(--background);
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: var(--accent) 0px 0px 0px 1px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 4px;
   animation: slidein 1s;
   display: flex;
@@ -680,13 +718,16 @@ input:focus {
   line-height: 20px;
   font-weight: bold;
   height: max-content;
+  flex: 1;
 }
-.undoContainer > div > button.button {
+.undoContainer div .contextBtn {
   font-size: 16px;
-  width: 25%;
-  padding: 0 8px;
+  width: auto;
+  /* padding: 0 8px; */
   margin: 2px 0;
+  width: auto;
 }
+
 .undoContainer .divProgers {
   position: absolute;
   bottom: 0;
@@ -767,14 +808,4 @@ input:focus {
   .main {
     width: 1440px;
   }
-}
-
-
-.todoList{
-  position: absolute;
-  top: 0;
-  left: 10px;
-}
-.todoList ul li {
-  margin-bottom: 4px;
 }
