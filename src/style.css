@@ -58,6 +58,7 @@ i {
 }
 .dragging {
   outline: 1px dashed var(--accent);
+  outline-offset: -1px;
   border-radius: 2px;
   opacity: 0.5;
 }
@@ -72,6 +73,52 @@ i {
   border-radius: 2px;
   min-height: 32px;
   position: relative;
+}
+.dragConfirmWindow {
+  position: absolute;
+  left: 50%;
+  top: -8.5%;
+  transform: translate(-50%, 0);
+  display: flex;
+  width: 22.5%;
+  height:max-content;
+  background-color: var(--background);
+  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 4px 8px 4px 8px;
+  gap: 16px;
+  animation: slideindrag 250ms ease-in-out;
+}
+@keyframes slideindrag {
+  from {
+    transform: translate(-50%, -100%);
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
+}
+.dragConfirmWindow a.contextBtn {
+  /* width: max-content; */
+  flex: 1;
+  height: auto;
+  /* width: max-content; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 8px;
+  text-align: center;
+}
+.dragConfirmWindow a.contextBtn:hover {
+  outline: 1px solid  var(--accent);
+}
+
+.dragConfirmWindow a.contextBtn:first-child {
+  background-color: var(--primary);
+}
+.dragConfirmWindow a.contextBtn p {
+  font-size: 12px;
+  color: gray;
 }
 ul.main-section-bookmarks-ul.dragOverList {
   height: 100%;
@@ -255,10 +302,22 @@ ul.main-section-bookmarks-ul.dragOverList {
   background-color: var(--background);
   box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+/* a.btnIsDisabled,
+a.btnIsDisabled:hover,
+a.btnIsDisabled:focus {
+  color: rgb(128, 128, 128, 0.75);
+  cursor: auto;
+  border: none;
+  border: 0 solid transparent;
+  pointer-events: none;
+} */
 
 input.btnIsDisabled,
 input.btnIsDisabled:hover,
-input.btnIsDisabled:focus {
+input.btnIsDisabled:focus,
+a.btnIsDisabled,
+a.btnIsDisabled:hover,
+a.btnIsDisabled:focus {
   color: rgb(128, 128, 128, 0.75);
   cursor: auto;
   border: none;
@@ -488,6 +547,28 @@ input:focus {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+.setting-menu-appearance-colorPickers[data-visible="true"] {
+  display: grid;
+}
+.setting-menu-appearance-colorPickers {
+  gap: 4px;
+  grid-template-columns: repeat(5, 1fr);
+  margin-top: 8px;
+}
+.setting-menu-appearance-colorPickers > div {
+  width: auto;
+  position: relative;
+}
+.setting-menu-appearance-colorPickers .input {
+  cursor: pointer;
+}
+.setting-menu-appearance-colorPickers .input:hover {
+  outline: 1px var(--accent) solid;
+}
+
+.setting-menu-appearance-colorPickers .input:hover ~ .colorPickerName {
+  display: block;
 }
 .settings h1 {
   grid-column: 1 / span 2;

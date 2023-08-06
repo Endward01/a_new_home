@@ -1,6 +1,5 @@
 //Check if values in localstorage Exist
 if (localStorage.getItem("Setting") === null) {
-  console.log(localStorage.getItem("Setting"));
   //create bookmarks template
   var bookmarks = [
     {
@@ -81,13 +80,11 @@ const changeCSSStyle = (selector, rule, value) => {
 //on fully load website
 addEventListener("load", (e) => {
   changeTheme(colorScheme.mode);
-  const mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
-  styleSheet.deleteRule(mode, 0);
-  styleSheet.insertRule(mode, 0);
   const windowHeight = document.body.clientHeight;
   const sectionHeight = (windowHeight * 88) / 100;
   changeCSSStyle(".main-section-bookmarks", "height", `${sectionHeight}px`);
   drawGroup(bookmarks);
+  groupFoldingFunc();
   appendIcons();
 });
 // on resize window
@@ -183,19 +180,30 @@ document
     );
     // settingsBtn.textContent = "Settings";
     // settingsBtn.setAttribute("type", "button");
+    const dragFuntionString = localStorage.getItem("dragFuntion");
+    let dragFuntion = JSON.parse(dragFuntionString);
+
+    if (dragFuntion) {
+      dragBtn.classList.add("btnIsDisabled");
+    }
+
     dragBtn.addEventListener("click", (e) => {
-      const dragFuntionString = localStorage.getItem("dragFuntion");
-      let dragFuntion = JSON.parse(dragFuntionString);
       const mainSection = document.querySelector(".main-section");
 
       if (!dragFuntion) {
-        mainSection.addEventListener("click", enableFunt);
-        console.log(mainSection.addEventListener("click", enableFunt));
+        mainSection.addEventListener("dragstart", dragstart);
 
         document
           .querySelectorAll(".main-section-bookmarks-ul-li-link")
           .forEach((elem) => {
             elem.removeAttribute("href");
+            elem.setAttribute("draggable", "true");
+          });
+
+        document
+          .querySelectorAll(".main-section-bookmarks-group-title")
+          .forEach((elem) => {
+            elem.setAttribute("draggable", "true");
           });
         changeCSSStyle(".main-section", "outline", "1px dashed var(--accent)");
         changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "grab");
@@ -204,10 +212,27 @@ document
         dragFuntion = true;
         const dragFuntionString = JSON.stringify(dragFuntion);
         localStorage.setItem("dragFuntion", dragFuntionString);
-      } else {
-        mainSection.removeEventListener("click", enableFunt);
+      }
 
-        console.log(mainSection.removeEventListener("click", enableFunt));
+      const confirmDiv = document.createElement("div");
+      confirmDiv.classList.add("dragConfirmWindow");
+      mainSection.appendChild(confirmDiv);
+      const btn1 = document.createElement("a");
+      btn1.classList.add("contextBtn");
+      btn1.textContent = "Confirm Changes";
+      confirmDiv.appendChild(btn1);
+
+      const btn2 = document.createElement("a");
+      btn2.classList.add("contextBtn");
+      btn2.textContent = "Cancel";
+      const pCancel = document.createElement("p");
+      pCancel.textContent = "Without saving changes";
+      confirmDiv.appendChild(btn2);
+      btn2.appendChild(pCancel);
+
+      btn2.addEventListener("click", (e) => {
+        mainSection.removeEventListener("dragstart", dragstart);
+
         changeCSSStyle(".main-section", "outline", "");
         changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "");
         changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "");
@@ -223,9 +248,14 @@ document
               document.querySelector(".main-section-bookmarks").firstChild
             );
         }
+        if (document.querySelector(".dragConfirmWindow") !== null) {
+          document
+            .querySelector(".main-section")
+            .removeChild(document.querySelector(".dragConfirmWindow"));
+        }
         drawGroup(bookmarks);
         appendIcons();
-      }
+      });
     });
     topBtnDiv.appendChild(dragBtn);
 
@@ -311,560 +341,163 @@ document
         });
       });
 
-    // //enable draggable elements
-    // const endableDragBtn = document.createElement("a");
-    // endableDragBtn.classList.add("contextBtn", "dragging-btn");
-    // popUp.appendChild(endableDragBtn);
-    // const mainSection = document.querySelector(".main-section-bookmarks");
+    // const dragMainFuntion = () => {
+    let elementToMove,
+      positionToMove,
+      arrayElementToMove,
+      indexOfElementToMove,
+      groupOfElementToMove,
+      positionY,
+      parentToInsert,
+      position;
+    // };
 
-    function enableFunt(e) {
-      if (e.target.nodeName === "H2") {
-        console.log("group");
-        console.log(e.target);
-      } else if (e.target.nodeName === "A") {
-        console.log("link");
-        console.log(e.target);
+    //draging element
+    // function enableFunt(e) {
+    function dragover(e) {
+      e.preventDefault();
+
+      if (e.target.nodeName === "A") {
+        positionY = e.layerY;
+      }
+      if (e.target.parentNode.nodeName === "LI") {
+        position = e.target.parentNode;
+      }
+      if (e.target.parentNode.parentNode.nodeName === "UL") {
+        parentToInsert = e.target.parentNode.parentNode;
+      }
+
+      if (e.target.hasChildNodes()) {
+        if (positionY <= 14) {
+          if (position !== undefined) {
+            parentToInsert.insertBefore(elementToMove, position);
+          }
+        } else {
+          if (position !== undefined) {
+            parentToInsert.insertBefore(elementToMove, position.nextSibling);
+          }
+        }
+      } else {
+        e.target.appendChild(elementToMove);
       }
     }
 
-    // const dragFuntionString = localStorage.getItem("dragFuntion");
-    // let dragFuntion = JSON.parse(dragFuntionString);
+    function drop(e) {
+      e.preventDefault();
 
-    // if (!dragFuntion) {
-    //   endableDragBtn.textContent = "Enable Dragging Element";
-    // } else {
-    //   endableDragBtn.textContent = "Disable Dragging Element";
-    // }
+      elementToMove.classList.remove("dragging");
 
-    // endableDragBtn.addEventListener("click", (e) => {
-    //   if (!dragFuntion) {
-    //     mainSection.addEventListener("click", enableFunt);
+      const indexOfElement = Array.from(
+        elementToMove.parentNode.childNodes
+      ).indexOf(elementToMove);
 
-    //     document
-    //       .querySelectorAll(".main-section-bookmarks-ul-li-link")
-    //       .forEach((elem) => {
-    //         elem.removeAttribute("href");
-    //       });
+      const indexOfGroup = Array.from(
+        elementToMove.parentNode.parentNode.parentNode.childNodes
+      ).indexOf(elementToMove.parentNode.parentNode);
 
-    //     changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "grab");
-    //     changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "grab");
+      const indexOfColumn = Array.from(
+        elementToMove.parentNode.parentNode.parentNode.parentNode.childNodes
+      ).indexOf(elementToMove.parentNode.parentNode.parentNode);
 
-    //     dragFuntion = true;
-    //     const dragFuntionString = JSON.stringify(dragFuntion);
-    //     localStorage.setItem("dragFuntion", dragFuntionString);
-    //   } else {
-    //     mainSection.removeEventListener("click", enableFunt);
-
-    //     changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "");
-    //     changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "");
-
-    //     dragFuntion = false;
-    //     const dragFuntionString = JSON.stringify(dragFuntion);
-    //     localStorage.setItem("dragFuntion", dragFuntionString);
-
-    //     while (document.querySelector(".main-section-bookmarks").firstChild) {
-    //       document
-    //         .querySelector(".main-section-bookmarks")
-    //         .removeChild(
-    //           document.querySelector(".main-section-bookmarks").firstChild
-    //         );
-    //     }
-    //     drawGroup(bookmarks);
-    //     appendIcons();
-    //   }
-    // });
-
-    const dragMainFuntion = () => {
-      let elementToMove,
-        positionToMove,
-        arrayElementToMove,
-        indexOfElementToMove,
-        groupOfElementToMove,
-        positionY,
-        parentToInsert,
-        position;
-
-      function dragover(e) {
-        e.preventDefault();
-
-        if (e.target.nodeName === "A") {
-          positionY = e.layerY;
-        }
-        if (e.target.parentNode.nodeName === "LI") {
-          position = e.target.parentNode;
-        }
-        if (e.target.parentNode.parentNode.nodeName === "UL") {
-          parentToInsert = e.target.parentNode.parentNode;
-        }
-
-        if (e.target.hasChildNodes()) {
-          if (positionY <= 14) {
-            if (position !== undefined) {
-              parentToInsert.insertBefore(elementToMove, position);
-            }
-          } else {
-            if (position !== undefined) {
-              parentToInsert.insertBefore(elementToMove, position.nextSibling);
-            }
-          }
-        } else {
-          e.target.appendChild(elementToMove);
-        }
+      if (indexOfElementToMove > -1) {
+        groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
       }
-      function drop(e) {
-        e.preventDefault();
+      bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
+        indexOfElement,
+        0,
+        arrayElementToMove
+      );
+      let bookmarksString = JSON.stringify(bookmarks);
+      localStorage.setItem("Bookmarks", bookmarksString);
+    }
 
-        elementToMove.classList.remove("dragging");
-
-        const indexOfElement = Array.from(
-          elementToMove.parentNode.childNodes
-        ).indexOf(elementToMove);
-
-        const indexOfGroup = Array.from(
-          elementToMove.parentNode.parentNode.parentNode.childNodes
-        ).indexOf(elementToMove.parentNode.parentNode);
-
-        const indexOfColumn = Array.from(
-          elementToMove.parentNode.parentNode.parentNode.parentNode.childNodes
-        ).indexOf(elementToMove.parentNode.parentNode.parentNode);
-
-        if (indexOfElementToMove > -1) {
-          groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
-        }
-        bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
-          indexOfElement,
-          0,
-          arrayElementToMove
-        );
-        let bookmarksString = JSON.stringify(bookmarks);
-        localStorage.setItem("Bookmarks", bookmarksString);
-      }
-      function dragstart(e) {
-        e.dataTransfer.setDragImage(
-          e.target,
-          window.outerWidth,
-          window.outerHeight
-        );
-
-        elementToMove = e.target;
+    function dragstart(e) {
+      e.dataTransfer.setDragImage(
+        e.target,
+        window.outerWidth,
+        window.outerHeight
+      );
+      if (e.target.nodeName === "H2") {
+        console.log("group");
+        console.log(e.target.parentNode.parentNode);
+        elementToMove = e.target.parentNode.parentNode;
         elementToMove.classList.add("dragging");
+        bookmarks.forEach((column) => {
+          column.groups.forEach((group) => {
+            if (group.groupName === e.target.textContent) {
+              const indexOfColumn = bookmarks.indexOf(column);
+              const indexOfGroup = column.groups.indexOf(group);
 
-        const indexOfElement = Array.from(
-          e.target.parentNode.childNodes
-        ).indexOf(e.target);
-        const indexOfGroup = Array.from(
-          e.target.parentNode.parentNode.parentNode.childNodes
-        ).indexOf(e.target.parentNode.parentNode);
-        const indexOfColumn = Array.from(
-          e.target.parentNode.parentNode.parentNode.parentNode.childNodes
-        ).indexOf(e.target.parentNode.parentNode.parentNode);
+              arrayElementToMove =
+                bookmarks[indexOfColumn].groups[indexOfGroup];
+              indexOfElementToMove = indexOfGroup;
+              groupOfElementToMove = bookmarks[indexOfColumn];
 
-        arrayElementToMove =
-          bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
-            indexOfElement
-          ];
+              console.log(arrayElementToMove);
+              console.log(indexOfElementToMove);
+              console.log(groupOfElementToMove);
+            }
+          });
+        });
+      } else if (e.target.nodeName === "A") {
+        console.log(e.target.parentNode);
+        elementToMove = e.target.parentNode;
+        elementToMove.classList.add("dragging");
+        bookmarks.forEach((column) => {
+          column.groups.forEach((group) => {
+            group.bookmark.forEach((bookamrk) => {
+              if (bookamrk.name === e.target.textContent) {
+                const indexOfColumn = bookmarks.indexOf(column);
+                const indexOfGroup = column.groups.indexOf(group);
+                const indexOfElement = group.bookmark.indexOf(bookamrk);
+                console.log(indexOfColumn);
+                console.log(indexOfGroup);
+                console.log(indexOfElement);
 
-        indexOfElementToMove = indexOfElement;
-        groupOfElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
+                arrayElementToMove =
+                  bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
+                    indexOfElement
+                  ];
+
+                indexOfElementToMove = indexOfElement;
+                groupOfElementToMove =
+                  bookmarks[indexOfColumn].groups[indexOfGroup];
+                console.log(arrayElementToMove);
+                console.log(indexOfElementToMove);
+                console.log(groupOfElementToMove);
+              }
+            });
+          });
+        });
       }
-    };
 
-    // const draggableLinkBtn = document.createElement("a");
-    // const draggableGroupBtn = document.createElement("a");
-    // draggableLinkBtn.classList.add(
-    //   "contextBtn",
-    //   "dragging-btn",
-    //   "dragging-link"
-    // );
-    // draggableGroupBtn.classList.add(
-    //   "contextBtn",
-    //   "dragging-btn",
-    //   "dragging-group"
-    // );
-    // if (dragLink !== true) {
-    //   draggableLinkBtn.textContent = "Enable Link Dragging";
-    // } else {
-    //   draggableLinkBtn.textContent = "Disable Link Dragging";
+      // const indexOfElement = Array.from(e.target.parentNode.childNodes).indexOf(
+      //   e.target
+      // );
+      // const indexOfGroup = Array.from(
+      //   e.target.parentNode.parentNode.parentNode.childNodes
+      // ).indexOf(e.target.parentNode.parentNode);
+      // const indexOfColumn = Array.from(
+      //   e.target.parentNode.parentNode.parentNode.parentNode.childNodes
+      // ).indexOf(e.target.parentNode.parentNode.parentNode);
+
+      // arrayElementToMove =
+      //   bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[indexOfElement];
+
+      // indexOfElementToMove = indexOfElement;
+      // groupOfElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
+    }
+
+    // if (e.target.nodeName === "H2") {
+    //   console.log("group");
+    //   console.log(e.target);
+    // } else if (e.target.nodeName === "A") {
+    //   console.log("link");
+    //   console.log(e.target);
     // }
-    // if (draggableLinkBtn.textContent === "Disable Link Dragging") {
-    //   draggableGroupBtn.classList.add("disable");
+
+    // e.target.addEventListener("dragstart", dragstart);
     // }
-    // if (dragGroup !== true) {
-    //   draggableGroupBtn.textContent = "Enable Group Dragging";
-    // } else {
-    //   draggableGroupBtn.textContent = "Disable Group Dragging";
-    // }
-    // if (draggableGroupBtn.textContent === "Disable Group Dragging") {
-    //   draggableLinkBtn.classList.add("disable");
-    // }
-    // popUp.appendChild(draggableLinkBtn);
-    // popUp.appendChild(draggableGroupBtn);
-
-    // draggableLinkBtn.addEventListener("click", (e) => {
-    //   const elemToDrag = document.querySelectorAll(
-    //     ".main-section-bookmarks-ul-li"
-    //   );
-    //   const elemToDragAppend = document.querySelectorAll(
-    //     ".main-section-bookmarks-ul-li"
-    //   );
-
-    //   const elemToDragOver = document.querySelectorAll(
-    //     ".main-section-bookmarks-ul"
-    //   );
-
-    //   let elementToMove,
-    //     positionToMove,
-    //     arrayElementToMove,
-    //     indexOfElementToMove,
-    //     groupOfElementToMove,
-    //     positionY,
-    //     parentToInsert,
-    //     position;
-
-    //   function dragover(e) {
-    //     e.preventDefault();
-
-    //     if (e.target.nodeName === "A") {
-    //       positionY = e.layerY;
-    //     }
-    //     if (e.target.parentNode.nodeName === "LI") {
-    //       position = e.target.parentNode;
-    //     }
-    //     if (e.target.parentNode.parentNode.nodeName === "UL") {
-    //       parentToInsert = e.target.parentNode.parentNode;
-    //     }
-
-    //     if (e.target.hasChildNodes()) {
-    //       if (positionY <= 14) {
-    //         if (position !== undefined) {
-    //           parentToInsert.insertBefore(elementToMove, position);
-    //         }
-    //       } else {
-    //         if (position !== undefined) {
-    //           parentToInsert.insertBefore(elementToMove, position.nextSibling);
-    //         }
-    //       }
-    //     } else {
-    //       e.target.appendChild(elementToMove);
-    //     }
-    //   }
-    //   function drop(e) {
-    //     e.preventDefault();
-
-    //     elementToMove.classList.remove("dragging");
-
-    //     const indexOfElement = Array.from(
-    //       elementToMove.parentNode.childNodes
-    //     ).indexOf(elementToMove);
-
-    //     const indexOfGroup = Array.from(
-    //       elementToMove.parentNode.parentNode.parentNode.childNodes
-    //     ).indexOf(elementToMove.parentNode.parentNode);
-
-    //     const indexOfColumn = Array.from(
-    //       elementToMove.parentNode.parentNode.parentNode.parentNode.childNodes
-    //     ).indexOf(elementToMove.parentNode.parentNode.parentNode);
-
-    //     if (indexOfElementToMove > -1) {
-    //       groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
-    //     }
-    //     bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
-    //       indexOfElement,
-    //       0,
-    //       arrayElementToMove
-    //     );
-    //     let bookmarksString = JSON.stringify(bookmarks);
-    //     localStorage.setItem("Bookmarks", bookmarksString);
-    //   }
-
-    //   function dragstart(e) {
-    //     e.dataTransfer.setDragImage(
-    //       e.target,
-    //       window.outerWidth,
-    //       window.outerHeight
-    //     );
-
-    //     elementToMove = e.target;
-    //     elementToMove.classList.add("dragging");
-
-    //     const indexOfElement = Array.from(
-    //       e.target.parentNode.childNodes
-    //     ).indexOf(e.target);
-    //     const indexOfGroup = Array.from(
-    //       e.target.parentNode.parentNode.parentNode.childNodes
-    //     ).indexOf(e.target.parentNode.parentNode);
-    //     const indexOfColumn = Array.from(
-    //       e.target.parentNode.parentNode.parentNode.parentNode.childNodes
-    //     ).indexOf(e.target.parentNode.parentNode.parentNode);
-
-    //     arrayElementToMove =
-    //       bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
-    //         indexOfElement
-    //       ];
-
-    //     indexOfElementToMove = indexOfElement;
-    //     groupOfElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
-    //   }
-
-    //   if (dragLink !== true) {
-    //     dragLink = true;
-    //     elemToDrag.forEach((elemToDrag) => {
-    //       elemToDrag.addEventListener("dragstart", dragstart, true);
-    //       elemToDrag.setAttribute("draggable", "true");
-    //       elemToDrag.classList.add("move");
-    //       elemToDrag.childNodes[0].removeAttribute("href");
-    //     });
-
-    //     elemToDragOver.forEach((elemToDragOver) => {
-    //       elemToDragOver.addEventListener("dragover", dragover, true);
-    //       elemToDragOver.addEventListener("drop", drop, true);
-
-    //       elemToDragOver.classList.add("dragOverList");
-    //     });
-    //     function closeOnESC() {
-    //       dragLink = false;
-    //       elemToDrag.forEach((elemToDrag) => {
-    //         elemToDrag.removeEventListener("dragstart", dragstart, true);
-    //       });
-    //       elemToDragOver.forEach((elemToDragOver) => {
-    //         elemToDragOver.removeEventListener("dragover", dragover, true);
-    //         elemToDragOver.removeEventListener("drop", drop, true);
-    //         // elemToDragOver.removeEventListener("dragenter", dragenter, true);
-    //         elemToDragOver.classList.remove("dragOverList");
-    //       });
-    //       while (document.querySelector(".main-section-bookmarks").firstChild) {
-    //         document
-    //           .querySelector(".main-section-bookmarks")
-    //           .removeChild(
-    //             document.querySelector(".main-section-bookmarks").firstChild
-    //           );
-    //       }
-    //       drawGroup(bookmarks);
-    //       appendIcons();
-    //       document.body.removeEventListener("dragover", dragover, true);
-    //       document.body.removeEventListener("keyup", closeOnESC);
-    //     }
-    //     document.body.addEventListener("keyup", closeOnESC);
-    //   } else {
-    //     dragLink = false;
-    //     elemToDrag.forEach((elemToDrag) => {
-    //       elemToDrag.removeEventListener("dragstart", dragstart, true);
-    //     });
-    //     elemToDragOver.forEach((elemToDragOver) => {
-    //       elemToDragOver.removeEventListener("dragover", dragover, true);
-    //       elemToDragOver.removeEventListener("drop", drop, true);
-    //       // elemToDragOver.removeEventListener("dragenter", dragenter, true);
-    //       elemToDragOver.classList.remove("dragOverList");
-    //     });
-    //     while (document.querySelector(".main-section-bookmarks").firstChild) {
-    //       document
-    //         .querySelector(".main-section-bookmarks")
-    //         .removeChild(
-    //           document.querySelector(".main-section-bookmarks").firstChild
-    //         );
-    //     }
-    //     drawGroup(bookmarks);
-    //     appendIcons();
-    //   }
-
-    //   if (document.querySelector(".rmb-popup") !== null) {
-    //     if (document.querySelector(".rmb-popup").parentNode) {
-    //       document
-    //         .querySelector(".rmb-popup")
-    //         .parentNode.removeChild(document.querySelector(".rmb-popup"));
-    //     }
-    //   }
-    // });
-
-    // draggableGroupBtn.addEventListener("click", (e) => {
-    //   const elemToDrag = document.querySelectorAll(
-    //     ".main-section-bookmarks-group-div"
-    //   );
-    //   const elemToDragOver = document.querySelectorAll(".main-section-column");
-
-    //   let elementToMove,
-    //     positionToMove,
-    //     arrayElementToMove,
-    //     indexOfElementToMove,
-    //     groupOfElementToMove,
-    //     positionY,
-    //     clientH,
-    //     parentToInsert,
-    //     position;
-
-    //   function dragover(e) {
-    //     e.preventDefault();
-
-    //     if (
-    //       e.target.parentNode.className ===
-    //       "main-section-bookmarks-group relative"
-    //     ) {
-    //       positionY = e.layerY;
-    //       clientH = e.target.clientHeight;
-    //     } else {
-    //       positionY = undefined;
-    //     }
-
-    //     let y = (50 * clientH) / 100;
-    //     if (e.target.parentNode.getAttribute("draggable") !== undefined) {
-    //       if (
-    //         e.target.parentNode.className ===
-    //         "main-section-bookmarks-group relative"
-    //       ) {
-    //         position = e.target.parentNode;
-    //       } else {
-    //         position = e.target;
-    //       }
-    //     }
-
-    //     if (
-    //       e.target.parentNode.className ===
-    //       "main-section-bookmarks-group relative"
-    //     ) {
-    //       parentToInsert = e.target.parentNode.parentNode;
-    //     } else if (e.target.className === "main-section-column dragOverList") {
-    //       parentToInsert = e.target;
-    //     }
-    //     if (parentToInsert !== undefined) {
-    //       if (parentToInsert.hasChildNodes()) {
-    //         if (positionY <= y) {
-    //           if (position !== undefined) {
-    //             parentToInsert.insertBefore(elementToMove, position);
-    //           }
-    //         } else {
-    //           if (position !== undefined) {
-    //             parentToInsert.insertBefore(
-    //               elementToMove,
-    //               position.nextSibling
-    //             );
-    //           }
-    //         }
-    //       } else {
-    //         parentToInsert.appendChild(elementToMove);
-    //       }
-    //     }
-    //   }
-    //   function drop(e) {
-    //     e.preventDefault();
-    //     elementToMove.classList.remove("dragging");
-
-    //     const indexOfGroup = Array.from(
-    //       elementToMove.parentNode.childNodes
-    //     ).indexOf(elementToMove);
-
-    //     const indexOfColumn = Array.from(
-    //       elementToMove.parentNode.parentNode.childNodes
-    //     ).indexOf(elementToMove.parentNode);
-
-    //     if (indexOfElementToMove > -1) {
-    //       groupOfElementToMove.groups.splice(indexOfElementToMove, 1);
-    //     }
-    //     bookmarks[indexOfColumn].groups.splice(
-    //       indexOfGroup,
-    //       0,
-    //       arrayElementToMove
-    //     );
-
-    //     let bookmarksString = JSON.stringify(bookmarks);
-    //     localStorage.setItem("Bookmarks", bookmarksString);
-    //   }
-
-    //   function dragstart(e) {
-    //     e.dataTransfer.setDragImage(
-    //       e.target,
-    //       window.outerWidth,
-    //       window.outerHeight
-    //     );
-
-    //     elementToMove = e.target.parentNode;
-    //     elementToMove.classList.add("dragging");
-
-    //     const indexOfGroup = Array.from(
-    //       elementToMove.parentNode.childNodes
-    //     ).indexOf(elementToMove);
-
-    //     const indexOfColumn = Array.from(
-    //       elementToMove.parentNode.parentNode.childNodes
-    //     ).indexOf(elementToMove.parentNode);
-
-    //     arrayElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
-    //     indexOfElementToMove = indexOfGroup;
-    //     groupOfElementToMove = bookmarks[indexOfColumn];
-    //   }
-
-    //   if (dragGroup !== true) {
-    //     dragGroup = true;
-    //     elemToDrag.forEach((elemToDrag) => {
-    //       const div = document.createElement("div");
-    //       elemToDrag.parentNode.classList.add("relative");
-    //       div.classList.add("mask");
-    //       elemToDrag.parentNode.appendChild(div);
-
-    //       div.setAttribute("draggable", "true");
-    //       div.classList.add("move");
-    //       div.addEventListener("dragstart", dragstart, true);
-    //     });
-    //     elemToDragOver.forEach((elemToDragOver) => {
-    //       elemToDragOver.addEventListener("dragover", dragover, true);
-    //       elemToDragOver.addEventListener("drop", drop, true);
-    //       elemToDragOver.classList.add("dragOverList");
-    //     });
-    //     function closeOnESC() {
-    //       dragGroup = false;
-    //       elemToDrag.forEach((elemToDrag) => {
-    //         elemToDrag.removeEventListener("dragstart", dragstart, true);
-    //       });
-    //       elemToDragOver.forEach((elemToDragOver) => {
-    //         elemToDragOver.removeEventListener("dragover", dragover, true);
-    //         elemToDragOver.removeEventListener("drop", drop, true);
-    //         // elemToDragOver.removeEventListener("dragenter", dragenter, true);
-    //         elemToDragOver.classList.remove("dragOverList");
-    //         while (
-    //           document.querySelector(".main-section-bookmarks").firstChild
-    //         ) {
-    //           document
-    //             .querySelector(".main-section-bookmarks")
-    //             .removeChild(
-    //               document.querySelector(".main-section-bookmarks").firstChild
-    //             );
-    //         }
-    //         drawGroup(bookmarks);
-    //         appendIcons();
-    //       });
-    //       document.body.removeEventListener("dragover", dragover, true);
-    //       document.body.removeEventListener("keyup", closeOnESC);
-    //     }
-    //     document.body.addEventListener("keyup", closeOnESC);
-    //   } else {
-    //     dragGroup = false;
-    //     elemToDrag.forEach((elemToDrag) => {
-    //       elemToDrag.removeEventListener("dragstart", dragstart, true);
-    //     });
-    //     elemToDragOver.forEach((elemToDragOver) => {
-    //       elemToDragOver.removeEventListener("dragover", dragover, true);
-    //       elemToDragOver.removeEventListener("drop", drop, true);
-    //       // elemToDragOver.removeEventListener("dragenter", dragenter, true);
-    //       elemToDragOver.classList.remove("dragOverList");
-    //       while (document.querySelector(".main-section-bookmarks").firstChild) {
-    //         document
-    //           .querySelector(".main-section-bookmarks")
-    //           .removeChild(
-    //             document.querySelector(".main-section-bookmarks").firstChild
-    //           );
-    //       }
-    //       drawGroup(bookmarks);
-    //       appendIcons();
-    //     });
-    //   }
-
-    //   if (document.querySelector(".rmb-popup") !== null) {
-    //     if (document.querySelector(".rmb-popup").parentNode) {
-    //       document
-    //         .querySelector(".rmb-popup")
-    //         .parentNode.removeChild(document.querySelector(".rmb-popup"));
-    //     }
-    //   }
-    // });
   });
 
 window.addEventListener("storage", function (e) {
@@ -965,10 +598,13 @@ const drawGroup = (array, name, url, newGroup) => {
         h2.textContent = element.groupName;
         h2.classList.add("main-section-bookmarks-group-title");
         divSecond.appendChild(h2);
-
         const ul = document.createElement("ul");
         ul.classList.add("main-section-bookmarks-ul");
-        ul.setAttribute("data-folded", element.folded);
+        if (groupFolding) {
+          ul.setAttribute("data-folded", element.folded);
+        } else {
+          ul.setAttribute("data-folded", "false");
+        }
         divFirst.appendChild(ul);
         drawLink(element, ul);
       });
@@ -1076,10 +712,12 @@ function foldUnfoldFunction(e) {
     });
   }
 }
+
 function groupFoldingFunc() {
   const groupElem = document.querySelectorAll(
     ".main-section-bookmarks-group-div"
   );
+  const elementToFold = document.querySelectorAll(".main-section-bookmarks-ul");
   if (groupFolding) {
     groupElem.forEach((group) => {
       if (group.getAttribute("listener") !== "true") {
@@ -1087,15 +725,25 @@ function groupFoldingFunc() {
         group.addEventListener("click", foldUnfoldFunction);
       }
     });
+
     changeCSSStyle(
       ".main-section-bookmarks-group-div:hover::before",
       "display",
       "block"
     );
 
-    // document.styleSheets[0].cssRules.forEach((style, index) => console.log(style[index]))
-    // document.styleSheets[0].cssRules[27].style.cursor = "pointer";
-    // document.styleSheets[0].cssRules[28].style.display = "block";
+    elementToFold.forEach((element) => {
+      bookmarks.forEach((column) => {
+        column.groups.forEach((group) => {
+          if (
+            group.groupName ===
+            element.parentNode.childNodes[0].childNodes[0].textContent
+          ) {
+            element.setAttribute("data-folded", group.folded);
+          }
+        });
+      });
+    });
   } else {
     groupElem.forEach((group) => {
       if (group.getAttribute("listener") === "true") {
@@ -1103,17 +751,27 @@ function groupFoldingFunc() {
         group.removeEventListener("click", foldUnfoldFunction);
       }
     });
+
     changeCSSStyle(
       ".main-section-bookmarks-group-div:hover::before",
       "display",
       "none"
     );
 
-    // document.styleSheets[0].cssRules[27].style.cursor = "auto";
-    // document.styleSheets[0].cssRules[28].style.display = "none";
+    elementToFold.forEach((element) => {
+      bookmarks.forEach((column) => {
+        column.groups.forEach((group) => {
+          if (
+            group.groupName ===
+            element.parentNode.childNodes[0].childNodes[0].textContent
+          ) {
+            element.setAttribute("data-folded", "false");
+          }
+        });
+      });
+    });
   }
 }
-groupFoldingFunc();
 
 //
 /// addBookmark Container logic
@@ -1366,7 +1024,7 @@ const drawAddBookmark = () => {
       let bookmarksString = JSON.stringify(bookmarks);
       localStorage.setItem("Bookmarks", bookmarksString);
       drawGroup(null, name, url, newGroupName);
-      appendIcons();
+      // appendIcons();
     }
     closeWindow();
   });
@@ -1718,6 +1376,10 @@ const drawSettings = () => {
         value: "jetblack",
         name: "JetBlack",
       },
+      {
+        value: "custom",
+        name: "Custom",
+      },
     ];
     listOfOptions.forEach((element) => {
       const option = document.createElement("option");
@@ -1726,46 +1388,43 @@ const drawSettings = () => {
       selectTheme.appendChild(option);
     });
 
-    // const divColorPickers = document.createElement("div");
-    // divColorPickers.classList.add("setting-menu-appearance-colorPickers");
-    // divColorPickers.setAttribute("data-visible", "false");
-    // divTheme.appendChild(divColorPickers);
-    // const listOfColors = [
-    //   {
-    //     value: "background",
-    //     name: "Background",
-    //   },
-    //   {
-    //     value: "primary",
-    //     name: "Primary",
-    //   },
-    //   {
-    //     value: "secondary",
-    //     name: "Secondary",
-    //   },
-    //   {
-    //     value: "accent",
-    //     name: "Accent",
-    //   },
-    //   {
-    //     value: "text",
-    //     name: "Text",
-    //   },
-    // ];
-    // listOfColors.forEach((element) => {
-    //   const div = document.createElement("div");
-    //   divColorPickers.appendChild(div);
-    //   const input = document.createElement("input");
-    //   input.setAttribute("type", "color");
-    //   input.setAttribute("name", element.value);
-    //   input.setAttribute("autocomplete", "off");
-    //   input.classList.add("input", `${element.value}Color-input`);
-    //   div.appendChild(input);
-    //   const p = document.createElement("p");
-    //   p.classList.add("colorPickerName");
-    //   p.textContent = element.name;
-    //   div.appendChild(p);
-    // });
+    const divColorPickers = document.createElement("div");
+    divColorPickers.classList.add("setting-menu-appearance-colorPickers");
+    divColorPickers.setAttribute("data-visible", "false");
+    divTheme.appendChild(divColorPickers);
+    const listOfColors = [
+      {
+        value: "background",
+        name: "Background",
+      },
+      {
+        value: "primary",
+        name: "Primary",
+      },
+      {
+        value: "secondary",
+        name: "Secondary",
+      },
+      {
+        value: "accent",
+        name: "Accent",
+      },
+      {
+        value: "text",
+        name: "Text",
+      },
+    ];
+    listOfColors.forEach((element) => {
+      const div = document.createElement("div");
+      divColorPickers.appendChild(div);
+      const input = document.createElement("input");
+      input.setAttribute("type", "color");
+      input.setAttribute("name", element.value);
+      input.setAttribute("autocomplete", "off");
+      input.classList.add("input", `${element.value}Color-input`);
+      div.appendChild(input);
+    });
+
     const divAppeSett = document.createElement("div");
     divAppeSett.classList.add("setting-menu-appearance-settings");
     divAppe.appendChild(divAppeSett);
@@ -1826,33 +1485,66 @@ const drawSettings = () => {
     //
 
     // change color theme
-    // if (colorScheme.mode !== "custom") {
-    //   divColorPickers.setAttribute("data-visible", "false");
-    // } else {
-    //   divColorPickers.setAttribute("data-visible", "true");
-    //   document.querySelector(".backgroundColor-input").value =
-    //     colorScheme.customeColors.background;
-    //   document.querySelector(".primaryColor-input").value =
-    //     colorScheme.customeColors.primary;
-    //   document.querySelector(".secondaryColor-input").value =
-    //     colorScheme.customeColors.secondary;
-    //   document.querySelector(".accentColor-input").value =
-    //     colorScheme.customeColors.accent;
-    //   document.querySelector(".textColor-input").value =
-    //     colorScheme.customeColors.text;
-    //   document;
-    // }
-    // selectTheme.value = colorScheme.mode;
+
+    const customColorChange = (e) => {
+      const colorName = e.target.name;
+      const value = e.target.value;
+      colorScheme.customColors[colorName] = value;
+      colorSchemeString = JSON.stringify(colorScheme);
+      localStorage.setItem("ColorSheme", colorSchemeString);
+      const mode = `:root { --background:${colorScheme.customColors.background}; --primary: ${colorScheme.customColors.primary}; --secondary: ${colorScheme.customColors.secondary}; --accent: ${colorScheme.customColors.accent}; --text: ${colorScheme.customColors.text};}`;
+      styleSheet.deleteRule(mode, 0);
+      styleSheet.insertRule(mode, 0);
+    };
+
+    if (colorScheme.mode === "custom") {
+      divColorPickers.setAttribute("data-visible", "true");
+      document.querySelector(".backgroundColor-input").value =
+        colorScheme.customColors.background;
+      document.querySelector(".primaryColor-input").value =
+        colorScheme.customColors.primary;
+      document.querySelector(".secondaryColor-input").value =
+        colorScheme.customColors.secondary;
+      document.querySelector(".accentColor-input").value =
+        colorScheme.customColors.accent;
+      document.querySelector(".textColor-input").value =
+        colorScheme.customColors.text;
+
+      document
+        .querySelectorAll(".setting-menu-appearance-colorPickers input")
+        .forEach((element) => {
+          element.addEventListener("input", customColorChange);
+        });
+    } else {
+      divColorPickers.setAttribute("data-visible", "false");
+    }
+
+    selectTheme.value = colorScheme.mode;
     selectTheme.addEventListener("input", () => {
       changeTheme(selectTheme.value);
+      if (selectTheme.value === "custom") {
+        divColorPickers.setAttribute("data-visible", "true");
+        document.querySelector(".backgroundColor-input").value =
+          colorScheme.customColors.background;
+        document.querySelector(".primaryColor-input").value =
+          colorScheme.customColors.primary;
+        document.querySelector(".secondaryColor-input").value =
+          colorScheme.customColors.secondary;
+        document.querySelector(".accentColor-input").value =
+          colorScheme.customColors.accent;
+        document.querySelector(".textColor-input").value =
+          colorScheme.customColors.text;
+
+        document
+          .querySelectorAll(".setting-menu-appearance-colorPickers input")
+          .forEach((element) => {
+            element.addEventListener("input", customColorChange);
+          });
+      } else {
+        divColorPickers.setAttribute("data-visible", "false");
+      }
     });
-    // document
-    //   .querySelectorAll(".setting-menu-appearance-colorPickers input")
-    //   .forEach((element) => {
-    //     element.addEventListener("input", changeCustomePalete);
-    //   });
-    // changeCustomePalete;
-    //
+    // select
 
     //features
     const divFeatures = document.createElement("div");
@@ -2272,7 +1964,7 @@ const changeTheme = (value) => {
 
     case "jetblack":
       // colorPickersContainer.setAttribute("data-visible", "false");
-      colorScheme.mode = "midnight";
+      colorScheme.mode = "jetblack";
       colorScheme.colors = {
         background: "#181818",
         primary: "#3d3d3d",
@@ -2281,13 +1973,51 @@ const changeTheme = (value) => {
         text: "#eae6da",
       };
       break;
+
+    case "custom":
+      // colorPickersContainer.setAttribute("data-visible", "true");
+      colorScheme.mode = "custom";
+      if (colorScheme.customColors === undefined) {
+        if (
+          window.matchMedia("(prefers-color-scheme:light)").matches === true
+        ) {
+          //light
+          colorScheme.customColors = {
+            background: "#ffffff",
+            primary: "#d6d6d7",
+            secondary: "#e3e5e8",
+            accent: "#6f7071",
+            text: "#0f0f0f",
+          };
+        } else {
+          //dark
+          colorScheme.customColors = {
+            background: "#313338",
+            primary: "#1e1f22",
+            secondary: "#3b3b44",
+            accent: "#82858c",
+            text: "#f7f7f8",
+          };
+        }
+        colorSchemeString = JSON.stringify(colorScheme);
+        localStorage.setItem("ColorSheme", colorSchemeString);
+      }
+      break;
+
     default:
       break;
   }
+
   colorSchemeString = JSON.stringify(colorScheme);
   localStorage.setItem("ColorSheme", colorSchemeString);
 
-  const mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+  let mode;
+  if (colorScheme.mode === "custom") {
+    mode = `:root { --background:${colorScheme.customColors.background}; --primary: ${colorScheme.customColors.primary}; --secondary: ${colorScheme.customColors.secondary}; --accent: ${colorScheme.customColors.accent}; --text: ${colorScheme.customColors.text};}`;
+  } else {
+    mode = `:root { --background:${colorScheme.colors.background}; --primary: ${colorScheme.colors.primary}; --secondary: ${colorScheme.colors.secondary}; --accent: ${colorScheme.colors.accent}; --text: ${colorScheme.colors.text};}`;
+  }
+
   styleSheet.deleteRule(mode, 0);
   styleSheet.insertRule(mode, 0);
 };
@@ -2375,19 +2105,8 @@ const createUndoElement = (
           .removeChild(document.querySelector(".undoContainer"));
       }
     }
-  }, 5150);
+  }, 5050);
 };
-
-//draging element
-function enableFunt(e) {
-  if (e.target.nodeName === "H2") {
-    console.log("group");
-    console.log(e.target);
-  } else if (e.target.nodeName === "A") {
-    console.log("link");
-    console.log(e.target);
-  }
-}
 
 //footer moving text
 
