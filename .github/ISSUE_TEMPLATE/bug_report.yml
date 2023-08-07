@@ -30,16 +30,13 @@ body:
       value: "A bug happened!"
   validations:
       required: true
-- type: dropdown
-  id: version
+- type: input
   attributes:
-      label: Version
-      description: What version of our software are you running?
-      options:
-        - 1.0.2 (Default)
-        - 1.0.3 (Edge)
+    label: a_new_home version
+    description: "A New HOMEpage version"
+    placeholder: v1.0.0
   validations:
-      required: true
+    required: true
 - type: dropdown
   id: browsers
   attributes:
