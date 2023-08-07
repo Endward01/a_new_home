@@ -1,15 +1,17 @@
 name: Feature request
 description: Suggest an idea for this project
-title: "<TITLE HERE>"
+title: "[Feature]: "
 labels: ["enhancement"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
 - type: checkboxes
   attributes:
     label: Consent
     options:
     - label: I verified that there is no open/closed issue for the same subject.
-      required: true
-    - label: I understand that **YTMDesktop have NO affiliation with Google or YouTube**
       required: true
 - type: textarea
   attributes:
