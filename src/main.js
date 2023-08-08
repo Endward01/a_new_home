@@ -547,7 +547,6 @@ document
               indexOfElementToMove = column.groups.indexOf(group);
               arrayElementToMove =
                 bookmarks[indexOfColumnToMove].groups[indexOfElementToMove];
-              // indexOfElementToMove = indexOfGroup;
               groupOfElementToMove = bookmarks[indexOfColumnToMove];
             }
           });
