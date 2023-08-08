@@ -710,7 +710,9 @@ input:focus {
   resize: none;
 }
 .hideMenuBtnCheckBox,
-.hideLinkIconCheckbox {
+.hideLinkIconCheckbox,
+.hideTipsCheckbox,
+.toggleGroupFolding  {
   width: 16px;
   aspect-ratio: 1/1;
 }
