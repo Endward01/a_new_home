@@ -57,22 +57,33 @@ i {
   background: var(--accent);
 }
 .dragging {
-  outline: 1px dashed var(--accent);
+  /* outline: 1px dashed var(--accent); */
   outline-offset: -1px;
   border-radius: 2px;
   opacity: 0.5;
+  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
 }
-.dragging > * {
-  pointer-events: none;
+.dragging:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
 }
-.drag {
-  border-top: 1px solid var(--accent);
+.dragging .main-section-bookmarks-group-div{
+  border-top: none;
 }
 .dragOverList {
   outline: 1px dashed var(--accent);
   border-radius: 2px;
   min-height: 32px;
-  position: relative;
+  /* position: relative; */
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
 }
 .dragConfirmWindow {
   position: absolute;
@@ -80,10 +91,10 @@ i {
   top: -8.5%;
   transform: translate(-50%, 0);
   display: flex;
-  width: 22.5%;
-  height:max-content;
-  background-color: var(--background);
-  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  width: max-content;
+  height: max-content;
+  /* background-color: var(--background);
+  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px; */
   padding: 4px 8px 4px 8px;
   gap: 16px;
   animation: slideindrag 250ms ease-in-out;
@@ -96,11 +107,11 @@ i {
     transform: translate(-50%, 0);
   }
 }
-.dragConfirmWindow a.contextBtn {
+.dragConfirmWindow a.button {
   /* width: max-content; */
   flex: 1;
-  height: auto;
-  /* width: max-content; */
+  height: 40px;
+  width: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,13 +121,13 @@ i {
   text-align: center;
 }
 .dragConfirmWindow a.contextBtn:hover {
-  outline: 1px solid  var(--accent);
+  outline: 1px solid var(--accent);
 }
 
-.dragConfirmWindow a.contextBtn:first-child {
+/* .dragConfirmWindow a.contextBtn:first-child {
   background-color: var(--primary);
-}
-.dragConfirmWindow a.contextBtn p {
+} */
+.dragConfirmWindow a.button p {
   font-size: 12px;
   color: gray;
 }
@@ -125,7 +136,7 @@ ul.main-section-bookmarks-ul.dragOverList {
   max-height: 100%;
 }
 .main-section-column {
-  height: max-content;
+  height: 100%;
 }
 .move {
   cursor: move;
@@ -143,7 +154,7 @@ ul.main-section-bookmarks-ul.dragOverList {
   cursor: move;
 }
 .main {
-  /* width: 100%; */
+  width: 95%;
   margin: 0 auto;
   height: 100vh;
   display: flex;
@@ -187,8 +198,11 @@ ul.main-section-bookmarks-ul.dragOverList {
   flex-grow: 1;
   position: relative;
   height: 100%;
+  width: 100%;
   border-radius: 4px;
   outline-offset: 1px;
+}
+.main-section *{
   transition: outline 250ms ease-in-out;
 }
 .main-section-bookmarks {
@@ -257,7 +271,8 @@ ul.main-section-bookmarks-ul.dragOverList {
   border-radius: 2px;
 }
 .main-footer {
-  height: 3%;
+  height: 3vh;
+  
 }
 .main-footer-conteiner {
   height: 100%;
@@ -270,11 +285,14 @@ ul.main-section-bookmarks-ul.dragOverList {
   position: absolute;
   z-index: -1;
   top: 0;
+  line-height: 1;
   animation: moveText 20s linear;
-  /* left: 0; */
+  color: gray;
   transform: translateX(100%);
   text-align: center;
+  font-size: calc(0.55 * 3vh);
   width: 100%;
+  margin: calc(0.2 * 3vh) 0;
 }
 @keyframes moveText {
   from {
@@ -392,12 +410,12 @@ input.cpybtn {
 .addBookmark-form {
   /* position: absolute; */
   /* top: 0; */
-  transform: translateY(-10%);
-  padding: 42px;
+  /* transform: translateY(-10%); */
+  
   padding-top: 0;
   background-color: var(--background);
   display: flex;
-  width: 50%;
+  width: 75%;
   flex-direction: column;
   gap: 16px;
   border-radius: 2px;
@@ -420,11 +438,10 @@ input.cpybtn {
 }
 .editDiv form {
   position: absolute;
-  top: 20%;
-  padding: 42px;
+
   background-color: var(--background);
   display: flex;
-  width: 50%;
+  width: 75%;
   flex-direction: column;
   border-radius: 2px;
   /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
@@ -520,21 +537,24 @@ input:focus {
   justify-content: center;
 }
 .settings-menu {
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  grid-template-rows: max-content max-content;
+  position: relative;
   height: 100%;
-  width: 70%;
+  width: 100%;
   padding: 32px;
-  gap: 16px;
   border-radius: 2px;
   background-color: var(--background);
   /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
   animation: opacityAnimation 200ms;
+}
+.settings-options {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  grid-template-rows: max-content max-content;
+  gap: 16px;
   overflow-y: scroll;
   overflow-x: hidden;
 }
-.settings-menu > div {
+.settings-options > div {
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -547,6 +567,7 @@ input:focus {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-top: 1px solid var(--accent);
 }
 .setting-menu-appearance-colorPickers[data-visible="true"] {
   display: grid;
@@ -566,15 +587,38 @@ input:focus {
 .setting-menu-appearance-colorPickers .input:hover {
   outline: 1px var(--accent) solid;
 }
-
-.setting-menu-appearance-colorPickers .input:hover ~ .colorPickerName {
-  display: block;
+.main-section-navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
 }
-.settings h1 {
-  grid-column: 1 / span 2;
+.main-section-navbar h1 {
   line-height: 1.25;
   font-size: 42px;
-  /* text-align: center; */
+}
+.main-section-navbar .fa-xmark {
+  /* width: 20px; */
+  aspect-ratio: 1/1;
+  /* position: relative; */
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  color: grey;
+}
+.main-section-navbar .fa-xmark:hover {
+  color: var(--text);
+}
+.main-section-navbar .fa-xmark::before {
+  /* position: absolute; */
+  /* top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px; */
 }
 .settings h2 {
   /* width: 100%; */
@@ -602,9 +646,8 @@ input:focus {
 .settingInput {
   cursor: pointer;
 }
-.settings-menu > div > div {
-  border-top: 1px solid var(--accent);
-}
+/* .settings-menu > div > div {
+} */
 
 .setting-menu-appearance-theme *,
 .setting-menu-appearance-settings label {
@@ -673,23 +716,39 @@ input:focus {
 }
 
 .settings-links {
-  margin: auto 0;
+  /* margin: auto 0; */
   position: absolute;
-  bottom: -2%;
+  bottom: 0;
   /* left:0; */
-  width: 70%;
-  z-index: 5;
+  width: max-content;
+  /* z-index: 5; */
   display: flex;
   justify-content: space-around;
   align-items: center;
+  gap: 26px;
+  padding: 8px 4px;
 }
 .settings-links a {
   text-decoration: none;
   color: gray;
+  font-size: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+.settings-links span{
+  text-decoration: none;
+  color: gray;
   font-size: 12px;
+  font-weight: 600;
+}
+.settings-links a{
+  display: flex;
+  flex-direction: column;
 }
 .settings-links a:hover {
-  color: var(--accent);
+  color: var(--primary);
 }
 .rmb-popup {
   overflow: hidden;
@@ -885,8 +944,30 @@ font-size: 16px;
     opacity: 1;
   }
 }
+@media screen and (min-width: 1200px){
+  .addBookmark-form{
+    width: 50%;
+   
+  }
+}
 @media screen and (min-width: 1440px) {
   .main {
     width: 1440px;
   }
+  .addBookmark-form{
+    width: 50%;
+    padding: 42px;
+    transform: translateY(-10%);
+  }
+  .settings-menu{
+    width: 70%;
+  }
+  .editDiv form{
+    top: 20%;
+    padding: 42px;
+    width: 50%;
+  }
+  /* .main-section{
+    width: 100%;
+  } */
 }
