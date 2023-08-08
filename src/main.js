@@ -121,6 +121,7 @@ if (
     false
   );
 }
+
 document
   .querySelector(".main-section")
   .addEventListener("contextmenu", (element) => {
@@ -187,10 +188,13 @@ document
       dragBtn.classList.add("btnIsDisabled");
     }
 
-    dragBtn.addEventListener("click", (e) => {
-      const mainSection = document.querySelector(".main-section");
+    let arrayToChange;
 
+    dragBtn.addEventListener("click", (e) => {
+      arrayToChange = bookmarks;
+      const mainSection = document.querySelector(".main-section");
       if (!dragFuntion) {
+        mainSection.addEventListener("drag", drag);
         mainSection.addEventListener("dragstart", dragstart);
 
         document
@@ -205,9 +209,9 @@ document
           .forEach((elem) => {
             elem.setAttribute("draggable", "true");
           });
-        changeCSSStyle(".main-section", "outline", "1px dashed var(--accent)");
-        changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "grab");
-        changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "grab");
+        // changeCSSStyle(".main-section", "outline", "1px dashed var(--accent)");
+        changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "move");
+        changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "move");
 
         dragFuntion = true;
         const dragFuntionString = JSON.stringify(dragFuntion);
@@ -217,23 +221,32 @@ document
       const confirmDiv = document.createElement("div");
       confirmDiv.classList.add("dragConfirmWindow");
       mainSection.appendChild(confirmDiv);
+
       const btn1 = document.createElement("a");
-      btn1.classList.add("contextBtn");
-      btn1.textContent = "Confirm Changes";
+      btn1.classList.add("button");
+      btn1.textContent = "Confirm";
+      // confirmDiv.appendChild(btn1);
+      const pConfirm = document.createElement("p");
+      pConfirm.textContent = "Save Changes";
       confirmDiv.appendChild(btn1);
+      btn1.appendChild(pConfirm);
 
       const btn2 = document.createElement("a");
-      btn2.classList.add("contextBtn");
+      btn2.classList.add("button");
       btn2.textContent = "Cancel";
       const pCancel = document.createElement("p");
-      pCancel.textContent = "Without saving changes";
+      pCancel.textContent = "Discard Changes";
       confirmDiv.appendChild(btn2);
       btn2.appendChild(pCancel);
 
-      btn2.addEventListener("click", (e) => {
+      btn1.addEventListener("click", (e) => {
+        const bookmarksString = JSON.stringify(arrayToChange);
+        localStorage.setItem("Bookmarks", bookmarksString);
+
+        mainSection.removeEventListener("drag", drag);
         mainSection.removeEventListener("dragstart", dragstart);
 
-        changeCSSStyle(".main-section", "outline", "");
+        // changeCSSStyle(".main-section", "outline", "");
         changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "");
         changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "");
 
@@ -248,12 +261,44 @@ document
               document.querySelector(".main-section-bookmarks").firstChild
             );
         }
+
         if (document.querySelector(".dragConfirmWindow") !== null) {
           document
             .querySelector(".main-section")
             .removeChild(document.querySelector(".dragConfirmWindow"));
         }
         drawGroup(bookmarks);
+        appendIcons();
+      });
+
+      btn2.addEventListener("click", (e) => {
+        mainSection.removeEventListener("drag", drag);
+        mainSection.removeEventListener("dragstart", dragstart);
+
+        // changeCSSStyle(".main-section", "outline", "");
+        changeCSSStyle(".main-section-bookmarks-ul-li-link", "cursor", "");
+        changeCSSStyle(".main-section-bookmarks-group-title", "cursor", "");
+
+        dragFuntion = false;
+        const dragFuntionString = JSON.stringify(dragFuntion);
+        localStorage.setItem("dragFuntion", dragFuntionString);
+
+        while (document.querySelector(".main-section-bookmarks").firstChild) {
+          document
+            .querySelector(".main-section-bookmarks")
+            .removeChild(
+              document.querySelector(".main-section-bookmarks").firstChild
+            );
+        }
+
+        if (document.querySelector(".dragConfirmWindow") !== null) {
+          document
+            .querySelector(".main-section")
+            .removeChild(document.querySelector(".dragConfirmWindow"));
+        }
+        const bookmarksString = localStorage.getItem("Bookmarks");
+        const bookmarksArray = JSON.parse(bookmarksString);
+        drawGroup(bookmarksArray);
         appendIcons();
       });
     });
@@ -341,44 +386,84 @@ document
         });
       });
 
-    // const dragMainFuntion = () => {
     let elementToMove,
       positionToMove,
       arrayElementToMove,
       indexOfElementToMove,
-      groupOfElementToMove,
+      indexOfGroupToMove,
+      indexOfColumnToMove,
       positionY,
       parentToInsert,
       position;
-    // };
 
-    //draging element
-    // function enableFunt(e) {
     function dragover(e) {
       e.preventDefault();
-
-      if (e.target.nodeName === "A") {
-        positionY = e.layerY;
-      }
-      if (e.target.parentNode.nodeName === "LI") {
-        position = e.target.parentNode;
-      }
-      if (e.target.parentNode.parentNode.nodeName === "UL") {
-        parentToInsert = e.target.parentNode.parentNode;
-      }
-
-      if (e.target.hasChildNodes()) {
-        if (positionY <= 14) {
-          if (position !== undefined) {
-            parentToInsert.insertBefore(elementToMove, position);
-          }
-        } else {
-          if (position !== undefined) {
-            parentToInsert.insertBefore(elementToMove, position.nextSibling);
+      if (elementToMove.nodeName === "DIV") {
+        if (e.target !== elementToMove) {
+          let parent, element;
+          if (e.target.hasChildNodes()) {
+            if (e.target.className === "main-section-bookmarks-ul-li-link") {
+              element = e.target.parentNode.parentNode.parentNode;
+              parent = e.target.parentNode.parentNode.parentNode.parentNode;
+              let rect = element.getBoundingClientRect();
+              positionY = e.clientY - rect.top;
+              if (positionY <= rect.height / 2) {
+                if (element !== undefined) {
+                  parent.insertBefore(elementToMove, element);
+                }
+              } else {
+                if (element !== undefined) {
+                  parent.insertBefore(elementToMove, element.nextSibling);
+                }
+              }
+            }
+          } else {
+            e.target.appendChild(elementToMove);
           }
         }
-      } else {
-        e.target.appendChild(elementToMove);
+      } else if (elementToMove.nodeName === "LI") {
+        if (e.target !== elementToMove) {
+          let groupIsEmpty;
+          let emptyGroup;
+
+          if (!e.target.hasChildNodes()) {
+            groupIsEmpty = !e.target.hasChildNodes();
+            emptyGroup = e.target;
+          }
+
+          if (!groupIsEmpty) {
+            if (e.target.className === "main-section-bookmarks-ul-li-link") {
+              let rect = e.target.getBoundingClientRect();
+              positionY = e.clientY - rect.top;
+
+              if (positionY <= rect.height / 2) {
+                if (
+                  e.target.className === "main-section-bookmarks-ul-li-link"
+                ) {
+                  if (e.target.parentNode !== undefined) {
+                    e.target.parentNode.parentNode.insertBefore(
+                      elementToMove,
+                      e.target.parentNode
+                    );
+                  }
+                }
+              } else {
+                if (
+                  e.target.className === "main-section-bookmarks-ul-li-link"
+                ) {
+                  if (e.target.parentNode !== undefined) {
+                    e.target.parentNode.parentNode.insertBefore(
+                      elementToMove,
+                      e.target.parentNode.nextSibling
+                    );
+                  }
+                }
+              }
+            }
+          } else {
+            emptyGroup.appendChild(elementToMove);
+          }
+        }
       }
     }
 
@@ -386,29 +471,124 @@ document
       e.preventDefault();
 
       elementToMove.classList.remove("dragging");
+      if (elementToMove.nodeName === "DIV") {
+        const newGroupIndex = Array.prototype.indexOf.call(
+          elementToMove.parentNode.childNodes,
+          elementToMove
+        );
+        const newColumnIndex = Array.prototype.indexOf.call(
+          elementToMove.parentNode.parentNode.children,
+          elementToMove.parentNode
+        );
 
-      const indexOfElement = Array.from(
-        elementToMove.parentNode.childNodes
-      ).indexOf(elementToMove);
+        arrayToChange[indexOfColumnToMove].groups.splice(
+          indexOfElementToMove,
+          1
+        );
 
-      const indexOfGroup = Array.from(
-        elementToMove.parentNode.parentNode.parentNode.childNodes
-      ).indexOf(elementToMove.parentNode.parentNode);
+        arrayToChange[newColumnIndex].groups.splice(
+          newGroupIndex,
+          0,
+          arrayElementToMove
+        );
 
-      const indexOfColumn = Array.from(
-        elementToMove.parentNode.parentNode.parentNode.parentNode.childNodes
-      ).indexOf(elementToMove.parentNode.parentNode.parentNode);
+        document.querySelectorAll(".main-section-column").forEach((element) => {
+          element.removeEventListener("dragover", dragover);
+          element.removeEventListener("drop", drop);
+        });
+        document
+          .querySelectorAll(".main-section-column")
+          .forEach((element) => element.classList.remove("dragOverList"));
+      } else if (elementToMove.nodeName === "LI") {
+        const newElementIndex = Array.prototype.indexOf.call(
+          elementToMove.parentNode.childNodes,
+          elementToMove
+        );
+        const newGroupIndex = Array.prototype.indexOf.call(
+          elementToMove.parentNode.parentNode.parentNode.childNodes,
+          elementToMove.parentNode.parentNode
+        );
+        const newColumnIndex = Array.prototype.indexOf.call(
+          elementToMove.parentNode.parentNode.parentNode.parentNode.children,
+          elementToMove.parentNode.parentNode.parentNode
+        );
 
-      if (indexOfElementToMove > -1) {
-        groupOfElementToMove.bookmark.splice(indexOfElementToMove, 1);
+        arrayToChange[indexOfColumnToMove].groups[
+          indexOfGroupToMove
+        ].bookmark.splice(indexOfElementToMove, 1);
+
+        arrayToChange[newColumnIndex].groups[newGroupIndex].bookmark.splice(
+          newElementIndex,
+          0,
+          arrayElementToMove
+        );
+
+        document
+          .querySelectorAll(".main-section-bookmarks-ul")
+          .forEach((element) => {
+            element.removeEventListener("dragover", dragover);
+            element.removeEventListener("drop", drop);
+          });
+        document
+          .querySelectorAll(".main-section-bookmarks-ul")
+          .forEach((element) => element.classList.remove("dragOverList"));
       }
-      bookmarks[indexOfColumn].groups[indexOfGroup].bookmark.splice(
-        indexOfElement,
-        0,
-        arrayElementToMove
-      );
-      let bookmarksString = JSON.stringify(bookmarks);
-      localStorage.setItem("Bookmarks", bookmarksString);
+    }
+
+    function drag(e) {
+      e.dataTransfer.setDragImage(e.target, e.outerWidth, e.outerHeight);
+      if (e.target.nodeName === "H2") {
+        elementToMove = e.target.parentNode.parentNode;
+        elementToMove.classList.add("dragging");
+        bookmarks.forEach((column) => {
+          column.groups.forEach((group) => {
+            if (group.groupName === e.target.textContent) {
+              indexOfColumnToMove = bookmarks.indexOf(column);
+              indexOfElementToMove = column.groups.indexOf(group);
+              arrayElementToMove =
+                bookmarks[indexOfColumnToMove].groups[indexOfElementToMove];
+              // indexOfElementToMove = indexOfGroup;
+              groupOfElementToMove = bookmarks[indexOfColumnToMove];
+            }
+          });
+        });
+        document.querySelectorAll(".main-section-column").forEach((element) => {
+          element.addEventListener("dragover", dragover, true);
+          element.addEventListener("drop", drop, true);
+        });
+        document
+          .querySelectorAll(".main-section-column")
+          .forEach((element) => element.classList.add("dragOverList"));
+      } else if (e.target.nodeName === "A") {
+        elementToMove = e.target.parentNode;
+        elementToMove.classList.add("dragging");
+        bookmarks.forEach((column) => {
+          column.groups.forEach((group) => {
+            group.bookmark.forEach((bookamrk) => {
+              if (bookamrk.name === e.target.textContent) {
+                indexOfColumnToMove = bookmarks.indexOf(column);
+                indexOfGroupToMove = column.groups.indexOf(group);
+                indexOfElementToMove = group.bookmark.indexOf(bookamrk);
+                arrayElementToMove =
+                  bookmarks[indexOfColumnToMove].groups[indexOfGroupToMove]
+                    .bookmark[indexOfElementToMove];
+
+                groupOfElementToMove =
+                  bookmarks[indexOfColumnToMove].groups[indexOfGroupToMove];
+              }
+            });
+          });
+        });
+        document
+          .querySelectorAll(".main-section-bookmarks-ul")
+          .forEach((element) => {
+            element.addEventListener("dragover", dragover);
+            element.addEventListener("drop", drop);
+          });
+        document
+          .querySelectorAll(".main-section-bookmarks-ul")
+          .forEach((element) => element.classList.add("dragOverList"));
+      }
     }
 
     function dragstart(e) {
@@ -417,87 +597,7 @@ document
         window.outerWidth,
         window.outerHeight
       );
-      if (e.target.nodeName === "H2") {
-        console.log("group");
-        console.log(e.target.parentNode.parentNode);
-        elementToMove = e.target.parentNode.parentNode;
-        elementToMove.classList.add("dragging");
-        bookmarks.forEach((column) => {
-          column.groups.forEach((group) => {
-            if (group.groupName === e.target.textContent) {
-              const indexOfColumn = bookmarks.indexOf(column);
-              const indexOfGroup = column.groups.indexOf(group);
-
-              arrayElementToMove =
-                bookmarks[indexOfColumn].groups[indexOfGroup];
-              indexOfElementToMove = indexOfGroup;
-              groupOfElementToMove = bookmarks[indexOfColumn];
-
-              console.log(arrayElementToMove);
-              console.log(indexOfElementToMove);
-              console.log(groupOfElementToMove);
-            }
-          });
-        });
-      } else if (e.target.nodeName === "A") {
-        console.log(e.target.parentNode);
-        elementToMove = e.target.parentNode;
-        elementToMove.classList.add("dragging");
-        bookmarks.forEach((column) => {
-          column.groups.forEach((group) => {
-            group.bookmark.forEach((bookamrk) => {
-              if (bookamrk.name === e.target.textContent) {
-                const indexOfColumn = bookmarks.indexOf(column);
-                const indexOfGroup = column.groups.indexOf(group);
-                const indexOfElement = group.bookmark.indexOf(bookamrk);
-                console.log(indexOfColumn);
-                console.log(indexOfGroup);
-                console.log(indexOfElement);
-
-                arrayElementToMove =
-                  bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[
-                    indexOfElement
-                  ];
-
-                indexOfElementToMove = indexOfElement;
-                groupOfElementToMove =
-                  bookmarks[indexOfColumn].groups[indexOfGroup];
-                console.log(arrayElementToMove);
-                console.log(indexOfElementToMove);
-                console.log(groupOfElementToMove);
-              }
-            });
-          });
-        });
-      }
-
-      // const indexOfElement = Array.from(e.target.parentNode.childNodes).indexOf(
-      //   e.target
-      // );
-      // const indexOfGroup = Array.from(
-      //   e.target.parentNode.parentNode.parentNode.childNodes
-      // ).indexOf(e.target.parentNode.parentNode);
-      // const indexOfColumn = Array.from(
-      //   e.target.parentNode.parentNode.parentNode.parentNode.childNodes
-      // ).indexOf(e.target.parentNode.parentNode.parentNode);
-
-      // arrayElementToMove =
-      //   bookmarks[indexOfColumn].groups[indexOfGroup].bookmark[indexOfElement];
-
-      // indexOfElementToMove = indexOfElement;
-      // groupOfElementToMove = bookmarks[indexOfColumn].groups[indexOfGroup];
     }
-
-    // if (e.target.nodeName === "H2") {
-    //   console.log("group");
-    //   console.log(e.target);
-    // } else if (e.target.nodeName === "A") {
-    //   console.log("link");
-    //   console.log(e.target);
-    // }
-
-    // e.target.addEventListener("dragstart", dragstart);
-    // }
   });
 
 window.addEventListener("storage", function (e) {
@@ -1313,14 +1413,27 @@ const drawSettings = () => {
   const divMenu = document.createElement("div");
   divMenu.classList.add("settings-menu");
   divMain.appendChild(divMenu);
+
+  const divNav = document.createElement("div");
+  divNav.classList.add("main-section-navbar");
+  divMenu.appendChild(divNav);
+
   const h1 = document.createElement("h1");
   h1.textContent = "Settings";
-  divMenu.appendChild(h1);
+  divNav.appendChild(h1);
+
+  const closeBtn = document.createElement("a");
+  closeBtn.classList.add("fa-solid", "fa-xmark");
+  divNav.appendChild(closeBtn);
+
+  const divOption = document.createElement("div");
+  divOption.classList.add("settings-options");
+  divMenu.appendChild(divOption);
 
   const leftColumn = () => {
     const leftDiv = document.createElement("div");
     leftDiv.classList.add("leftSettings");
-    divMenu.appendChild(leftDiv);
+    divOption.appendChild(leftDiv);
 
     //apperance
     const divAppe = document.createElement("div");
@@ -1589,7 +1702,7 @@ const drawSettings = () => {
     const rightDiv = document.createElement("div");
     rightDiv.classList.add("rightSettings");
 
-    divMenu.appendChild(rightDiv);
+    divOption.appendChild(rightDiv);
 
     // Homepage Url
     const divTab = document.createElement("div");
@@ -1797,24 +1910,41 @@ const drawSettings = () => {
   divLinks.classList.add("settings-links");
   divMain.appendChild(divLinks);
   const a1 = document.createElement("a");
-  a1.setAttribute("href", "https://github.com/Endward01");
+  a1.setAttribute(
+    "href",
+    "https://github.com/Endward01/a_new_home/issues/new/choose"
+  );
   a1.setAttribute("target", "_blank");
-  a1.textContent = "My Github";
+  a1.classList.add("fa-solid", "fa-bug");
+  const span1 = document.createElement("span");
+  span1.textContent = "@Report";
+
   divLinks.appendChild(a1);
+  a1.appendChild(span1);
+
   const a2 = document.createElement("a");
   a2.setAttribute("href", "https://github.com/Endward01/a_new_home");
   a2.setAttribute("target", "_blank");
-  a2.textContent = "Github Page of this Project";
+  a2.classList.add("fa-brands", "fa-github");
+  const span2 = document.createElement("span");
+  span2.textContent = "@Github";
+
   divLinks.appendChild(a2);
+  a2.appendChild(span2);
+
   const a3 = document.createElement("a");
-  a3.setAttribute("href", "https://danielpretki.dev/");
+  a3.setAttribute("href", "mailto:kontakt.dpretki@gmail.com");
   a3.setAttribute("target", "_blank");
-  a3.textContent = "My Website";
+  a3.classList.add("fa-solid", "fa-message");
+  const span3 = document.createElement("span");
+  span3.textContent = "@Mail";
+
   divLinks.appendChild(a3);
+  a3.appendChild(span3);
 
   // close window
   const closeWindow = () => {
-    document.body.removeEventListener("keyup", closeWindowKey);
+    // document.body.removeEventListener("keyup", closeWindowKey);
 
     document
       .querySelector(".main-section")
@@ -1829,19 +1959,21 @@ const drawSettings = () => {
     }
   };
   document.body.addEventListener("keyup", closeWindowKey);
-  divMain.addEventListener(
-    "mouseup",
-    (e) => {
-      if (e.target.className === "settings") {
-        document.body.removeEventListener("keyup", closeWindowKey);
+  closeBtn.addEventListener("click", closeWindow);
 
-        document
-          .querySelector(".main-section")
-          .removeChild(document.querySelector(".settings"));
-      }
-    },
-    true
-  );
+  // divMain.addEventListener(
+  //   "mouseup",
+  //   (e) => {
+  //     if (e.target.className === "settings") {
+  //       document.body.removeEventListener("keyup", closeWindowKey);
+
+  //       document
+  //         .querySelector(".main-section")
+  //         .removeChild(document.querySelector(".settings"));
+  //     }
+  //   },
+  //   true
+  // );
 
   //
 };
