@@ -2632,7 +2632,7 @@ const movingTextFooter = () => {
   div.appendChild(p);
   setTimeout(() => {
     document.querySelectorAll(".main-footer-conteiner-text").forEach((text) => {
-      if (text.textContent === randomText) {
+      if (text.textContent === tipsText) {
         div.removeChild(text);
       }
     });
@@ -2651,12 +2651,12 @@ const movingTextFooter = () => {
       document
         .querySelectorAll(".main-footer-conteiner-text")
         .forEach((text) => {
-          if (text.textContent === randomText) {
+          if (text.textContent === tipsText) {
             div.removeChild(text);
           }
         });
     }, 20000);
-  }, 7500);
+  }, 20000);
 };
 if (!hideTips) {
   movingTextFooter();
