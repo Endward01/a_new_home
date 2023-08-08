@@ -20,6 +20,9 @@
   <a href="https://addons.mozilla.org/en-US/firefox/addon/a-new-home/" target="_blank"> <img src="assets/logos/FIREFOX BROWSER.svg"/></a>
 
  </p>
+ <p>
+  <a href="https://unrivaled-speculoos-51299a.netlify.app" target="_blank">Web Preview</a>
+ </p>
 </h3>
 
 ---
