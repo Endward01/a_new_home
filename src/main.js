@@ -540,10 +540,11 @@ document
           arrayElementToMove
         );
 
-        document.querySelectorAll(".main-section-column").forEach((element) => {
+        document.querySelectorAll(".main-section").forEach((element) => {
           element.removeEventListener("dragover", dragover);
           element.removeEventListener("drop", drop);
         });
+
         document
           .querySelectorAll(".main-section-column")
           .forEach((element) => element.classList.remove("dragOverList"));
@@ -571,12 +572,11 @@ document
           arrayElementToMove
         );
 
-        document
-          .querySelectorAll(".main-section-bookmarks-ul")
-          .forEach((element) => {
-            element.removeEventListener("dragover", dragover);
-            element.removeEventListener("drop", drop);
-          });
+        document.querySelectorAll(".main-section").forEach((element) => {
+          element.removeEventListener("dragover", dragover);
+          element.removeEventListener("drop", drop);
+        });
+
         document
           .querySelectorAll(".main-section-bookmarks-ul")
           .forEach((element) => element.classList.remove("dragOverList"));
@@ -599,9 +599,9 @@ document
             }
           });
         });
-        document.querySelectorAll(".main-section-column").forEach((element) => {
-          element.addEventListener("dragover", dragover, true);
-          element.addEventListener("drop", drop, true);
+        document.querySelectorAll(".main-section").forEach((element) => {
+          element.addEventListener("dragover", dragover);
+          element.addEventListener("drop", drop);
         });
         document
           .querySelectorAll(".main-section-column")
@@ -626,12 +626,10 @@ document
             });
           });
         });
-        document
-          .querySelectorAll(".main-section-bookmarks-ul")
-          .forEach((element) => {
-            element.addEventListener("dragover", dragover);
-            element.addEventListener("drop", drop);
-          });
+        document.querySelectorAll(".main-section").forEach((element) => {
+          element.addEventListener("dragover", dragover);
+          element.addEventListener("drop", drop);
+        });
         document
           .querySelectorAll(".main-section-bookmarks-ul")
           .forEach((element) => element.classList.add("dragOverList"));
