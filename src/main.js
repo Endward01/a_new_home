@@ -193,11 +193,12 @@ document
     if (dragFuntion) {
       dragBtn.classList.add("btnIsDisabled");
     }
+    // console.log(bookmarks);
 
-    let arrayToChange;
+    // console.log(arrayToChange);
+    const arrayToChange = [...bookmarks];
 
     dragBtn.addEventListener("click", (e) => {
-      arrayToChange = bookmarks;
       const mainSection = document.querySelector(".main-section");
       if (!dragFuntion) {
         mainSection.addEventListener("drag", drag);
@@ -274,6 +275,7 @@ document
             .removeChild(document.querySelector(".dragConfirmWindow"));
         }
         drawGroup(bookmarks);
+        groupFoldingFunc();
         appendIcons();
       });
 
@@ -305,6 +307,7 @@ document
         const bookmarksString = localStorage.getItem("Bookmarks");
         const bookmarksArray = JSON.parse(bookmarksString);
         drawGroup(bookmarksArray);
+        groupFoldingFunc();
         appendIcons();
       });
 
@@ -457,7 +460,9 @@ document
               }
             }
           } else {
-            e.target.appendChild(elementToMove);
+            if (e.target.nodeName !== "IMG") {
+              e.target.appendChild(elementToMove);
+            }
           }
         }
       } else if (elementToMove.nodeName === "LI") {
@@ -500,7 +505,11 @@ document
               }
             }
           } else {
-            emptyGroup.appendChild(elementToMove);
+            if (emptyGroup.nodeName !== "IMG") {
+              if (emptyGroup.className !== "main-section-column") {
+                emptyGroup.appendChild(elementToMove);
+              }
+            }
           }
         }
       }
@@ -1703,6 +1712,7 @@ const drawSettings = () => {
       colorSchemeString = JSON.stringify(colorScheme);
       localStorage.setItem("ColorSheme", colorSchemeString);
       const mode = `:root { --background:${colorScheme.customColors.background}; --primary: ${colorScheme.customColors.primary}; --secondary: ${colorScheme.customColors.secondary}; --accent: ${colorScheme.customColors.accent}; --text: ${colorScheme.customColors.text};}`;
+
       styleSheet.deleteRule(mode, 0);
       styleSheet.insertRule(mode, 0);
     };
@@ -2057,22 +2067,6 @@ const drawSettings = () => {
   };
   document.body.addEventListener("keyup", closeWindowKey);
   closeBtn.addEventListener("click", closeWindow);
-
-  // divMain.addEventListener(
-  //   "mouseup",
-  //   (e) => {
-  //     if (e.target.className === "settings") {
-  //       document.body.removeEventListener("keyup", closeWindowKey);
-
-  //       document
-  //         .querySelector(".main-section")
-  //         .removeChild(document.querySelector(".settings"));
-  //     }
-  //   },
-  //   true
-  // );
-
-  //
 };
 // drawSettings();
 

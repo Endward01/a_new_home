@@ -72,7 +72,7 @@ i {
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
-.dragging .main-section-bookmarks-group-div{
+.dragging .main-section-bookmarks-group-div {
   border-top: none;
 }
 .dragOverList {
@@ -202,7 +202,7 @@ ul.main-section-bookmarks-ul.dragOverList {
   border-radius: 4px;
   outline-offset: 1px;
 }
-.main-section *{
+.main-section * {
   transition: outline 250ms ease-in-out;
 }
 .main-section-bookmarks {
@@ -272,7 +272,6 @@ ul.main-section-bookmarks-ul.dragOverList {
 }
 .main-footer {
   height: 3vh;
-  
 }
 .main-footer-conteiner {
   height: 100%;
@@ -411,7 +410,7 @@ input.cpybtn {
   /* position: absolute; */
   /* top: 0; */
   /* transform: translateY(-10%); */
-  
+
   padding-top: 0;
   background-color: var(--background);
   display: flex;
@@ -712,7 +711,7 @@ input:focus {
 .hideMenuBtnCheckBox,
 .hideLinkIconCheckbox,
 .hideTipsCheckbox,
-.toggleGroupFolding  {
+.toggleGroupFolding {
   width: 16px;
   aspect-ratio: 1/1;
 }
@@ -739,13 +738,13 @@ input:focus {
   align-items: center;
   gap: 4px;
 }
-.settings-links span{
+.settings-links span {
   text-decoration: none;
   color: gray;
   font-size: 12px;
   font-weight: 600;
 }
-.settings-links a{
+.settings-links a {
   display: flex;
   flex-direction: column;
 }
@@ -946,25 +945,24 @@ font-size: 16px;
     opacity: 1;
   }
 }
-@media screen and (min-width: 1200px){
-  .addBookmark-form{
+@media screen and (min-width: 1200px) {
+  .addBookmark-form {
     width: 50%;
-   
   }
 }
 @media screen and (min-width: 1440px) {
   .main {
     width: 1440px;
   }
-  .addBookmark-form{
+  .addBookmark-form {
     width: 50%;
     padding: 42px;
     transform: translateY(-10%);
   }
-  .settings-menu{
+  .settings-menu {
     width: 70%;
   }
-  .editDiv form{
+  .editDiv form {
     top: 20%;
     padding: 42px;
     width: 50%;
