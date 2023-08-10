@@ -1363,9 +1363,14 @@ const editBtnLogic = (domElement) => {
 
       document.querySelector(".confirmBtn").addEventListener("click", () => {
         let newUrl;
-        let regex = /https:\/[\s\S]*/i;
+        let httpsRegex = /https:\/[\s\S]*/i;
+        let httpRegex = /http:\/[\s\S]*/i;
 
-        if (!regex.test(document.querySelector(".editInpUrl").value)) {
+        if (httpRegex.test(document.querySelector(".editInpUrl").value)) {
+          newUrl = document.querySelector(".editInpUrl").value;
+        } else if (
+          !httpsRegex.test(document.querySelector(".editInpUrl").value)
+        ) {
           newUrl = `https://${document.querySelector(".editInpUrl").value}`;
         } else {
           newUrl = document.querySelector(".editInpUrl").value;
