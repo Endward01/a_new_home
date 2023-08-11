@@ -6,7 +6,7 @@
 </h1> 
 
 <p align="center">
- An extension for firefox and chromium that adds a homepage and a new tab page for your minimalist needs.
+ This extension replaces your browser's new tab page and home page for your minimalist needs, which presents your links as a clean, simple list.
 </p>
 
 ---
@@ -33,6 +33,22 @@
 
 ---
 
+**Its features include**:
+- create bookmark lists in 4 simple columns
+- editing and deleting links
+- import/export bookmarks
+- changing the order of links and lists by dragging them between each other
+- the ability to change the color theme and the ability to create your own
+- collapsing lists to hide links when you don't need them
+  
+**New features in pipeline:**
+- [ ] bookmark search bar
+- [ ] ability to add a background image
+- [ ] the ability to change the amount of column
+- [ ] weather card (widget)
+- [ ] simple taking and displaying notes (widget)
+
+---
 <p align="center">
   <img src="assets/screenshots/2.png" width="30%" />
   <img src="assets/screenshots/3.png" width="30%" />
