@@ -38,7 +38,7 @@
 - editing and deleting links
 - import/export bookmarks
 - changing the order of links and lists by dragging them between each other
-- the ability to change the color theme and the ability to create your own
+- the ability to change color theme and create your own
 - collapsing lists to hide links when you don't need them
   
 **New features in pipeline:**
