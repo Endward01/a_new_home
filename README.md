@@ -37,8 +37,8 @@
 - create bookmark lists in 4 simple columns
 - editing and deleting links
 - import/export bookmarks
-- changing the order of links and lists by dragging them between each other
-- the ability to change color theme and create your own
+- changing the order of links and lists by dragging
+- ability to change color theme and create your own
 - collapsing lists to hide links when you don't need them
   
 **New features in pipeline:**
