@@ -88,8 +88,8 @@ i {
 .dragConfirmWindow {
   position: absolute;
   left: 50%;
-  top: -8.5%;
-  transform: translate(-50%, 0);
+  top: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   width: max-content;
   height: max-content;
@@ -101,10 +101,10 @@ i {
 }
 @keyframes slideindrag {
   from {
-    transform: translate(-50%, -100%);
+    transform: translate(-50%, -200%);
   }
   to {
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -50%);
   }
 }
 .dragConfirmWindow a.button {
@@ -161,6 +161,7 @@ ul.main-section-bookmarks-ul.dragOverList {
   flex-direction: column;
 }
 .main-nav {
+  position: relative;
   height: 10%;
   /* width: 100%; */
   display: flex;
@@ -747,12 +748,14 @@ input:focus {
 }
 .settings-links a {
   text-decoration: none;
-  color: gray;
-  font-size: 22px;
+  fill: gray;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   gap: 4px;
+}
+.settings-links svg{
+  font-size: 24px;
+  margin: 0 auto;
 }
 .settings-links span {
   text-decoration: none;
@@ -760,12 +763,8 @@ input:focus {
   font-size: 12px;
   font-weight: 600;
 }
-.settings-links a {
-  display: flex;
-  flex-direction: column;
-}
-.settings-links a:hover {
-  color: var(--primary);
+.settings-links a:hover svg{
+  fill: var(--primary);
 }
 .rmb-popup {
   overflow: hidden;
@@ -844,59 +843,34 @@ font-size: 16px;
   border: 0 solid transparent;
 }
 
-.undoContainer {
+.undoDiv {
   position: absolute;
-  top: 70%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 25%;
-  height: max-content;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  transition: all 250ms ease-in-out;
-  /* z-index: -1; */
-}
-.undoContainer > div {
-  position: relative;
-  /* height: 32px; */
-  width: 100%;
-  background-color: var(--background);
-  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  border-radius: 4px;
-  animation: slidein 1s;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 16px;
+  padding: 4px 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  overflow: hidden;
-  padding: 4px 8px;
-  animation: deleteUndoContainer 5150ms, slidein 250ms;
-  z-index: 5;
+  gap: 16px;
+  background-color: var(--background);
+  box-shadow: var(--accent) 0px 0px 2px, rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 2px;
+  animation: deleteUndoContainer 7750ms, slidein 250ms;
+  animation-timing-function: linear;
 }
-.undoContainer > div > span {
-  font-size: 16px;
-  line-height: 20px;
-  font-weight: bold;
-  height: max-content;
-  flex: 1;
+.undoDiv > .contextBtn {
+  width: max-content;
 }
-.undoContainer div .contextBtn {
-  font-size: 16px;
-  width: auto;
-  /* padding: 0 8px; */
-  margin: 2px 0;
-  width: auto;
-}
-
-.undoContainer .divProgers {
+.undoDiv .divProgers {
   position: absolute;
   bottom: 0;
   left: 0;
   height: 4px;
   border-radius: 4px;
   background-color: var(--accent);
-  animation: progressBar 5s;
+  animation: progressBar 7500ms;
+  animation-delay: 250ms;
 }
 @keyframes progressBar {
   from {
@@ -908,15 +882,12 @@ font-size: 16px;
 }
 @keyframes deleteUndoContainer {
   0% {
-    transform: translateX(0);
   }
   95% {
-    transform: translateX(0);
     opacity: 1;
     filter: blur(0);
   }
   100% {
-    transform: translateX(50%);
     opacity: 0;
     filter: blur(1rem);
   }
@@ -924,11 +895,11 @@ font-size: 16px;
 @keyframes slidein {
   from {
     opacity: 0;
-    transform: translateY(500%);
+    transform: translate(-100%, -50%);
   }
   to {
     opcaity: 1;
-    transform: translateY(0);
+    transform: translate(0, -50%);
   }
 }
 @keyframes fadeIn {
