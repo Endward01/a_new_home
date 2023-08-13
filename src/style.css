@@ -177,6 +177,18 @@ ul.main-section-bookmarks-ul.dragOverList {
   margin-right: 16px;
   gap: 16px;
 }
+.icon {
+  width: 38px;
+}
+.icon svg {
+  margin: 0 auto;
+  fill: var(--text);
+  /* font-size: 28px; */
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /* .main-nav-icon > li {
   display: flex;
@@ -217,14 +229,14 @@ ul.main-section-bookmarks-ul.dragOverList {
   line-height: 1.25;
   cursor: pointer;
 }
-.main-section-bookmarks-group-div:hover::before {
-  right: 5%;
-  top: 0;
-  position: absolute;
-  content: "";
-  font: 12px/1 FontAwesome;
-  color: var(--accent);
-  padding-top: 4px;
+.main-section-bookmarks-group-div:hover::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 6px 6px 6px;
+  border-color: transparent transparent gray transparent;
 }
 .main-section-bookmarks-group-div {
   border-top: 1px solid var(--accent);
@@ -259,17 +271,31 @@ ul.main-section-bookmarks-ul.dragOverList {
   justify-content: flex-end;
   gap: 6px;
   align-items: center;
-  padding: 4px 16px 4px 16px;
-  line-height: 20px;
+  padding: 3px 16px 3px 16px;
+  border-radius: 3px;
   text-decoration: none;
-  transition: background 250ms ease;
+  overflow: hidden;
+  margin-block-end: 2px;
+  transform: scale(100%);
+  background-image: linear-gradient(var(--accent) 0 0);
+  background-size: 200% 0.08em;
+  background-position: 200% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 400ms, background-position 400ms;
 }
 .main-section-bookmarks-ul-li-link:hover,
 .main-section-bookmarks-ul-li-link:focus {
-  /* color: var(--accent); */
-  background-color: var(--primary);
+  transition: background-size 400ms, background-position 400ms;
+  background-position: 100% 100%;
+}
+.main-section-bookmarks-ul-li {
+  transition: background-color 200ms ease-in;
   border-radius: 2px;
 }
+.main-section-bookmarks-ul-li:hover {
+  background-color: var(--primary);
+}
+
 .main-footer {
   height: 3vh;
 }
@@ -597,27 +623,18 @@ input:focus {
   line-height: 1.25;
   font-size: 42px;
 }
-.main-section-navbar .fa-xmark {
-  /* width: 20px; */
-  aspect-ratio: 1/1;
-  /* position: relative; */
+.main-section-navbar a {
   cursor: pointer;
-  border-radius: 4px;
   padding: 4px 8px;
-  font-size: 20px;
   display: flex;
   align-items: center;
-  color: grey;
+  fill: grey;
 }
-.main-section-navbar .fa-xmark:hover {
-  color: var(--text);
+.main-section-navbar a svg {
+  font-size: 20px;
 }
-.main-section-navbar .fa-xmark::before {
-  /* position: absolute; */
-  /* top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 20px; */
+.main-section-navbar a:hover {
+  fill: var(--text);
 }
 .settings h2 {
   /* width: 100%; */
@@ -637,8 +654,7 @@ input:focus {
   flex-direction: column;
   gap: 8px;
 }
-.settings-menu-newTab-label {
-}
+
 .settings p {
   line-height: 1.25;
 }
@@ -777,12 +793,16 @@ input:focus {
   line-height: 20px;
 }
 .contextBtn {
+  fill: var(--text);
   display: block;
   width: 100%;
   padding: 8px 16px 8px 16px;
   text-decoration: none;
   cursor: pointer;
   transition: background 250ms ease;
+}
+.contextBtn svg {
+  font-size: 18px;
 }
 .contextBtn:hover,
 .contextBtn:focus {
