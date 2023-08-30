@@ -63,6 +63,7 @@ const dataVisibleSwitcher = (elem, position) => {
     elem.setAttribute("data-visible", "true");
   }
 };
+document.querySelector(".addBookmark-form-name").focus();
 
 document
   .querySelector(".addBookmark-form-checkbox")
@@ -200,3 +201,8 @@ document.querySelector(".addBookmark-form").addEventListener("input", () => {
     }
   }
 });
+
+if(document.querySelector(".addBookmark-form-chooseGroup").childNodes.length === 0){
+  document.querySelector(".addBookmark-form-checkbox").click()
+  document.querySelector(".addBookmark-form-checkbox").disabled = true
+}
