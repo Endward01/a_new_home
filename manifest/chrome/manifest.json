@@ -2,9 +2,9 @@
   "manifest_version": 3,
   "name": "A New Homepage",
   "short_name": "a_new_home",
-  "version": "0.9",
+  "version": "1.0",
   "author": "Daniel Prętki",
-  "description": "An extension that adds a homepage and new tab page for your minimalistic needs.",
+  "description": "This extension replaces your browser's new page and home page which presents your links as a clean, simple list",
   "icons": {
     "96": "src/icons/logo-96.png"
   },

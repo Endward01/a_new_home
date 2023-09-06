@@ -292,7 +292,7 @@ ul.main-section-bookmarks-ul.dragOverList {
 }
 
 .main-footer {
-  height: 3vh;
+  height: 22px;
 }
 .main-footer-conteiner {
   height: 100%;
@@ -310,9 +310,9 @@ ul.main-section-bookmarks-ul.dragOverList {
   color: gray;
   transform: translateX(100%);
   text-align: center;
-  font-size: calc(0.55 * 3vh);
+  font-size: 16px;
   width: 100%;
-  margin: calc(0.2 * 3vh) 0;
+  /* margin: calc(0.2 * 3vh) 0; */
 }
 @keyframes moveText {
   from {
