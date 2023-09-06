@@ -2323,13 +2323,6 @@ const dragAndDrop = () => {
         elementToMove.parentNode.parentNode.children,
         elementToMove.parentNode
       );
-      console.log(arrayToChange);
-      console.log("Old:")
-      console.log(indexOfColumnToMove)
-      console.log(indexOfElementToMove)
-      console.log("New:");
-      console.log(newColumnIndex);
-      console.log(newGroupIndex);
 
       arrayToChange[indexOfColumnToMove].groups.splice(indexOfElementToMove, 1);
 
@@ -2362,18 +2355,6 @@ const dragAndDrop = () => {
         elementToMove.parentNode.parentNode.parentNode.parentNode.children,
         elementToMove.parentNode.parentNode.parentNode
       );
-      console.log(arrayToChange);
-      console.log(arrayToChange[indexOfColumnToMove].groups[indexOfGroupToMove].bookmark[
-        indexOfElementToMove
-      ])
-      console.log("Old:")
-      console.log(indexOfColumnToMove)
-      console.log(indexOfGroupToMove)
-      console.log(indexOfElementToMove)
-      console.log("New:");
-      console.log(newColumnIndex);
-      console.log(newGroupIndex);
-      console.log(newElementIndex);
 
       arrayToChange[indexOfColumnToMove].groups[
         indexOfGroupToMove
@@ -2406,9 +2387,6 @@ const dragAndDrop = () => {
           if (group.groupName === e.target.textContent) {
             indexOfColumnToMove = arrayToChange.indexOf(column);
             indexOfElementToMove = column.groups.indexOf(group);
-            // console.log("Old:");
-            // console.log(arrayToChange.indexOf(column));
-            // console.log(column.groups.indexOf(group));
             arrayElementToMove = arrayToChange[indexOfColumnToMove].groups[indexOfElementToMove]
           }
         });
@@ -2430,10 +2408,6 @@ const dragAndDrop = () => {
               indexOfColumnToMove = arrayToChange.indexOf(column);
               indexOfGroupToMove = column.groups.indexOf(group);
               indexOfElementToMove = group.bookmark.indexOf(bookamrk);
-              // console.log("Old:");
-              // console.log(arrayToChange.indexOf(column));
-              // console.log(column.groups.indexOf(group));
-              // console.log(group.bookmark.indexOf(bookamrk));
               arrayElementToMove = arrayToChange[indexOfColumnToMove].groups[indexOfGroupToMove].bookmark[
                 indexOfElementToMove
               ]
