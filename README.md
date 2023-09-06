@@ -21,7 +21,8 @@
 
  </p>
  <p>
-  <a href="https://unrivaled-speculoos-51299a.netlify.app" target="_blank">Web Preview</a>
+  <a href="https://unrivaled-speculoos-51299a.netlify.app" target="_blank">Web Preview</a></br>
+  (use this site only as a preview, not as the main app)
  </p>
 </h3>
 
