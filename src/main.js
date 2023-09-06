@@ -2051,14 +2051,8 @@ const createUndoElement = (
   });
 
   setTimeout(() => {
-    if (
-      document
-        .querySelector(".main-nav")
-        .contains(undoDiv)
-    ) {
-      document
-        .querySelector(".main-nav")
-        .removeChild(undoDiv);
+    if (document.querySelector(".main-nav").contains(undoDiv)) {
+      document.querySelector(".main-nav").removeChild(undoDiv);
     }
   }, 7500);
 };
@@ -2066,11 +2060,6 @@ const createUndoElement = (
 // drag and drop function
 
 const dragAndDrop = () => {
-  const bookmarksString = localStorage.getItem("Bookmarks");
-  var arrayToChange = JSON.parse(bookmarksString);
-
-
-
   const dragFuntionString = localStorage.getItem("dragFuntion");
   let dragFuntion = JSON.parse(dragFuntionString);
 
@@ -2155,6 +2144,7 @@ const dragAndDrop = () => {
         .querySelector(".main-nav")
         .removeChild(document.querySelector(".dragConfirmWindow"));
     }
+
     drawGroup(arrayToChange);
     groupFoldingFunc();
     appendIcons();
@@ -2235,15 +2225,18 @@ const dragAndDrop = () => {
   }
   document.body.addEventListener("keyup", escapeColse);
 
+  const bookmarksString = localStorage.getItem("Bookmarks");
+  let arrayToChange = JSON.parse(bookmarksString);
+
   let elementToMove,
-    arrayElementToMove,
+  arrayElementToMove,
     indexOfElementToMove,
     indexOfGroupToMove,
-    indexOfColumnToMove,
-    positionY;
+    indexOfColumnToMove;
 
   function dragover(e) {
     e.preventDefault();
+    let positionY;
     if (elementToMove.nodeName === "DIV") {
       if (e.target !== elementToMove) {
         let parent, element;
@@ -2319,15 +2312,24 @@ const dragAndDrop = () => {
     e.preventDefault();
 
     elementToMove.classList.remove("dragging");
+
     if (elementToMove.nodeName === "DIV") {
       const newGroupIndex = Array.prototype.indexOf.call(
         elementToMove.parentNode.childNodes,
         elementToMove
       );
+
       const newColumnIndex = Array.prototype.indexOf.call(
         elementToMove.parentNode.parentNode.children,
         elementToMove.parentNode
       );
+      console.log(arrayToChange);
+      console.log("Old:")
+      console.log(indexOfColumnToMove)
+      console.log(indexOfElementToMove)
+      console.log("New:");
+      console.log(newColumnIndex);
+      console.log(newGroupIndex);
 
       arrayToChange[indexOfColumnToMove].groups.splice(indexOfElementToMove, 1);
 
@@ -2350,14 +2352,28 @@ const dragAndDrop = () => {
         elementToMove.parentNode.childNodes,
         elementToMove
       );
+
       const newGroupIndex = Array.prototype.indexOf.call(
         elementToMove.parentNode.parentNode.parentNode.childNodes,
         elementToMove.parentNode.parentNode
       );
+
       const newColumnIndex = Array.prototype.indexOf.call(
         elementToMove.parentNode.parentNode.parentNode.parentNode.children,
         elementToMove.parentNode.parentNode.parentNode
       );
+      console.log(arrayToChange);
+      console.log(arrayToChange[indexOfColumnToMove].groups[indexOfGroupToMove].bookmark[
+        indexOfElementToMove
+      ])
+      console.log("Old:")
+      console.log(indexOfColumnToMove)
+      console.log(indexOfGroupToMove)
+      console.log(indexOfElementToMove)
+      console.log("New:");
+      console.log(newColumnIndex);
+      console.log(newGroupIndex);
+      console.log(newElementIndex);
 
       arrayToChange[indexOfColumnToMove].groups[
         indexOfGroupToMove
@@ -2385,14 +2401,15 @@ const dragAndDrop = () => {
     if (e.target.nodeName === "H2") {
       elementToMove = e.target.parentNode.parentNode;
       elementToMove.classList.add("dragging");
-      bookmarks.forEach((column) => {
+      arrayToChange.forEach((column) => {
         column.groups.forEach((group) => {
           if (group.groupName === e.target.textContent) {
-            indexOfColumnToMove = bookmarks.indexOf(column);
+            indexOfColumnToMove = arrayToChange.indexOf(column);
             indexOfElementToMove = column.groups.indexOf(group);
-            arrayElementToMove =
-              bookmarks[indexOfColumnToMove].groups[indexOfElementToMove];
-            groupOfElementToMove = bookmarks[indexOfColumnToMove];
+            // console.log("Old:");
+            // console.log(arrayToChange.indexOf(column));
+            // console.log(column.groups.indexOf(group));
+            arrayElementToMove = arrayToChange[indexOfColumnToMove].groups[indexOfElementToMove]
           }
         });
       });
@@ -2406,19 +2423,21 @@ const dragAndDrop = () => {
     } else if (e.target.nodeName === "A") {
       elementToMove = e.target.parentNode;
       elementToMove.classList.add("dragging");
-      bookmarks.forEach((column) => {
+      arrayToChange.forEach((column) => {
         column.groups.forEach((group) => {
           group.bookmark.forEach((bookamrk) => {
             if (bookamrk.name === e.target.textContent) {
-              indexOfColumnToMove = bookmarks.indexOf(column);
+              indexOfColumnToMove = arrayToChange.indexOf(column);
               indexOfGroupToMove = column.groups.indexOf(group);
               indexOfElementToMove = group.bookmark.indexOf(bookamrk);
-              arrayElementToMove =
-                bookmarks[indexOfColumnToMove].groups[indexOfGroupToMove]
-                  .bookmark[indexOfElementToMove];
-
-              groupOfElementToMove =
-                bookmarks[indexOfColumnToMove].groups[indexOfGroupToMove];
+              // console.log("Old:");
+              // console.log(arrayToChange.indexOf(column));
+              // console.log(column.groups.indexOf(group));
+              // console.log(group.bookmark.indexOf(bookamrk));
+              arrayElementToMove = arrayToChange[indexOfColumnToMove].groups[indexOfGroupToMove].bookmark[
+                indexOfElementToMove
+              ]
+              
             }
           });
         });
