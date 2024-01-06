@@ -5,11 +5,11 @@ body {
   height: 100vh;
   overflow: hidden;
   background-color: var(--background);
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-	}
-	* {
-	color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+* {
+  color: var(--text);
   font-size: 16px;
   margin: 0;
   padding: 0;
@@ -226,7 +226,7 @@ ul.main-section-bookmarks-ul.dragOverList {
 }
 .main-section-bookmarks-group-div:hover::after {
   content: "";
-  display: block;
+  /* display: block; */
   width: 0;
   height: 0;
   border-style: solid;
@@ -671,13 +671,14 @@ input:focus {
 .setting-menu-features label {
   display: flex;
   height: 32px;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   gap: 8px;
 }
 .setting-menu-features p {
   color: gray;
+  height: 32px;
 }
 .settings-menu-newTab-content p {
   padding: 8px 0;
@@ -729,6 +730,33 @@ input:focus {
 .toggleGroupFolding {
   width: 16px;
   aspect-ratio: 1/1;
+}
+.setting-menu-features div:last-child {
+  position: relative;
+}
+.linkOption {
+  /* padding: 0  ; */
+  /* width: 25%; */
+  height: 26px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* .setting-menu-features div:not(:last-child){ */
+.setting-menu-features div,
+.setting-menu-appearance-settings label {
+  /* padding-bottom: 16px; */
+  border: solid var(--secondary);
+  border-width: 1px 0;
+}
+.setting-menu-appearance-settings label {
+  padding: 16px 0;
+}
+.setting-menu-appearance-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .settings-links {
@@ -948,9 +976,7 @@ font-size: 16px;
     padding: 42px;
     transform: translateY(-10%);
   }
-  .settings-menu {
-    width: 70%;
-  }
+ 
   .editDiv form {
     top: 20%;
     padding: 42px;
@@ -959,4 +985,10 @@ font-size: 16px;
   /* .main-section{
     width: 100%;
   } */
+}
+@media screen and (min-width: 2000px) {
+
+  .addBookmark-form {
+    width: 70%;
+  }
 }
