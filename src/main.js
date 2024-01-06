@@ -70,6 +70,14 @@ if (localStorage.getItem("Setting") === null) {
   const dragFuntionString = JSON.stringify(dragFuntion);
   localStorage.setItem("dragFuntion", dragFuntionString);
 }
+if (localStorage.getItem("openLink") === null) {
+  var openLink = "_blank";
+  const openLinkString = JSON.stringify(openLink);
+  localStorage.setItem("openLink", openLinkString);
+} else {
+  const openLinkString = localStorage.getItem("openLink");
+  var openLink = JSON.parse(openLinkString);
+}
 
 const styleSheet = document.styleSheets[0];
 const changeCSSStyle = (selector, rule, value) => {
@@ -452,6 +460,8 @@ const drawGroup = (array, name, url, newGroup) => {
 };
 
 const drawLink = (array, parent, name, url) => {
+  const openLinkString = localStorage.getItem("openLink");
+  let openLinkLocation = JSON.parse(openLinkString);
   if (array !== null) {
     array.bookmark.forEach((element) => {
       const li = document.createElement("li");
@@ -461,7 +471,8 @@ const drawLink = (array, parent, name, url) => {
       a.textContent = element.name;
       a.setAttribute("href", element.url);
       a.classList.add("main-section-bookmarks-ul-li-link");
-      a.setAttribute("target", "_blank");
+
+      a.setAttribute("target", openLinkLocation);
       a.setAttribute("draggable", "false");
       li.appendChild(a);
     });
@@ -473,7 +484,7 @@ const drawLink = (array, parent, name, url) => {
     a.textContent = name;
     a.setAttribute("href", url);
     a.classList.add("main-section-bookmarks-ul-li-link");
-    a.setAttribute("target", "_blank");
+    a.setAttribute("target", openLinkLocation);
     a.setAttribute("draggable", "false");
     li.appendChild(a);
   }
@@ -1508,6 +1519,59 @@ const drawSettings = () => {
       localStorage.setItem("groupFolding", groupFoldingString);
       groupFoldingFunc();
     });
+
+    const divOpen = document.createElement("div");
+    divFeatures.appendChild(divOpen);
+
+    const labelOpen = document.createElement("label");
+    labelOpen.textContent = "Open Links";
+    divOpen.appendChild(labelOpen);
+    const selectOpen = document.createElement("select");
+    selectOpen.classList.add(
+      "setting-menu-appearance-selectColorTheme",
+      "input",
+      "linkOption"
+    );
+    selectOpen.setAttribute("autocomplete", "off");
+    divOpen.appendChild(selectOpen);
+    const openList = [
+      {
+        value: "_blank",
+        name: "New Tab",
+      },
+      {
+        value: "_self",
+        name: "Same Tab",
+      }
+    ];
+    openList.forEach((element) => {
+      const optionOpen = document.createElement("option");
+      optionOpen.setAttribute("value", element.value);
+      optionOpen.textContent = element.name;
+      selectOpen.appendChild(optionOpen);
+    });
+
+    const pOpen = document.createElement("p");
+    pOpen.textContent = "Choose where links will be open.";
+    divOpen.appendChild(pOpen);
+
+    const openLinkString = localStorage.getItem("openLink");
+    selectOpen.value = JSON.parse(openLinkString);
+
+    selectOpen.addEventListener("input", () => {
+      const newOption = selectOpen.value;
+      newOptionString = JSON.stringify(newOption);
+      localStorage.setItem("openLink", newOptionString);
+      while (document.querySelector(".main-section-bookmarks").firstChild) {
+        document
+          .querySelector(".main-section-bookmarks")
+          .removeChild(
+            document.querySelector(".main-section-bookmarks").firstChild
+          );
+      }
+      drawGroup(bookmarks);
+      appendIcons();
+    });
   };
   const rightColumn = () => {
     const rightDiv = document.createElement("div");
@@ -2229,7 +2293,7 @@ const dragAndDrop = () => {
   let arrayToChange = JSON.parse(bookmarksString);
 
   let elementToMove,
-  arrayElementToMove,
+    arrayElementToMove,
     indexOfElementToMove,
     indexOfGroupToMove,
     indexOfColumnToMove;
@@ -2387,7 +2451,8 @@ const dragAndDrop = () => {
           if (group.groupName === e.target.textContent) {
             indexOfColumnToMove = arrayToChange.indexOf(column);
             indexOfElementToMove = column.groups.indexOf(group);
-            arrayElementToMove = arrayToChange[indexOfColumnToMove].groups[indexOfElementToMove]
+            arrayElementToMove =
+              arrayToChange[indexOfColumnToMove].groups[indexOfElementToMove];
           }
         });
       });
@@ -2408,10 +2473,9 @@ const dragAndDrop = () => {
               indexOfColumnToMove = arrayToChange.indexOf(column);
               indexOfGroupToMove = column.groups.indexOf(group);
               indexOfElementToMove = group.bookmark.indexOf(bookamrk);
-              arrayElementToMove = arrayToChange[indexOfColumnToMove].groups[indexOfGroupToMove].bookmark[
-                indexOfElementToMove
-              ]
-              
+              arrayElementToMove =
+                arrayToChange[indexOfColumnToMove].groups[indexOfGroupToMove]
+                  .bookmark[indexOfElementToMove];
             }
           });
         });
