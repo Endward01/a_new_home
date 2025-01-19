@@ -3,6 +3,11 @@
  A New HOMEpage
 </h1>
 
+<h2 align="center">
+ Hi! I'm back. I'm beginning to rewriting this app for better modularity and hopefully more features in the future :D
+ (19/01/2025 update)
+</h2>
+
 
 
 <h3 align="center">
