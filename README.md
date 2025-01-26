@@ -6,6 +6,9 @@
 <h2 align="center">
  Hi! I'm back. I'm beginning to rewriting this app for better modularity and hopefully more features in the future :D
  (19/01/2025 update)
+ <br></br>
+ Ok. I decided to archive this procjet and rewrite it to new one <a href="https://github.com/Endward01/owlink_nest" target="_blank">Owlink Nest</a>. Any new update that  will accure will be there.
+ (26/01/2025 update)
 </h2>
 
 
